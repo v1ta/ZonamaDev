@@ -12,6 +12,7 @@ apt-get update
 apt-get -y -o Dpkg::Options::="--force-confnew" dist-upgrade
 apt-get -y install xfce4 xfce4-goodies lightdm eclipse
 
+set +x
 for i in $(dirname ${BASH_SOURCE[0]})'/patches/'*
 do
     echo "** Apply patch $i"
