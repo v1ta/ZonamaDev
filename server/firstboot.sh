@@ -19,6 +19,6 @@ do
 done
 ) 2>&1 | logger -i -t firstboot -s 2>&1
 
-logger -i -t firstboot "** $0 COMPLETE AFTER $SECOND SECOND(S)"
+logger -i -t firstboot "** $0 COMPLETE AFTER $SECONDS SECOND(S)"
 
 exit 0
