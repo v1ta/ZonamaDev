@@ -19,10 +19,10 @@ Launch Git Bash: Start -> Programs -> Git Bash
 
 ```
 git clone https://github.com/lordkator/ZonamaDev.git
-cd ZonamaDev/host
 vagrant plugin install vagrant-reload
 vagrant plugin install vagrant-vbguest
 vagrant plugin install vagrant-triggers
+cd ZonamaDev
 vagrant up
 ```
 

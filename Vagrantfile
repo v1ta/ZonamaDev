@@ -1,5 +1,8 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
+# ZonamaDev Vagrantfile
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Wed Dec 23 17:54:28 EST 2015
 #
 
 ## Check for required plugins
@@ -17,8 +20,10 @@ plugins_installed = false
   end
 end
 
+# If we had to install anything they need to restart
 if plugins_installed
-    raise "Some plugins had to be installed, please re-run your command"
+    puts "Some plugins had to be installed, please re-run your command"
+    exit 1
 end
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
@@ -114,18 +119,24 @@ Vagrant.configure(2) do |config|
     apt-get update
     apt-get -y install git
     git clone https://github.com/lordkator/ZonamaDev.git
-    ZonamaDev/server/firstboot.sh
+    ZonamaDev/guest/firstboot.sh
+    chown -vR vagrant:vagrant ~vagrant/
   SHELL
 
+  # Make sure updated kernel is loaded etc.
   config.vm.provision :reload
 
   # Postponed vbguest, run it now...
   # config.vm.provision :host_shell, inline: "vagrant vbguest --do install"
   config.vm.provision :trigger, :force => true do |trigger|
     trigger.fire do
-      run "vagrant vbguest --do install"
+      run "vagrant vbguest --do install 2>&1"
     end
   end
 
   config.vm.provision :reload
 end
+#
+# -*- mode: ruby -*-
+# vi: set ft=ruby:
+#
