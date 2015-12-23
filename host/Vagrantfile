@@ -3,13 +3,22 @@
 #
 
 ## Check for required plugins
+plugins_installed = false
+
 [
   { :name => "vagrant-vbguest", :version => ">= 0.11.0" },
-  { :name => "vagrant-reload", :version => ">= 0.0.1" }
+  { :name => "vagrant-reload", :version => ">= 0.0.1" },
+  { :name => "vagrant-triggers", :version => ">= 0.5.0" }
 ].each do |plugin|
   if not Vagrant.has_plugin?(plugin[:name], plugin[:version])
-    raise "#{plugin[:name]} #{plugin[:version]} is required. Please run `vagrant plugin install #{plugin[:name]}`"
+    # raise "#{plugin[:name]} #{plugin[:version]} is required. Please run `vagrant plugin install #{plugin[:name]}`"
+    system("vagrant plugin install #{plugin[:name]}")
+    plugins_installed = true
   end
+end
+
+if plugins_installed
+    raise "Some plugins had to be installed, please re-run your command"
 end
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
@@ -17,6 +26,10 @@ end
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure(2) do |config|
+  # vbguest settings
+  config.vbguest.auto_update = false
+  config.vbguest.no_install = true
+
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
@@ -103,6 +116,16 @@ Vagrant.configure(2) do |config|
     git clone https://github.com/lordkator/ZonamaDev.git
     ZonamaDev/server/firstboot.sh
   SHELL
+
+  config.vm.provision :reload
+
+  # Postponed vbguest, run it now...
+  # config.vm.provision :host_shell, inline: "vagrant vbguest --do install"
+  config.vm.provision :trigger, :force => true do |trigger|
+    trigger.fire do
+      run "vagrant vbguest --do install"
+    end
+  end
 
   config.vm.provision :reload
 end
