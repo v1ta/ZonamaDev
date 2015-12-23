@@ -8,4 +8,4 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get -y -o Dpkg::Options::="--force-confnew" dist-upgrade
 apt-get -y install xfce4 xfce4-goodies lightdm eclipse
-) | logger -t firstboot
+) 2>&1 | logger -t firstboot -s 2>&1
