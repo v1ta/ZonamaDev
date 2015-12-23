@@ -6,6 +6,17 @@ Zonama - The living planet, or in our world an easily deployed development envir
 
 Download and install VirtualBox and Vagrant
 
+## Windows Host
+
+### Downloads
+* Github's Git for Windows: https://git-for-windows.github.io/
+* VirtualBox for Windows: https://www.vagrantup.com/downloads.html
+* Vagrant for Windows: https://www.vagrantup.com/downloads.html
+ 
+Launch Git Bash: Start -> Programs -> Git Bash
+
+# Once you have cloned and have a bash shell:
+
 ```
 git clone https://github.com/lordkator/ZonamaDev.git
 cd ZonamaDev/host
