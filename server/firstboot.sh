@@ -18,6 +18,8 @@ do
     echo "** Apply patch $i"
     (cd /;patch -p0 -Nft) < "$i"
 done
+
+usermod -c "vagrant" vagrant
 ) 2>&1 | logger -i -t firstboot -s 2>&1
 
 logger -i -t firstboot "** $0 COMPLETE AFTER $SECONDS SECOND(S)"
