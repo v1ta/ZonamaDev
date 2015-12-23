@@ -10,7 +10,8 @@ ucf --purge /boot/grub/menu.lst
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get -y -o Dpkg::Options::="--force-confnew" dist-upgrade
-apt-get -y install xfce4 xfce4-goodies lightdm eclipse
+apt-get -y install dkms build-essential linux-headers-$(uname -r) xfce4 xfce4-goodies lightdm eclipse
+apt-get -y autoremove
 
 set +x
 for i in $(dirname ${BASH_SOURCE[0]})'/patches/'*
