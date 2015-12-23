@@ -1,8 +1,11 @@
 #!/bin/bash
 (set -x
+unset UCF_FORCE_CONFFOLD
+export UCF_FORCE_CONFFNEW=YES
+ucf --purge /boot/grub/menu.lst
+
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
-apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
-apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade
-apt-get -y install virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11
+apt-get -y -o Dpkg::Options::="--force-confnew" dist-upgrade
+apt-get -y install xfce4 xfce4-goodies lightdm eclipse
 ) | logger -t firstboot
