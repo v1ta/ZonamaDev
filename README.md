@@ -8,6 +8,7 @@ Download and install VirtualBox and Vagrant
 
 ```
 git clone https://github.com/lordkator/ZonamaDev.git
+cd host
 vagrant plugin install vagrant-reload
 vagrant plugin install vagrant-vbguest
 vagrant up
