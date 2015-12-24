@@ -39,7 +39,7 @@ trap 'msg "UNEXPECTED SIGNAL SIGINT!";echo 22 > $FIRSTBOOT_STATUS' INT
 trap 'msg "UNEXPECTED SIGNAL SIGTERM!";echo 23 > $FIRSTBOOT_STATUS' TERM
 
 ## Should be magic from here on.. :-)
-export EXTRAS=$(egrep -hv '^#' extras ~vagrant/extras $(dirname $ME)/extras|sort -u|tr '\n' '\40' 2> /dev/null)
+export EXTRAS=$(egrep -hv '^#' extras ~vagrant/extras $(dirname $ME)/extras 2> /dev/null|sort -u|tr '\n' '\40')
 
 msg() {
     local hd="##"$(echo "$1"|sed 's/./#/g')"##"
