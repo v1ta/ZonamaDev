@@ -76,9 +76,14 @@ Vagrant.configure(2) do |config|
   # Example for VirtualBox:
   #
   config.vm.provider "virtualbox" do |vb|
-    # Display the VirtualBox GUI when booting the machine
-    vb.gui = true
- 
+    ## TODO is there a way we can toogle this when ready?
+    #if File.exist?("#{File.dirname(__FILE__)}/.vagrant/machines/default/virtualbox/action_provision")
+	# Enable GUI
+	vb.gui = true
+    #else
+	#puts "KATOR: No action_provision file; not enabling gui yet"
+    #end
+
     # Customize the amount of memory on the VM:
     vb.memory = "2048"
 
@@ -96,6 +101,7 @@ Vagrant.configure(2) do |config|
 
   # VMWARE Settings
   config.vm.provider :vmware_fusion do |vw|
+    vw.gui = true
     vw.memory = 2048
     vw.cpus = 2
   end
@@ -114,7 +120,7 @@ Vagrant.configure(2) do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", name: "firstboot.sh", inline: <<-SHELL
+  config.vm.provision :shell, name: "firstboot.sh", inline: <<-SHELL
     apt-get update
     apt-get -y install git
     git clone https://github.com/lordkator/ZonamaDev.git
@@ -132,6 +138,9 @@ Vagrant.configure(2) do |config|
       run "vagrant vbguest --do install"
     end
   end
+
+  # Enable Graphical Boot
+  config.vm.provision :shell, name: "graphical.target", inline: "systemctl set-default -f graphical.target"
 
   config.vm.provision :reload
 end

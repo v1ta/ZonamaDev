@@ -11,13 +11,17 @@ pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
 export ME=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
 popd > /dev/null
 
+chvt 8
+
+apt-get -y install moreutils | tee /dev/console
+
 (
     msg() {
 	local hd="+-"$(echo "$1"|sed 's/./-/g')"-+"
 	echo -e "$hd\n| $1 |\n$hd"
     }
 
-    msg "START $ME (git: "$(git describe --always)" md5:"$(md5sum $ME)")"
+    msg "START $ME (git: "$(cd $(dirname $ME);git describe --always)" md5:"$(md5sum $ME)")"
 
     msg "Unpack Tarballs"
 
@@ -35,7 +39,7 @@ popd > /dev/null
 
     # Add Googles's chrome repo to sources
     wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
 
     # Make sure we don't prompt with confusing things
     unset UCF_FORCE_CONFFOLD
@@ -64,7 +68,8 @@ popd > /dev/null
 	(cd /;patch -p0 -Nft) < "$i"
     done
 
-) 2>&1 | logger -i -t firstboot -s 2>&1
+    systemctl set-default -f multi-user.target
+) 2>&1 | ts -s | logger -i -t firstboot -s 2>&1 | tee /dev/console
 
 logger -i -t firstboot -s "** $0 COMPLETE AFTER $SECONDS SECOND(S)"
 
