@@ -13,15 +13,30 @@ pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
 export ME=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
 popd > /dev/null
 
-if [ "X$FIRSTBOOT_MAGIC" = "X" -a "X$1" = "X" ]; then
-    export FIRSTBOOT_MAGIC=magic
+# Run output through some stuff to make display more useful and capture errors
+if [ "X$FIRSTBOOT_STATUS" = "X" -a "X$1" = "X" ]; then
+    export FIRSTBOOT_STATUS="/tmp/firstboot-status-$$"
+    echo 253 > $FIRSTBOOT_STATUS
     # Switch to an empty vt on console
     chvt 8
     apt-get -y install moreutils | tee /dev/console
-    exec $ME - 2>&1 | ts -s | logger -i -t firstboot -s 2>&1 | tee /dev/console
-    logger -i -t firstboot -s "** FAILED TO EXEC: $ME ** ABORT **"
-    exit 11
+    $ME - 2>&1 | ts -s | logger -i -t firstboot -s 2>&1 | tee /dev/console
+    st=$(<$FIRSTBOOT_STATUS)
+    if [ $st -eq 0 ]; then
+	logger -i -t firstboot -s "** $ME SUCCESS **"
+    else
+	logger -i -t firstboot -s "** $ME FAILED! STATUS=$st ** ABORT **"
+    fi
+    exit $st
 fi
+
+echo 252 > $FIRSTBOOT_STATUS
+
+# Trap various failures
+trap 'echo $? > $FIRSTBOOT_STATUS;msg "UNEXPECTED EXIT=$?"' 0
+trap 'msg "UNEXPECTED SIGNAL SIGHUP!";echo 21 > $FIRSTBOOT_STATUS' HUP
+trap 'msg "UNEXPECTED SIGNAL SIGINT!";echo 22 > $FIRSTBOOT_STATUS' INT
+trap 'msg "UNEXPECTED SIGNAL SIGTERM!";echo 23 > $FIRSTBOOT_STATUS' TERM
 
 ## Should be magic from here on.. :-)
 export EXTRAS=$(egrep -hv '^#' extras ~vagrant/extras $(dirname $ME)/extras|sort -u|tr '\n' '\40' 2> /dev/null)
@@ -58,11 +73,6 @@ ucf --purge /boot/grub/menu.lst
 
 export DEBIAN_FRONTEND=noninteractive
 
-# Trap various failures
-trap 'msg "UNEXPECTED EXIT!"' 0
-trap 'msg "UNEXPECTED SIGNAL SIGHUP!";exit 21' HUP
-trap 'msg "UNEXPECTED SIGNAL SIGINT!";exit 22' INT
-trap 'msg "UNEXPECTED SIGNAL SIGTERM!";exit 23' TERM
 # exit if anything returns error
 set -e
 
@@ -99,6 +109,7 @@ chown -R vagrant:vagrant ~vagrant
 
 logger -i -t firstboot -s "** $0 COMPLETE AFTER $SECONDS SECOND(S)"
 
+# Success!
 trap - 0
-
+echo 0 > $FIRSTBOOT_STATUS
 exit 0
