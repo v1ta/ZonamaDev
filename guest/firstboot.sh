@@ -21,7 +21,7 @@ logger -i -t firstboot "0=$0 BASH_SOURCE[0]=${BASH_SOURCE[0]} ME=$ME"
 	echo -e "$hd\n| $1 |\n$hd"
     }
 
-    msg "START $ME"
+    msg "START $ME (git: "$(git describe --always)" md5:"$(md5sum $ME)")"
 
     unset UCF_FORCE_CONFFOLD
     export UCF_FORCE_CONFFNEW=YES
@@ -53,7 +53,7 @@ logger -i -t firstboot "0=$0 BASH_SOURCE[0]=${BASH_SOURCE[0]} ME=$ME"
     for i in $(dirname $ME)'/tarballs/'*
     do
 	msg "unpack $i"
-	(umask 0;cd $HOME;tar xvf $i)
+	(umask 0;cd ~vagrant;tar xpvf $i)
     done
 
     msg "Cusomize system"
