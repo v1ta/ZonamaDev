@@ -41,7 +41,7 @@ do
     (umask 0;cd ~vagrant;tar xpvf $i)
 done
 
-msg "Cusomize system"
+msg "Customize system"
 
 usermod -c "vagrant" vagrant
 
