@@ -31,9 +31,11 @@ end
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure(2) do |config|
-  # vbguest settings
-  config.vbguest.auto_update = false
-  config.vbguest.no_install = true
+  # vbguest settings for first up
+  if not File.exist?("#{File.dirname(__FILE__)}/.vagrant/machines/default/virtualbox/action_provision")
+      config.vbguest.auto_update = false
+      config.vbguest.no_install = true
+  end
 
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
@@ -117,9 +119,7 @@ Vagrant.configure(2) do |config|
   #   push.app = "YOUR_ATLAS_USERNAME/YOUR_APPLICATION_NAME"
   # end
 
-  # Enable provisioning with a shell script. Additional provisioners such as
-  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
-  # documentation for more information about their specific syntax and use.
+  # Execute firstboot.sh
   config.vm.provision :shell, name: "firstboot.sh", inline: <<-SHELL
     apt-get update
     apt-get -y install git
@@ -130,6 +130,12 @@ Vagrant.configure(2) do |config|
 
   # Make sure updated kernel is loaded etc.
   config.vm.provision :reload
+
+  # Tell them to be patient!
+  config.vm.provision :shell, name: "firstboot.sh", inline: <<-SHELL
+      chvt 8
+      echo "** Please wait while provisioning continues **" > /dev/console
+  SHELL
 
   # Postponed vbguest, run it now...
   # config.vm.provision :host_shell, inline: "vagrant vbguest --do install"
@@ -142,6 +148,7 @@ Vagrant.configure(2) do |config|
   # Enable Graphical Boot
   config.vm.provision :shell, name: "graphical.target", inline: "systemctl set-default -f graphical.target"
 
+  # One last reboot with all the drivers loaded
   config.vm.provision :reload
 end
 #
