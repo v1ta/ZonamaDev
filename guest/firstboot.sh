@@ -7,7 +7,7 @@
 # Created: Wed Dec 23 19:14:02 EST 2015
 #
 
-export PACKAGES="dkms build-essential linux-headers-$(uname -r) xfce4 xfce4-goodies lightdm eclipse google-chrome-stable vim vim-doc vim-scripts avahi-daemon"
+export PACKAGES="dkms build-essential linux-headers-$(uname -r) xfce4 xfce4-goodies lightdm eclipse google-chrome-stable vim vim-doc vim-scripts avahi-daemon ntp ntpdate wget unzip"
 
 pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
 export ME=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
