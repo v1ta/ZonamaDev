@@ -130,7 +130,7 @@ Vagrant.configure(2) do |config|
   # config.vm.provision :host_shell, inline: "vagrant vbguest --do install"
   config.vm.provision :trigger, :force => true do |trigger|
     trigger.fire do
-      run "vagrant vbguest --do install 2>&1"
+      run "vagrant vbguest --do install"
     end
   end
 
