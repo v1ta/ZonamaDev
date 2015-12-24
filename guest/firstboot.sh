@@ -177,7 +177,7 @@ logger -i -t firstboot -s "** $0 COMPLETE AFTER $SECONDS SECOND(S)"
 #############
 ## Success ##
 #############
-(cd $(dirname $ME);date;set -x;uname -a;java -version;git describe --always) > ~vagrant/.firstboot.ran
+(cd $(dirname $ME);date;set -x;uname -a;java -version 2>&1;git describe --always) > ~vagrant/.firstboot.ran
 trap - 0
 echo 0 > $FIRSTBOOT_STATUS
 exit 0
