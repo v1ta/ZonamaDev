@@ -7,14 +7,17 @@
 # Created: Wed Dec 23 19:14:02 EST 2015
 #
 
+logger -i -t firstboot "0=$0 BASH_SOURCE[0]=${BASH_SOURCE[0]}"
 
 pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
-export ME=$(pwd -P)$(basename ${BASH_SOURCE[0]})
+export ME=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
 popd > /dev/null
+
+logger -i -t firstboot "0=$0 BASH_SOURCE[0]=${BASH_SOURCE[0]} ME=$ME"
 
 (
     msg() {
-	local hd = "+-"$(echo "$1"|sed 's/./-/g')"-+"
+	local hd="+-"$(echo "$1"|sed 's/./-/g')"-+"
 	echo -e "$hd\n| $1 |\n$hd"
     }
 
