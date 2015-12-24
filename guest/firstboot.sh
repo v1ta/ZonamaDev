@@ -7,11 +7,15 @@
 # Created: Wed Dec 23 19:14:02 EST 2015
 #
 
+# Switch to an empty vt on console
+chvt 8
+
 pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
 export ME=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
 popd > /dev/null
 
-chvt 8
+export PACKAGES="dkms build-essential linux-headers-$(uname -r) xfce4 xfce4-goodies lightdm eclipse google-chrome-stable tree vim vim-doc vim-scripts"
+export EXTRAS=$(egrep -hv '^#' extras ~vagrant/extras $(dirname $ME)/extras 2> /dev/null)
 
 apt-get -y install moreutils | tee /dev/console
 
@@ -54,9 +58,11 @@ apt-get -y install moreutils | tee /dev/console
     # Upgrade whatever we can
     apt-get -y -o Dpkg::Options::="--force-confnew" dist-upgrade
 
-    msg "Install Base Packages"
+    msg "Install Packages"
 
-    apt-get -y install dkms build-essential linux-headers-$(uname -r) xfce4 xfce4-goodies lightdm eclipse google-chrome-stable
+    echo ">> PACKAGES: $PACKAGES $EXTRAS"
+
+    apt-get -y install $PACKAGES $EXTRAS
 
     apt-get -y autoremove
 
