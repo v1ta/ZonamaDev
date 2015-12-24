@@ -13,8 +13,8 @@ pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
 export ME=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
 popd > /dev/null
 
-if [ "X$FISTBOOT_MAGIC" = "X" -a "X$1" = "X" ]; then
-    export FISTBOOT_MAGIC=magic
+if [ "X$FIRSTBOOT_MAGIC" = "X" -a "X$1" = "X" ]; then
+    export FIRSTBOOT_MAGIC=magic
     # Switch to an empty vt on console
     chvt 8
     apt-get -y install moreutils | tee /dev/console
