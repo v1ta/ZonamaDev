@@ -24,7 +24,7 @@ if [ "X$FIRSTBOOT_MAGIC" = "X" -a "X$1" = "X" ]; then
 fi
 
 ## Should be magic from here on.. :-)
-export EXTRAS=$(egrep -hv '^#' extras ~vagrant/extras $(dirname $ME)/extras 2> /dev/null)
+export EXTRAS=$(egrep -hv '^#' extras ~vagrant/extras $(dirname $ME)/extras|sort -u|tr '\n' '\40' 2> /dev/null)
 
 msg() {
     local hd="##"$(echo "$1"|sed 's/./#/g')"##"
