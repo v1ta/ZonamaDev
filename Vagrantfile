@@ -119,13 +119,18 @@ Vagrant.configure(2) do |config|
   #   push.app = "YOUR_ATLAS_USERNAME/YOUR_APPLICATION_NAME"
   # end
 
+
+  # Copy local config into the host
+  if File.exist?("#{File.dirname(__FILE__)}/extras")
+      config.vm.provision :file, source: "#{File.dirname(__FILE__)}/extras", destination: "extras"
+  end
+
   # Execute firstboot.sh
   config.vm.provision :shell, name: "firstboot.sh", inline: <<-SHELL
     apt-get update
     apt-get -y install git
     git clone https://github.com/lordkator/ZonamaDev.git
-    ZonamaDev/guest/firstboot.sh
-    chown -vR vagrant:vagrant ~vagrant/
+    exec ZonamaDev/guest/firstboot.sh
   SHELL
 
   # Make sure updated kernel is loaded etc.
