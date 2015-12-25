@@ -1,0 +1,157 @@
+# ZonamaDev Vagrantfile
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Wed Dec 23 17:54:28 EST 2015
+#
+
+## Check for required plugins
+plugins_installed = false
+
+[
+  { :name => "vagrant-vbguest", :version => ">= 0.11.0" },
+  { :name => "vagrant-reload", :version => ">= 0.0.1" },
+  { :name => "vagrant-triggers", :version => ">= 0.5.0" }
+].each do |plugin|
+  if not Vagrant.has_plugin?(plugin[:name], plugin[:version])
+    # raise "#{plugin[:name]} #{plugin[:version]} is required. Please run `vagrant plugin install #{plugin[:name]}`"
+    system("vagrant plugin install #{plugin[:name]}")
+    plugins_installed = true
+  end
+end
+
+# If we had to install anything they need to restart
+if plugins_installed
+  puts "Some plugins had to be installed, please re-run your command"
+  exit 1
+end
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure(2) do |config|
+  config.vm.hostname = "swgemudev"
+
+  # vbguest settings for first up
+  if not File.exist?("#{File.dirname(__FILE__)}/.vagrant/machines/default/virtualbox/action_provision")
+    config.vbguest.auto_update = false
+    config.vbguest.no_install = true
+  end
+
+  # Base Box
+  config.vm.box = "debian/jessie64"
+
+  # TODO Setup for LAN testing
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
+
+  # TODO: Can we autoconfig this rather than prompting for which interface to bridge?
+  # config.vm.network "public_network", use_dhcp_assigned_default_route: true, auto_config: true
+
+  # This keeps windows hosts from blowing their brains out about rsync missing
+  config.vm.synced_folder '.', '/vagrant', :disabled => true
+  
+  # Tell themn what to do next...
+  config.vm.post_up_message = <<-UPMSG
+
+      ###################################
+      ## WELCOME TO SWGEMUDEV BASE BOX ##
+      ###################################
+
+      Your box is up now, you can use the console to work directly on the box.
+
+      From this folder you can do:
+          vagrant ssh     # ssh into the box
+          vagrant halt    # shutdown the box
+          vagrant destroy # destroy/delete the box WARNING: You will loose everything!
+          vagrant snapshot save {name} # Create a named snapshot so you can restore later
+
+      For more commands type: vagrant help
+
+  UPMSG
+
+  ###############
+  ## Providers ##
+  ###############
+
+  [ "vmware_fusion", "vmware_workstation", "virtualbox" ].each do |provider|
+    config.vm.provider provider do |v|
+      v.name = "ZonamaDev"
+      v.memory = "2048"
+      v.cpus = 2
+      v.gui = true
+
+      if provider == "virtualbox"
+        # Hint at a bigger video config
+        v.customize ["modifyvm", :id, "--accelerate3d", "on"]
+        v.customize ["modifyvm", :id, "--vram", "128"]
+        v.customize 'post-boot', ["controlvm", :id, "setvideomodehint", "1280", "720", "24"]
+        # v.customize ["modifyvm", :id, "--ioapic", "On"]
+        # v.customize ["modifyvm", :id, "--audio", "coreaudio"]
+        # v.customize ["modifyvm", :id, "--audiocontroller", "ac97"]
+      end
+    end
+  end
+
+  ###############
+  ## PROVISION ##
+  ###############
+
+  # Copy local config into the host
+  [ 'extras', '.bash_profile', '.bashrc', '.vimrc' ].each do |fn|
+    src = "#{File.dirname(__FILE__)}/#{fn}"
+
+    if File.exist?(src)
+      ## config.env.ui.info("Copy #{fn}")
+      ## TODO figure out right way to output
+      # puts "Copy #{fn} to host.."
+      config.vm.provision :file, source: src, destination: fn
+    end
+  end
+
+  # Execute {first|each}boot.sh
+  config.vm.provision :shell, name: "firstbooth", run: "always", inline: <<-SHELL
+    if [ ! -f "ZonamaDev/basebox/firstboot.sh" ]; then
+      echo "** Fresh Guest **"
+      apt-get update
+      apt-get -y install git
+      git clone https://github.com/lordkator/ZonamaDev.git
+      exec ZonamaDev/basebox/firstboot.sh
+    else
+      echo "** Existing Guest **"
+      pushd ZonamaDev;git pull;popd
+
+      if [ -f "ZonamaDev/basebox/eachboot.sh" ]; then
+        exec ZonamaDev/basebox/eachboot.sh
+      else
+        exec ZonamaDev/basebox/firstboot.sh
+      fi
+    fi
+  SHELL
+
+  # Make sure updated kernel is loaded etc.
+  config.vm.provision :reload
+
+  # Tell them to be patient!
+  config.vm.provision :shell, name: "firstboot.sh", inline: <<-SHELL
+      chvt 8
+      echo "** Please wait while provisioning continues **" > /dev/console
+  SHELL
+
+  # Postponed vbguest, run it now...
+  # config.vm.provision :host_shell, inline: "vagrant vbguest --do install"
+  config.vm.provision :trigger, :force => true do |trigger|
+    trigger.fire do
+      run "vagrant vbguest --do install"
+    end
+  end
+
+  # Enable Graphical Boot
+  config.vm.provision :shell, name: "graphical.target", inline: "systemctl set-default -f graphical.target"
+
+  # One last reboot with all the drivers loaded
+config.vm.provision :reload
+end
+#
+# -*- mode: ruby -*-
+# vi: ft=ruby sw=2
