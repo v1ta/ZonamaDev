@@ -7,6 +7,13 @@
 # Created: Sat Dec 26 17:25:19 EST 2015
 #
 
+if [ ! -d /home/vagrant/.config/autostart ]; then
+    msg "Created autostart directory"
+    mkdir -f /home/vagrant/.config/autostart
+fi
+
+[ ! -f /home/vagrant/.config/autostart/devsetup.desktop ] && msg "Setting up autostart"
+
 cat << ! > /home/vagrant/.config/autostart/devsetup.desktop
 [Desktop Entry]
 Encoding=UTF-8
