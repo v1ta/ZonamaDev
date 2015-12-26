@@ -96,12 +96,20 @@ Vagrant.configure(2) do |config|
     src = "#{File.dirname(__FILE__)}/#{fn}"
 
     if File.exist?(src)
-      ## config.env.ui.info("Copy #{fn}")
-      ## TODO figure out right way to output
-      # puts "Copy #{fn} to host.."
       config.vm.provision :file, source: src, destination: fn
     end
   end
+
+  # Update and exec rc.faststart
+  config.vm.provision :shell, name: "rc.faststart", run: "always", inline: <<-SHELL
+    if [ ! -f "ZonamaDev/faststart/firstboot.sh" ]; then
+      git clone https://github.com/lordkator/ZonamaDev.git
+    else
+      (cd ZonamaDev;git pull)
+    fi
+
+    exec ZonamaDev/faststart/scripts/rc.faststart
+  SHELL
 end
 #
 # -*- mode: ruby -*-
