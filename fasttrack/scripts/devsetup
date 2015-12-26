@@ -9,12 +9,5 @@
 pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
 export ME=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
 popd > /dev/null
-
-# No need for stdout or stderr from autostart it'll all end up in syslog anyway
-if [ "X$1" = "Xautostart" ]; then
-    exec > /dev/null 2>&1
-fi
-
 source $(dirname $ME)/rundir.sh
-
 # vi:sw=4 ft=sh
