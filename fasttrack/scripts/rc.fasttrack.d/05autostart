@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# 05autostart - Configure autostart
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Sat Dec 26 17:25:19 EST 2015
+#
+
+cat << ! > /home/vagrant/.config/autostart/devsetup.desktop
+[Desktop Entry]
+Encoding=UTF-8
+Version=0.9.4
+Type=Application
+Name=devsetup
+Comment=
+Exec=/home/vagrant/ZonamaDev/fasttrack/scripts/devsetup
+OnlyShowIn=XFCE;
+StartupNotify=false
+Terminal=false
+Hidden=false
+!
+
+chown vagrant:vagrant /home/vagrant/.config/autostart/devsetup.desktop
+
+return 0
