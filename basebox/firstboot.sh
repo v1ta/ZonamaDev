@@ -85,6 +85,7 @@ done
 msg "Customize system"
 
 usermod -c "vagrant" vagrant
+usermod vagrant -a -G adm
 
 echo -e '## ZonamaDev Boot\n(cd ~vagrant;(git clone https://github.com/lordkator/ZonamaDev.git || (cd ZonamaDev;git pull)) 2> /dev/null;exec ZonamaDev/fasttrack/scripts/rc.fasttrack)' >> /etc/rc.local
 

@@ -1,3 +1,9 @@
 extras
 .vagrant/*
 .bundle/*
+.bash_profile
+.bash_login
+.bash_logout
+.bashrc
+.gitconfig
+.vimrc
