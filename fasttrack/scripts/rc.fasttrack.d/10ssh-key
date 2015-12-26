@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# 10ssh-key - setup a new ssh key if needed
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Fri Dec 25 20:52:45 EST 2015
+#
+
+setup_sshkey() {
+    if [ ! -f $HOME/.ssh/id_rsa ]; then
+	msg "Generating SSH Key"
+	rm -f $HOME/.ssh/id_rsa $HOME/.ssh/id_rsa.pub
+	ssh-keygen -t rsa -q -N "" -C "emudev-"$(date +%Y%m%d)"-$(git config --get user.email)" -f ~/.ssh/id_rsa
+	[ -n "$SSH_AGENT_PID" ] && ssh-add
+    fi
+}
+
+setup_sshkey

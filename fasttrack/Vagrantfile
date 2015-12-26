@@ -100,15 +100,15 @@ Vagrant.configure(2) do |config|
     end
   end
 
-  # Update and exec rc.faststart
-  config.vm.provision :shell, name: "rc.faststart", run: "always", inline: <<-SHELL
-    if [ ! -f "ZonamaDev/faststart/firstboot.sh" ]; then
+  # Update and exec rc.fasttrack
+  config.vm.provision :shell, name: "rc.fasttrack", run: "always", inline: <<-SHELL
+    if [ ! -f "ZonamaDev/fasttrack/firstboot.sh" ]; then
       git clone https://github.com/lordkator/ZonamaDev.git
     else
       (cd ZonamaDev;git pull)
     fi
 
-    exec ZonamaDev/faststart/scripts/rc.faststart
+    exec ZonamaDev/fasttrack/scripts/rc.fasttrack
   SHELL
 end
 #

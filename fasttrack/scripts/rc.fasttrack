@@ -1,0 +1,84 @@
+#!/bin/bash
+#
+# rc.fasttrack - Run all the the swgemu scripts to keep the box healthy
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Fri Dec 25 19:30:31 EST 2015
+#
+
+#################################################
+## NO USER CONFIGURABLE PARTS BELOW THIS BLOCK ##
+#################################################
+
+###############################################################################################
+## Do not meddle in the affairs of Dragons, for you are crunchy and taste good with ketchup! ##
+###############################################################################################
+
+pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
+export ME=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
+popd > /dev/null
+
+# Run output through some stuff to make display more useful and capture errors
+if [ "X$RCSWGEMU_STATUS" = "X" -a "X$1" = "X" ]; then
+    export RCSWGEMU_STATUS="/tmp/rc.fasttrack-status-$$"
+    echo 253 > $RCSWGEMU_STATUS
+    # TODO do we need to check for ts?
+    # apt-get -y install moreutils
+    $ME - 2>&1 | ts -s | logger -i -t rc.fasttrack -s 2>&1
+    st=$(<$RCSWGEMU_STATUS)
+    if [ $st -eq 0 ]; then
+	logger -i -t rc.fasttrack -s "** $ME SUCCESS **"
+    else
+	logger -i -t rc.fasttrack -s "** $ME FAILED! STATUS=$st ** ABORT **"
+    fi
+    exit $st
+fi
+
+###################
+## CHILD PROCESS ##
+###################
+
+# We at least made it this far!
+echo 252 > $RCSWGEMU_STATUS
+
+# Trap various failures
+trap 'echo $? > $RCSWGEMU_STATUS;msg "UNEXPECTED EXIT=$?"' 0
+trap 'msg "UNEXPECTED SIGNAL SIGHUP!";echo 21 > $RCSWGEMU_STATUS' HUP
+trap 'msg "UNEXPECTED SIGNAL SIGINT!";echo 22 > $RCSWGEMU_STATUS' INT
+trap 'msg "UNEXPECTED SIGNAL SIGTERM!";echo 23 > $RCSWGEMU_STATUS' TERM
+
+msg() {
+    local hd="##"$(echo "$1"|sed 's/./#/g')"##"
+    echo -e "$hd\n# $1 #\n$hd"
+}
+
+error() {
+    msg "ERROR: $1"
+    err=251
+    if [ "X$2" != "X" ]; then
+	err=$2
+    fi
+    exit $err
+}
+
+msg "START $ME (git: "$(cd $(dirname $ME);git describe --always)" md5:"$(md5sum $ME)")"
+
+cd $(dirname $ME)
+
+for script in ${ME}'.d'/*
+do
+    msg "Run $script"
+    source $script
+done
+
+logger -i -t rc.fasttrack -s "** $0 COMPLETE AFTER $SECONDS SECOND(S)"
+
+#############
+## Success ##
+#############
+trap - 0
+echo 0 > $RCSWGEMU_STATUS
+exit 0
+
+# vi:sw=4 ft=sh

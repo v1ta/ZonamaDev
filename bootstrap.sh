@@ -27,7 +27,7 @@ main() {
     git clone https://github.com/lordkator/ZonamaDev.git
 
     ## hand off to next script
-    cd ZonamaDev/faststart
+    cd ZonamaDev/fasttrack
     exec ./setup.sh < /dev/tty
 
     echo "** Something went wrong, get help **"
