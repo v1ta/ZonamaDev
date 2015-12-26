@@ -13,7 +13,10 @@ setup_sshkey() {
 	rm -f $HOME/.ssh/id_rsa $HOME/.ssh/id_rsa.pub
 	ssh-keygen -t rsa -q -N "" -C "emudev-"$(date +%Y%m%d)"-$(git config --get user.email)" -f ~/.ssh/id_rsa
 	[ -n "$SSH_AGENT_PID" ] && ssh-add
+    else
+	msg "SSH $HOME/.ssh/id_rsa already exists"
     fi
 }
 
 setup_sshkey
+
