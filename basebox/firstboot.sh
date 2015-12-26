@@ -88,7 +88,7 @@ usermod -c "vagrant" vagrant
 usermod vagrant -a -G adm
 
 # Add rc.fasttrak
-echo -e '## ZonamaDev Boot\n(cd ~vagrant;(git clone https://github.com/lordkator/ZonamaDev.git || (cd ZonamaDev;git stash;git pull)) 2> /dev/null;exec ZonamaDev/fasttrack/scripts/rc.fasttrack)' >> /etc/rc.local
+echo -e '## ZonamaDev Boot\n(cd ~vagrant;(git clone https://github.com/lordkator/ZonamaDev.git || (cd ZonamaDev;git stash;git pull)) 2> /dev/null;exec ZonamaDev/fasttrack/scripts/rc.fasttrack) > /dev/null 2>&1' >> /etc/rc.local
 
 # Move exit to end (if any)
 sed -e '/^exit/{H;d}' -e '${p;x}' -i /etc/rc.local
