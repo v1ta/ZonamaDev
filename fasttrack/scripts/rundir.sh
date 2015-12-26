@@ -9,7 +9,7 @@
 
 BROWSER=$( (for i in chromium google-chrome chromium-browser firefox; do type -P $i; done)|head -1)
 
-TAG=$(basename ${BASH_SOURCE[0]})
+TAG=$(basename $ME)
 
 # Run output through some stuff to make display more useful and capture errors
 if [ "X$CHILD_STATUS" = "X" -a "X$1" = "X" ]; then
@@ -54,7 +54,7 @@ echo 252 > $CHILD_STATUS
 ## CHILD PROCESS ##
 ###################
 
-msg "START $ME git-tag: "$(cd $(dirname $ME);git describe --always)"
+msg "START $ME git-tag: "$(cd $(dirname $ME);git describe --always)
 
 cd $(dirname $ME)
 
