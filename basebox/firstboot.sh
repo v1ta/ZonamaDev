@@ -86,6 +86,8 @@ msg "Customize system"
 
 usermod -c "vagrant" vagrant
 
+echo -e '## ZonamaDev Boot\n(cd ~vagrant;(git clone https://github.com/lordkator/ZonamaDev.git || (cd ZonamaDev;git pull)) 2> /dev/null;exec ZonamaDev/fasttrack/scripts/rc.fasttrack)' >> /etc/rc.local
+
 #################################
 ## UPDATE AND INSTALL PACKAGES ##
 #################################
@@ -169,17 +171,6 @@ do
 	fi
     fi
 done
-
-###################
-## SETUP SSH KEY ##
-###################
-
-if [ ! -f ~vagrant/.ssh/id_rsa ]; then
-    msg "Generating SSH Key"
-    rm -f ~vagrant/.ssh/id_rsa ~vagrant/.ssh/id_rsa.pub
-    ssh-keygen -t rsa -q -N "" -C "emudev-"$(date +%Y%m%d)"-$(git config --get user.email)" -f ~/.ssh/id_rsa
-    [ -n "$SSH_AGENT_PID" ] && ssh-add
-fi
 
 chown -R vagrant:vagrant ~vagrant
 

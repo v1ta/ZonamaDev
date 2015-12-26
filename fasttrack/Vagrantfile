@@ -101,10 +101,10 @@ Vagrant.configure(2) do |config|
   end
 
   # Update and exec rc.fasttrack
-  config.vm.provision :shell, name: "rc.fasttrack", run: "always", inline: <<-SHELL
-    (git clone https://github.com/lordkator/ZonamaDev.git || (cd ZonamaDev;git pull))
-    exec ZonamaDev/fasttrack/scripts/rc.fasttrack
-  SHELL
+  #config.vm.provision :shell, name: "rc.fasttrack", run: "always", inline: <<-SHELL
+  #  (git clone https://github.com/lordkator/ZonamaDev.git || (cd ZonamaDev;git pull))
+  #  exec ZonamaDev/fasttrack/scripts/rc.fasttrack
+  #SHELL
 end
 #
 # -*- mode: ruby -*-
