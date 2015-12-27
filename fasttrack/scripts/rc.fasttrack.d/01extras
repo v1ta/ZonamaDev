@@ -28,6 +28,10 @@ setup_extras() {
 	return
     fi
 
+    export DEBIAN_FRONTEND=noninteractive
+    unset UCF_FORCE_CONFFOLD
+    export UCF_FORCE_CONFFNEW=YES
+
     # Remove dupes and check if installed
     extras=$(printf "%s\n" $extras)
     needinstall=false
