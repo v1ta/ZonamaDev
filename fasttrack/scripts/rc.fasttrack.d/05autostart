@@ -7,8 +7,6 @@
 # Created: Sat Dec 26 17:25:19 EST 2015
 #
 
-set -x
-
 if [ ! -d /home/vagrant/.config/autostart ]; then
     msg "Created autostart directory"
     mkdir -p /home/vagrant/.config/autostart
@@ -31,7 +29,5 @@ Hidden=false
 !
 
 chown vagrant:vagrant /home/vagrant/.config/autostart/devsetup.desktop
-
-set +x
 
 return 0
