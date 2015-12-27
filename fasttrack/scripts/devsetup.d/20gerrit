@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+# 20gerrit - Configure Gerrit
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Sun Dec 27 07:43:31 EST 2015
+#
+
+setup_gerrit() {
+    # is it setup already?
+    local gerrit_username=$(cat ~/.gerrit_username 2>/dev/null)
+
+    if [ -z "$gerrit_username" -o "$gerrit_username" = "$GERRIT_UNKNOWN_USER" ]; then
+	# Looks like we need to get them started
+	# TODO finish this :)
+    fi
+}
+
+if [ -z "$BROWSER" -o ! -x "$BROWSER" ]; then
+    notice "Can't find web browser!" "You must have a web browser installed to setup gerrit, did you remove it!?"
+    return
+fi
+
+if $HAVEX; then
+    setup_gerrit
+else
+    notice "Must run under X" "You need X windows to display your web browser for gerrit setup!"
+fi

@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# 02bin - Setup user's $HOME/bin
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Sun Dec 27 07:29:17 EST 2015
+#
+
+setup_bindir() {
+    cp -vpr $(dirname $ME)'/../bin' $HOME
+
+    # Do they have $HOME/bin in their path already?
+    case $PATH in
+	*$HOME/bin* ) return ;;
+    esac
+
+    # Remove old entry (if any)
+    if grep '## START DEVSETUP ##' ~/.bashrc > /dev/null 2>&1; then
+	sed '/^## START DEVSETUP ##/,/^## END DEVSETUP ##/d' -i ~/.bashrc
+    fi
+
+    # Append our new path
+    echo -e '## START DEVSETUP ##\nexport PATH=$HOME/bin:$PATH\n## END DEVSETUP ##' >> ~/.bashrc
+    chmod 600 ~/.bashrc
+}
+
+setup_bindir

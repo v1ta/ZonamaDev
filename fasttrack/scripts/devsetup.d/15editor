@@ -7,9 +7,6 @@
 # Created: Sat Dec 26 20:37:37 EST 2015
 #
 
-## Add any other editors you want to consider
-EDITORS='vim nano gedit'
-
 setup_visual() {
     while [ ! -f ~/.visual ];
     do
@@ -24,16 +21,20 @@ setup_visual() {
 
 	local r=$(zenity --list --title="Choose your favorite editor" --column="Editor" --column="Path" $args)
 
-	echo "ret=$? r=[$r]"
-
 	if [ -z "$r" ]; then
 	    notice "Editor" "When in doubt we choose nano!"
-	    echo nano > ~/.visual
+	    echo $(type -P nano) > ~/.visual
 	else
 	    notice "Editor" "Set editor to $r"
-	    echo $r > ~/.visual
+	    echo $(type -P $r) > ~/.visual
 	fi
     done
+
+    if grep '~/.visual' ~/.bashrc; then
+	:
+    else
+	echo 'export VISUAL=$(cat ~/.visual 2> /dev/null)' >> ~/.bashrc
+    fi
 }
 
 if $HAVEX; then

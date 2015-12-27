@@ -20,5 +20,26 @@ setup_sshkey() {
     fi
 }
 
+setup_sshconfig() {
+    # Remove old entry (if any)
+    if grep '## START DEVSETUP ##' ~/.ssh/config > /dev/null 2>&1; then
+	sed '/^## START DEVSETUP ##/,/^## END DEVSETUP ##/d' -i ~/.ssh/config
+    fi
+
+    local gerrit_username=$(cat ~/.gerrit_username 2>/dev/null)
+
+    # Do we know the GERRIT_USERNAME yet?
+    if [ -z "$gerrit_username" ]; then
+	# Default to this so gerrit tests fail and ask user to register
+	gerrit_username=$GERRIT_UNKNOWN_USER
+    fi
+
+    echo -e "## START DEVSETUP ##\nStrictHostKeyChecking no\n\nHost ${GERRIT_HOST}\n\tUser ${gerrit_username}\n\tPort ${GERRIT_PORT}\n\tIdentityFile ~/.ssh/id_rsa\n## END DEVSETUP ##" >> ~/.ssh/config
+    chmod 600 ~/.ssh/config
+    echo "Set ~/.ssh/config to:"
+    cat ~/.ssh/config
+}
+
 setup_sshkey
 
+setup_sshconfig

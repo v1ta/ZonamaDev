@@ -7,8 +7,6 @@
 # Created: Sat Dec 26 15:39:04 EST 2015
 #
 
-BROWSER=$( (for i in chromium google-chrome chromium-browser firefox; do type -P $i; done)|head -1)
-
 TAG=$(basename $ME)
 
 HAVEX=false
@@ -33,6 +31,9 @@ if [ "X$CHILD_STATUS" = "X" -a "X$1" = "X" ]; then
     exit $st
 fi
 
+## Assets Directory
+ASSETS_DIR=$(dirname $ME)'/../assets/'
+
 # Trap various failures
 trap 'echo $? > $CHILD_STATUS;msg "UNEXPECTED EXIT=$?"' 0
 trap 'msg "UNEXPECTED SIGNAL SIGHUP!";echo 21 > $CHILD_STATUS' HUP
@@ -46,7 +47,7 @@ msg() {
 
 notice() {
     if $HAVEX; then
-	notify-send --icon=/home/vagrant/swgemu_icon.png --expire-time=0 "$1" "$2"
+	notify-send --icon=${ASSETS_DIR}/swgemu_icon.png --expire-time=0 "$1" "$2"
     else
 	echo "**NOTICE** $1: $2"
     fi
