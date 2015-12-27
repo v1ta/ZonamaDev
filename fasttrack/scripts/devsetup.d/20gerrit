@@ -58,7 +58,7 @@ check_gerrit() {
     local tmp=$(mktemp /tmp/check_gerritXXXXXX.tmp)
     local err=$(mktemp /tmp/check_gerritXXXXXX.err)
 
-    if scp review.swgemu.com:hooks/commit-msg $tmp > /dev/null 2> $err; then
+    if scp ${GERRIT_HOST}:hooks/commit-msg $tmp > /dev/null 2> $err; then
 	echo "Gerrit seems happy with us!"
 
 	if $GERRIT_FIRSTTIME; then

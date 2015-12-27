@@ -62,6 +62,11 @@ error() {
     exit $err
 }
 
+command_window() {
+    # TODO do we need to detect other terminals in case this one's not installed?
+    xfce4-terminal --maximize --icon=${ASSETS_DIR}/swgemu_icon.png --hide-menubar --hide-toolbar --title="$1" --command="$2"
+}
+
 # We at least made it this far!
 echo 252 > $CHILD_STATUS
 

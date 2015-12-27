@@ -1,0 +1,90 @@
+#!/bin/bash
+#
+# 20clone - Clone the git repos
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Sun Dec 27 15:04:30 EST 2015
+#
+
+check_repos() {
+    # is it cloned already?
+    local missing=''
+
+    for i in $REPOS
+    do
+	if [ -d $i/.git ]; then
+	    echo "Repo $i is already cloned in $WORKSPACE/$i"
+	else
+	    missing="$missing $i"
+	fi
+    done
+
+    if [ -z "$missing" ]; then
+	return
+    fi
+
+    if zenity --question  --text="You're missing the following repos: $missing\n\nWould you like to clone them now?"; then
+	local status_pipe=$(mktemp /tmp/clone-status-pipe-XXXXXX)
+
+	mknod $status_pipe p
+	command_window "Clone Status" "tail -f $status_pipe"  &
+
+	(set -x
+	for i in $missing
+	do
+	    git clone ssh://${GERRIT_HOST}/${i}.git
+	    scp ${GERRIT_HOST}:hooks/commit-msg ${i}/.git/hooks
+	done
+	set +x
+	for i in $missing
+	do
+	    if [ "X$i" = "XCore3" ]; then
+		(set -x;cd $i;git checkout -b unstable origin/unstable; sed -e '/push = /d' -e '/url/s!$!\n\tpush = HEAD:refs/for/unstable!' -i .git/config)
+	    fi
+	done
+	echo "** DONE **"
+	) 2>&1 | tee $status_pipe
+	zenity --info --text="Clone process complete\nPress [OK] to discard the log window"
+	fuser -k $status_pipe
+	rm -f $status_pipe
+    else
+	notice "Git Repositories Missing" "Need to clone: $missing\nYou will not be able to build the server until you complete this step."
+	exit 203
+    fi
+}
+
+make_links() {
+    (set -x
+	rm -f MMOCoreORB MMOEngine Core3/MMOEngine
+	[ -d Core3 ] && (cd $PWD/Core3;ln -s ../PublicEngine/MMOEngine .)
+	[ -d PublicEngine ] && ln -s PublicEngine/MMOEngine .
+	[ -d Core3 ] && ln -s Core3/MMOCoreORB .
+	[ -f PublicEngine/MMOEngine/bin/idlc ] && chmod 755 PublicEngine/MMOEngine/bin/idlc && sudo ln -s $PWD/PublicEngine/MMOEngine/bin/idlc /usr/local/bin
+    )
+
+    local englib=PublicEngine/MMOEngine/lib/unix/libengine3.a
+
+    if [ ! -L $englib ]; then
+      echo "Setup unix library link"
+      mkdir -p PublicEngine/MMOEngine/lib/unix > /dev/null 2>&1
+      (
+      cd PublicEngine/MMOEngine/lib/unix
+      if [ $(uname -s) = "Darwin" ]; then
+	ln -s ../lion64/libengine3.a
+      else
+	case $(uname -m) in
+	  x86_64 ) ln -s ../linux64/libengine3.a ;;
+	  i386 ) ln -s ../linux32/libengine3.a ;;
+	esac
+      fi
+      )
+    fi
+
+    echo "Using engine library: $(readlink $englib)"
+}
+
+pushd $WORKSPACE
+check_repos
+make_links
+popd
