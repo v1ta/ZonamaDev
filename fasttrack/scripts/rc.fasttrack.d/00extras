@@ -9,7 +9,7 @@
 
 setup_extras() {
     # Figure out if user gave us extra packages to install
-    local extras=$(egrep -hv '^#' extras ~vagrant/extras $(dirname $ME)/../../extras 2> /dev/null|sort -u|tr '\n' '\40')
+    local extras=$(egrep -hv '^#' extras ~vagrant/extras $(dirname $ME)/../../../extras 2> /dev/null|sort -u|tr '\n' '\40')
 
     if [ -z "$extras" ]; then
 	msg "No extras packages found"
