@@ -32,7 +32,7 @@ if [ "X$CHILD_STATUS" = "X" -a "X$1" = "X" ]; then
 fi
 
 ## Assets Directory
-ASSETS_DIR=$(dirname $ME)'/../assets/'
+ASSETS_DIR=$(dirname $ME)'/../assets'
 
 # Trap various failures
 trap 'echo $? > $CHILD_STATUS;msg "UNEXPECTED EXIT=$?"' 0

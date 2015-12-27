@@ -7,7 +7,7 @@
 ## GERRIT SETTINGS
 GERRIT_HOST=review.swgemu.com
 GERRIT_PORT=29418
-GERRIT_REGISTER_URL='http://'${GERRIT_HOST}'/login/#/register/q/status:open'
+GERRIT_REGISTER_URL='http://'${GERRIT_HOST}'/login/%23%2Fregister%2Fq%2Fstatus%3Aopen'
 GERRIT_UNKNOWN_USER='darthvaderdev'
 #
 ## Autoconfig Browser to use
