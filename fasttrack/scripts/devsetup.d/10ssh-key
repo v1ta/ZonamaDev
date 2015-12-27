@@ -11,7 +11,9 @@ setup_sshkey() {
     if [ ! -f $HOME/.ssh/id_rsa ]; then
 	msg "Generating SSH Key"
 	rm -f $HOME/.ssh/id_rsa $HOME/.ssh/id_rsa.pub
-	ssh-keygen -t rsa -q -N "" -C "emudev-"$(date +%Y%m%d)"-$(git config --get user.email)" -f ~/.ssh/id_rsa
+	if ssh-keygen -t rsa -q -N "" -C "emudev-"$(date +%Y%m%d)"-$(git config --get user.email)" -f ~/.ssh/id_rsa; then
+	    notice 'SSH Key Created' 'We created a new ssh key for you!\n\nPlease make sure to update your Gerrity key settings!'
+	fi
 	[ -n "$SSH_AGENT_PID" ] && ssh-add
     else
 	msg "SSH $HOME/.ssh/id_rsa already exists"

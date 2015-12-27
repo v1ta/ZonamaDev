@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+# 15editor - Choose the user's favorite editor
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Sat Dec 26 20:37:37 EST 2015
+#
+
+## Add any other editors you want to consider
+EDITORS='vim nano gedit'
+
+setup_visual() {
+    while [ ! -f ~/.visual ];
+    do
+	local args=''
+	for i in $EDITORS; do
+	    local path=$(type -P $i)
+
+	    if [ -n "$path" ]; then
+		args="$args $i $path"
+	    fi
+	done
+
+	local r=$(zenity --list --title="Choose your favorite editor" --column="Editor" --column="Path" $args)
+
+	echo "ret=$? r=[$r]"
+
+	if [ -z "$r" ]; then
+	    notice "Editor" "When in doubt we choose nano!"
+	    echo nano > ~/.visual
+	else
+	    notice "Editor" "Set editor to $r"
+	    echo $r > ~/.visual
+	fi
+    done
+}
+
+if $HAVEX; then
+    setup_visual
+else
+    msg "Can't prompt user w/o X"
+fi

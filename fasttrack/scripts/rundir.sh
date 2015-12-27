@@ -11,6 +11,12 @@ BROWSER=$( (for i in chromium google-chrome chromium-browser firefox; do type -P
 
 TAG=$(basename $ME)
 
+HAVEX=false
+
+if xset q > /dev/null 2>&1; then
+    HAVEX=true
+fi
+
 # Run output through some stuff to make display more useful and capture errors
 if [ "X$CHILD_STATUS" = "X" -a "X$1" = "X" ]; then
     export CHILD_STATUS="/tmp/${TAG}-status-$$"
@@ -36,6 +42,14 @@ trap 'msg "UNEXPECTED SIGNAL SIGTERM!";echo 23 > $CHILD_STATUS' TERM
 msg() {
     local hd="##"$(echo "$1"|sed 's/./#/g')"##"
     echo -e "$hd\n# $1 #\n$hd"
+}
+
+notice() {
+    if $HAVEX; then
+	notify-send --icon=/home/vagrant/swgemu_icon.png --expire-time=0 "$1" "$2"
+    else
+	echo "**NOTICE** $1: $2"
+    fi
 }
 
 error() {
@@ -64,7 +78,7 @@ do
     source $script
 done
 
-msg "** $ME COMPLETE AFTER $SECONDS SECOND(S)"
+msg "$ME COMPLETE AFTER $SECONDS SECOND(S)"
 
 #############
 ## Success ##
