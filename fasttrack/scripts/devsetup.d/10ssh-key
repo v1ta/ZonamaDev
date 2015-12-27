@@ -12,7 +12,7 @@ setup_sshkey() {
 	msg "Generating SSH Key"
 	rm -f $HOME/.ssh/id_rsa $HOME/.ssh/id_rsa.pub
 	if ssh-keygen -t rsa -q -N "" -C "emudev-"$(date +%Y%m%d)"-$(git config --get user.email)" -f ~/.ssh/id_rsa; then
-	    notice 'SSH Key Created' 'We created a new ssh key for you!\n\nPlease make sure to update your Gerrity key settings!'
+	    notice 'SSH Key Created' 'We created a new ssh key for you!\n\nPlease make sure to update your Gerrit key settings!'
 	fi
 	[ -n "$SSH_AGENT_PID" ] && ssh-add
     else

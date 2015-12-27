@@ -28,7 +28,7 @@ setup_gerrit() {
 
 	echo "url=[$url]"
 	
-        if xsel -i < ~/.ssh/id_rsa.pub; then
+        if xsel -b -i < ~/.ssh/id_rsa.pub; then
 	    notice "SSH Key" "Your ssh key has been added to the clipboard so you can paste it into Gerrit's registration form"
 	fi
 
@@ -89,7 +89,7 @@ if $HAVEX; then
     # TODO should we count the number of loops and at some point kill ssh keys etc?
     GERRIT_RETRY=true
 
-    while $GERRIT_RETY
+    while $GERRIT_RETRY
     do
 	GERRIT_RETRY=false
 	setup_gerrit
