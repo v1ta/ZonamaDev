@@ -111,8 +111,9 @@ ucf --purge /boot/grub/menu.lst
 
 export DEBIAN_FRONTEND=noninteractive
 
-opts='-o Dpkg::Options::="--force-confnew" -o APT::Install-Suggests="false" -o APT::Install-Recommends="false"'
+opts='-o Dpkg::Options::="--force-confnew" -o APT::Install-Suggests="false" --no-install-recommends'
 
+set -x
 # exit if anything returns error
 set -e
 
@@ -133,6 +134,7 @@ apt-get -y autoremove
 apt-get -y clean
 
 systemctl set-default -f multi-user.target
+set +x
 
 #####################
 ## INSTALL ECLIPSE ##
