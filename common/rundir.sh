@@ -152,7 +152,7 @@ if [ -n "$1" ]; then
 
     for i in $@
     do
-	fn="${ME}'.d'/$i"
+	fn="${ME}.d/$i"
 	if [ -f $fn ]; then
 	    scripts="${scripts} ${fn}"
 	else
