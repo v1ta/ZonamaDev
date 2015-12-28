@@ -47,42 +47,6 @@ if [ "X$CHILD_STATUS" = "X" -a "X$1" = "X" ]; then
     exit $st
 fi
 
-## Run LOCK
-LOCKTMP=/tmp/${TAG}.lock-XXXXXX
-LOCKFILE=/tmp/${TAG}.lock
-
-echo "$$ "$(date +%s) > ${LOCKFILE}
-
-if ln ${LOCKTMP} ${LOCKFILE}; then
-    rm -f ${LOCKTMP}
-else
-    set -- $(cat ${LOCKFILE} 2> /dev/null)
-    pid=$1; tm_lock=$2; tm_now=$(date +%s)
-
-    let "tm_delta=${tm_now} - ${tm_lock}"
-
-    if kill -0 $pid; then
-	msg "PID $pid HAS HAD LOCK FOR ${tm_delta} SECOND(S), EXITING"
-	exit 0
-    else
-	msg "Stealing lock from PID $pid which has gone away, locked ${tm_delta} second(s) ago"
-	if ln -f ${LOCKTMP} ${LOCKFILE}; then
-	    set -- $(cat ${LOCKFILE} 2> /dev/null)
-	    pid=$1; tm_lock=$2
-
-	    if [ "$pid" -eq "$$" ]; then
-		msg "STOLE LOCK, PROCEEDING"
-	    else
-		msg "Can't steal lock, somone got in before us!? pid=${pid}"
-		exit 2
-	    fi
-	else
-	    msg "Failed to steal lock, **ABORT**"
-	    exit 1
-	fi
-    fi
-fi
-
 ## Assets Directory
 ASSETS_DIR=$(dirname $ME)'/../assets'
 
@@ -128,6 +92,42 @@ echo 252 > $CHILD_STATUS
 ###################
 
 msg "START $ME git-tag: "$(cd $(dirname $ME);git describe --always)
+
+## Run LOCK
+LOCKTMP=$(mktemp /tmp/${TAG}.lock-XXXXXX)
+LOCKFILE=/tmp/${TAG}.lock
+
+echo "$$ "$(date +%s) > ${LOCKTMP}
+
+if ln ${LOCKTMP} ${LOCKFILE}; then
+    rm -f ${LOCKTMP}
+else
+    set -- $(cat ${LOCKFILE} 2> /dev/null)
+    pid=$1; tm_lock=$2; tm_now=$(date +%s)
+
+    let "tm_delta=${tm_now} - ${tm_lock}"
+
+    if kill -0 $pid; then
+	msg "PID $pid HAS HAD LOCK FOR ${tm_delta} SECOND(S), EXITING"
+	exit 0
+    else
+	msg "Stealing lock from PID $pid which has gone away, locked ${tm_delta} second(s) ago"
+	if ln -f ${LOCKTMP} ${LOCKFILE}; then
+	    set -- $(cat ${LOCKFILE} 2> /dev/null)
+	    pid=$1; tm_lock=$2
+
+	    if [ "$pid" -eq "$$" ]; then
+		msg "STOLE LOCK, PROCEEDING"
+	    else
+		msg "Can't steal lock, somone got in before us!? pid=${pid}"
+		exit 2
+	    fi
+	else
+	    msg "Failed to steal lock, **ABORT**"
+	    exit 1
+	fi
+    fi
+fi
 
 cd $(dirname $ME)
 
