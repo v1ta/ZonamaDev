@@ -51,7 +51,7 @@ fi
 ASSETS_DIR=$(dirname $ME)'/../assets'
 
 # Trap various failures
-trap 'echo $? > $CHILD_STATUS;rm -f ${LOCKFILE} ${LOCKTMP};msg "UNEXPECTED EXIT=$?"' 0
+trap 'echo $? > '${CHILD_STATUS}';rm -f ${LOCKFILE} ${LOCKTMP};msg "UNEXPECTED EXIT=$?"' 0
 trap 'msg "UNEXPECTED SIGNAL SIGHUP!";echo 21 > $CHILD_STATUS' HUP
 trap 'msg "UNEXPECTED SIGNAL SIGINT!";echo 22 > $CHILD_STATUS' INT
 trap 'msg "UNEXPECTED SIGNAL SIGTERM!";echo 23 > $CHILD_STATUS' TERM
@@ -139,9 +139,17 @@ scripts=$(echo ${ME}'.d'/*)
 
 # Did the user call us with specific steps?
 if [ -n "$1" -a -f "${ME}'.d'/$1" ]; then
-    scripts=$@
-    msg "Custom steps: $scripts"
+    msg "Custom steps: $@"
+    # 00* always run
+    scripts=$(echo ${ME}'.d'/00*)
+
+    for i in $@
+    do
+	scripts="${scripts} ${ME}'.d/'$i"
+    done
 fi
+
+echo $scripts
 
 for script in $scripts
 do
