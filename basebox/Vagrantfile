@@ -113,22 +113,16 @@ Vagrant.configure(2) do |config|
 
   # Execute {first|each}boot.sh
   config.vm.provision :shell, name: "firstbooth", run: "always", inline: <<-SHELL
-    if [ ! -f "ZonamaDev/basebox/firstboot.sh" ]; then
+    if [ ! -f "ZonamaDev/basebox/scripts/firstboot.sh" ]; then
       echo "** Fresh Guest **"
       apt-get update
       apt-get -y install git
       git clone https://github.com/lordkator/ZonamaDev.git
-      exec ZonamaDev/basebox/firstboot.sh
     else
       echo "** Existing Guest **"
       pushd ZonamaDev;git pull;popd
-
-      if [ -f "ZonamaDev/basebox/eachboot.sh" ]; then
-        exec ZonamaDev/basebox/eachboot.sh
-      else
-        exec ZonamaDev/basebox/firstboot.sh
-      fi
     fi
+    exec ZonamaDev/basebox/scripts/firstboot.sh
   SHELL
 
   # Make sure updated kernel is loaded etc.

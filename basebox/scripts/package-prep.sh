@@ -32,24 +32,26 @@ dd if=/dev/zero of="$swappart" bs=1M
 
 chown -R vagrant:vagrant ~vagrant
 
-rm -f ~vagrant/.suspend_devsetup ~vagrant
+# Clean up any misc stuff in dev's user account
+(cd ~vagrant; rm -rf .suspend_devsetup .bash* .profile .inputrc .vim* .cache)
 
+# Stop all the noise
 service lightdm stop
 service vboxadd stop
 service mysql stop
 service syslog stop
 
+# Make sure VBox service really stops
 vbpid=$(cat /var/run/vboxadd-service.pid 2> /dev/null)
 
 [ -n "$vbpid" ] && kill -9 $vbpid
 
+# Cleanup all the logs
 find /var/log /etc/machine-id /var/lib/dbus/machine-id -type f | while read fn
 do
     echo "Zero $f"
     cp /dev/null "$f"
 done
-
-dbus-uuidgen > /var/lib/dbus/machine-id
 
 echo "Fill filesystem with 0 bytes to reduce box size"
 dd if=/dev/zero of=/EMPTY bs=1M

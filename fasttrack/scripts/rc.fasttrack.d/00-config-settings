@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# Settings for rc.faststart scripts
+#
+# NOTE: This file is named 00-config-settings to make sure it loads first, don't make anything load sooner than this file!
+#
+## Fix machine-id if it's blank (first fresh boot)
+if [ ! -s /var/lib/dbus/machine-id ]; then
+    # New machine-id
+    dbus-uuidgen > /var/lib/dbus/machine-id
+    systemd-machine-id-setup
+fi
+
+SWGEMUDEV_VERSION=$(cat /.swgemudev.version)
+SWGEMUDEV_GITURL=$(cat /.swgemudev.giturl)
