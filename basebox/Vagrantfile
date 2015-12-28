@@ -116,7 +116,7 @@ Vagrant.configure(2) do |config|
     if [ ! -f "ZonamaDev/basebox/scripts/firstboot.sh" ]; then
       echo "** Fresh Guest **"
       apt-get update
-      apt-get -y install git
+      apt-get -y install git moreutils
       git clone https://github.com/lordkator/ZonamaDev.git
     else
       echo "** Existing Guest **"

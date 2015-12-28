@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# 15customize - Customize system settings
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Mon Dec 28 16:42:16 EST 2015
+#
+
+usermod -c "vagrant" vagrant
+usermod vagrant -a -G adm
+
+# Add rc.fasttrak
+echo -e '## ZonamaDev Boot\n(set +e;cd ~vagrant;(git clone https://github.com/lordkator/ZonamaDev.git || (cd ZonamaDev;git stash;git pull)) 2> /dev/null;ZonamaDev/fasttrack/scripts/rc.fasttrack;exit 0) > /tmp/rc.fasttrack.out 2>&1' >> /etc/rc.local
+
+# Move exit to end (if any)
+sed -e '/^exit/{H;d}' -e '${p;x}' -i /etc/rc.local
+

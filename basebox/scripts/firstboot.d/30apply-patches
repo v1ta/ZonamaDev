@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# 30apply-patches - Apply patch files
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Mon Dec 28 16:46:04 EST 2015
+#
+
+for i in $(dirname $ME)'/../patches/'*
+do
+    msg "Patch $i: APPLY"
+    if (cd /;exec patch --verbose -p0 -Nft) < "$i"; then
+	msg "Patch $i: SUCCESS"
+    else
+	st=$?
+	if [ $st -eq 1 ]; then
+	    msg "Patch $i: WARNING, Returned $st"
+	else
+	    msg "Patch $i: FAILED! Returned $st"
+	    exit 12
+	fi
+    fi
+done

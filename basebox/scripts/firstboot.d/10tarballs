@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# 10tarballs - Untar "pre-saved" config
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Mon Dec 28 16:42:16 EST 2015
+#
+
+(
+    umask 0
+    cd ~vagrant
+    for i in $(dirname $ME)'/../tarballs/'*
+    do
+	msg "unpack $i"
+	tar xpvf $i
+    done
+)

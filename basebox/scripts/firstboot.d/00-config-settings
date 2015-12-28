@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# Settings for firstboot scripts
+#
+# NOTE: This file is named 00-config-settings to make sure it loads first, don't make anything load sooner than this file!
+#
+source $(dirname $ME)/../../../common/basebox.config
+
+# Have we ran before?
+if [ -f ~vagrant/.firstboot.ran ]; then
+    msg "** ALREADY RAN, REMOVE ~vagrant/.firstboot.ran TO FORCE RE-RUN **"
+    exit 0
+fi

@@ -1,13 +1,1 @@
-#!/bin/bash
-#
-# rc.fasttrack - System scripts to run at boot time
-#
-# Author: Lord Kator <lordkator@swgemu.com>
-#
-# Created: Fri Dec 25 19:30:31 EST 2015
-#
-pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
-export ME=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
-popd > /dev/null
-source $(dirname $ME)/rundir.sh
-# vi:sw=4 ft=sh
+../../common/rundir.sh
