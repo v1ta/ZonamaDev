@@ -124,7 +124,7 @@ msg "Install Packages"
 
 echo ">> PACKAGES: $PACKAGES $EXTRAS"
 
-apt-get -y --no-install-recommends install $PACKAGES $EXTRAS
+apt-get -y install $PACKAGES $EXTRAS
 
 apt-get -y autoremove
 
