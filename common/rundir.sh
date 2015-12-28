@@ -113,7 +113,7 @@ delete_on_exit $LOCKTMP
 echo "$$ "$(date +%s) > ${LOCKTMP}
 
 if ln ${LOCKTMP} ${LOCKFILE}; then
-    delete_on_exit $LOCKFILE
+    :
 else
     read pid tm_lock < ${LOCKFILE}
     tm_now=$(date +%s)
@@ -128,7 +128,6 @@ else
 	if ln -f ${LOCKTMP} ${LOCKFILE}; then
 	    read pid tm_lock < ${LOCKFILE}
 	    if [ "$pid" -eq "$$" ]; then
-		delete_on_exit $LOCKFILE
 		msg "STOLE LOCK, PROCEEDING"
 	    else
 		msg "Can't steal lock, somone got in before us!? pid=${pid}"
@@ -140,6 +139,8 @@ else
 	fi
     fi
 fi
+
+delete_on_exit $LOCKFILE
 
 cd $(dirname $ME)
 
