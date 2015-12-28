@@ -7,7 +7,7 @@
 # Created: Wed Dec 23 19:14:02 EST 2015
 #
 
-export PACKAGES="dkms build-essential linux-headers-$(uname -r) xfce4 xfce4-goodies lightdm zenity xsel openjdk-7-jre google-chrome-stable vim vim-doc vim-scripts avahi-daemon ntp ntpdate wget unzip"
+export PACKAGES="dkms build-essential linux-headers-$(uname -r) xfce4 xfce4-goodies lightdm zenity xsel mysql-server mysql-workbench gdb autoconf automake autotools-dev libdb-dev liblua5.1-0-dev libmysqlclient-dev libssl-dev gdb gccxml clang openjdk-7-jre google-chrome-stable vim vim-doc vim-scripts avahi-daemon ntp ntpdate wget unzip"
 export ECLIPSE_URL="http://eclipse.bluemix.net/packages/mars.1/data/eclipse-cpp-mars-1-linux-gtk-x86_64.tar.gz"
 
 #################################################
