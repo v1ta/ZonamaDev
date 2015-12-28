@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# 01check-already-ran - have we already ran?
+#
+if [ -f ~vagrant/.firstboot.ran ]; then
+    msg "** ALREADY RAN, REMOVE ~vagrant/.firstboot.ran TO FORCE RE-RUN **"
+    exit 0
+fi
