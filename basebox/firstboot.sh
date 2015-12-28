@@ -111,7 +111,8 @@ ucf --purge /boot/grub/menu.lst
 
 export DEBIAN_FRONTEND=noninteractive
 
-opts='-o Dpkg::Options::="--force-confnew" -o APT::Install-Suggests="false" -o Debug::pkgDPkgPM=true --no-install-recommends'
+# opts='-o Dpkg::Options::="--force-confnew" -o APT::Install-Suggests="false" -o Debug::pkgDPkgPM=true --no-install-recommends'
+opts='-o Dpkg::Options::="--force-confnew" -o APT::Install-Suggests="false" --no-install-recommends'
 
 set -x
 # exit if anything returns error
@@ -146,7 +147,7 @@ if [ "X$ECLIPSE_URL" != "X" ]; then
     pushd ~vagrant
     mkdir Downloads || echo "Created Downloads directory"
     pushd Downloads
-    if wget "$ECLIPSE_URL"; then
+    if wget --progress=dot:giga "$ECLIPSE_URL"; then
 	:
     else
 	echo "** wget returned $?"
