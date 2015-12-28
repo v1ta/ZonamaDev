@@ -8,7 +8,7 @@ Download and install Git, VirtualBox and Vagrant
 
 ## Windows Host
 
--## Fast Start
+## Fast Start
 
 curl http://downloads.lordkator.com/bootstrap.sh | bash
 
