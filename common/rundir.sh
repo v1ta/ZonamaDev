@@ -34,9 +34,9 @@ if [ "X$CHILD_STATUS" = "X" -a "X$1" = "X" ]; then
     echo 253 > $CHILD_STATUS
     ts=$(type -P ts)
     if [ -n "$TS" ]; then
-	$ME - 2>&1 | $ts -s | logger -i -t ${TAG} -s 2>&1
+	$ME -- $* 2>&1 | $ts -s | logger -i -t ${TAG} -s 2>&1
     else
-	$ME - 2>&1 | logger -i -t ${TAG} -s 2>&1
+	$ME -- $* 2>&1 | logger -i -t ${TAG} -s 2>&1
     fi
     st=$(<$CHILD_STATUS)
     if [ $st -eq 0 ]; then
@@ -91,7 +91,11 @@ echo 252 > $CHILD_STATUS
 ## CHILD PROCESS ##
 ###################
 
-msg "START $ME git-tag: "$(cd $(dirname $ME);git describe --always)
+if [ "X$1" = "X--" ]; then
+    shift
+fi
+
+msg "START $ME $* git-tag: "$(cd $(dirname $ME);git describe --always)
 
 ## Run LOCK
 LOCKTMP=$(mktemp /tmp/${TAG}.lock-XXXXXX)
@@ -131,7 +135,15 @@ fi
 
 cd $(dirname $ME)
 
-for script in ${ME}'.d'/*
+scripts=$(echo ${ME}'.d'/*)
+
+# Did the user call us with specific steps?
+if [ -n "$1" -a -f "${ME}'.d'/$1" ]; then
+    scripts=$@
+    msg "Custom steps: $scripts"
+fi
+
+for script in $scripts
 do
     msg "Run $script md5:"$(md5sum $script)
     source $script
