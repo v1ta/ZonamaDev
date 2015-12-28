@@ -75,7 +75,7 @@ msg "START $ME (git: "$(cd $(dirname $ME);git describe --always)" md5:"$(md5sum 
 #####################
 msg "Unpack Tarballs"
 
-for i in $(dirname $ME)'/tarballs/'*
+for i in $(dirname $ME)'/../tarballs/'*
 do
     msg "unpack $i"
     (umask 0;cd ~vagrant;tar xpvf $i)
@@ -163,7 +163,7 @@ fi
 #######################
 msg "Apply Patches"
 
-for i in $(dirname ${BASH_SOURCE[0]})'/patches/'*
+for i in $(dirname ${BASH_SOURCE[0]})'/../patches/'*
 do
     msg "Patch $i: APPLY"
     if (cd /;exec patch --verbose -p0 -Nft) < "$i"; then
