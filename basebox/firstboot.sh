@@ -28,6 +28,8 @@ if [ -f ~vagrant/.firstboot.ran ]; then
     exit 0
 fi
 
+date +%s > ~vagrant/.suspend_devsetup
+
 # Run output through some stuff to make display more useful and capture errors
 if [ "X$FIRSTBOOT_STATUS" = "X" -a "X$1" = "X" ]; then
     export FIRSTBOOT_STATUS="/tmp/firstboot-status-$$"
@@ -122,7 +124,7 @@ msg "Install Packages"
 
 echo ">> PACKAGES: $PACKAGES $EXTRAS"
 
-apt-get -y install $PACKAGES $EXTRAS
+apt-get -y --no-install-recommends install $PACKAGES $EXTRAS
 
 apt-get -y autoremove
 
