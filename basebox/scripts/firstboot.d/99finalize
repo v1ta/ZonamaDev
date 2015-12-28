@@ -1,0 +1,2 @@
+chown -R vagrant:vagrant ~vagrant
+(date;uname -a) > ~vagrant/.firstboot.ran
