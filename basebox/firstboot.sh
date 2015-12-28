@@ -113,7 +113,8 @@ export DEBIAN_FRONTEND=noninteractive
 
 # opts='-o Dpkg::Options::="--force-confnew" -o APT::Install-Suggests="false" -o Debug::pkgDPkgPM=true --no-install-recommends'
 # opts='-o Dpkg::Options::="--force-confnew" -o APT::Install-Suggests="false" --no-install-recommends'
-opts='-o Dpkg::Options::="--force-confnew" --no-install-recommends'
+# opts='-o Dpkg::Options::="--force-confnew" --no-install-recommends'
+opts='-o Dpkg::Options::="--force-confnew"'
 
 set -x
 # exit if anything returns error
