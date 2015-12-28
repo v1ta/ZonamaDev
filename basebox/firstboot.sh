@@ -7,7 +7,7 @@
 # Created: Wed Dec 23 19:14:02 EST 2015
 #
 
-export PACKAGES="dkms build-essential linux-headers-$(uname -r) xfce4 xfce4-goodies lightdm zenity xsel openjdk-7-jre google-chrome-stable vim vim-doc vim-scripts avahi-daemon ntp ntpdate wget unzip"
+export PACKAGES="dkms build-essential linux-headers-$(uname -r) xfce4 xfce4-goodies lightdm zenity xsel mysql-server mysql-workbench gdb autoconf automake autotools-dev libdb-dev liblua5.1-0-dev libmysqlclient-dev libssl-dev gdb gccxml clang openjdk-7-jre google-chrome-stable vim vim-doc vim-scripts avahi-daemon ntp ntpdate wget unzip"
 export ECLIPSE_URL="http://eclipse.bluemix.net/packages/mars.1/data/eclipse-cpp-mars-1-linux-gtk-x86_64.tar.gz"
 
 #################################################
@@ -27,6 +27,8 @@ if [ -f ~vagrant/.firstboot.ran ]; then
     logger -i -t firstboot -s "** ALREADY RAN, REMOVE ~vagrant/.firstboot.ran TO FORCE RE-RUN **"
     exit 0
 fi
+
+date +%s > ~vagrant/.suspend_devsetup
 
 # Run output through some stuff to make display more useful and capture errors
 if [ "X$FIRSTBOOT_STATUS" = "X" -a "X$1" = "X" ]; then
@@ -109,6 +111,8 @@ ucf --purge /boot/grub/menu.lst
 
 export DEBIAN_FRONTEND=noninteractive
 
+opts='-o Dpkg::Options::="--force-confnew" -o APT::Install-Suggests="false" -o APT::Install-Recommends="false"'
+
 # exit if anything returns error
 set -e
 
@@ -116,15 +120,17 @@ set -e
 apt-get update
 
 # Upgrade whatever we can
-apt-get -y -o Dpkg::Options::="--force-confnew" dist-upgrade
+apt-get -y ${opts} dist-upgrade
 
 msg "Install Packages"
 
 echo ">> PACKAGES: $PACKAGES $EXTRAS"
 
-apt-get -y install $PACKAGES $EXTRAS
+apt-get -y ${opts} install $PACKAGES $EXTRAS
 
 apt-get -y autoremove
+
+apt-get -y clean
 
 systemctl set-default -f multi-user.target
 

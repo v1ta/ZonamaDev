@@ -48,6 +48,7 @@ msg() {
 notice() {
     if $HAVEX; then
 	notify-send --icon=${ASSETS_DIR}/swgemu_icon.png --expire-time=0 "$1" "$2"
+	echo "USER NOTICE: $1 - $2"
     else
 	echo "**NOTICE** $1: $2"
     fi
