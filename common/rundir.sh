@@ -51,7 +51,9 @@ fi
 ASSETS_DIR=$(dirname $ME)'/../assets'
 
 # Trap various failures
-trap 'echo $? > '${CHILD_STATUS}';rm -f ${LOCKFILE} ${LOCKTMP};msg "UNEXPECTED EXIT=$?"' 0
+TMPFILES=''
+
+trap 'echo $? > '${CHILD_STATUS}';rm -f ${TMPFILES};msg "UNEXPECTED EXIT=$?"' 0
 trap 'msg "UNEXPECTED SIGNAL SIGHUP!";echo 21 > $CHILD_STATUS' HUP
 trap 'msg "UNEXPECTED SIGNAL SIGINT!";echo 22 > $CHILD_STATUS' INT
 trap 'msg "UNEXPECTED SIGNAL SIGTERM!";echo 23 > $CHILD_STATUS' TERM
@@ -68,6 +70,10 @@ notice() {
     else
 	echo "**NOTICE** $1: $2"
     fi
+}
+
+delete_on_exit() {
+    TMPFILES="'${TMPFILES}' '${1}'"
 }
 
 error() {
@@ -101,13 +107,15 @@ msg "START $ME $* git-tag: "$(cd $(dirname $ME);git describe --always)
 LOCKTMP=$(mktemp /tmp/${TAG}.lock-XXXXXX)
 LOCKFILE=/tmp/${TAG}.lock
 
+delete_on_exit $LOCKTMP
+
 echo "$$ "$(date +%s) > ${LOCKTMP}
 
 if ln ${LOCKTMP} ${LOCKFILE}; then
-    rm -f ${LOCKTMP}
+    delete_on_exit $LOCKFILE
 else
-    set -- $(cat ${LOCKFILE} 2> /dev/null)
-    pid=$1; tm_lock=$2; tm_now=$(date +%s)
+    read pid tm_lock < ${LOCKFILE}
+    tm_now=$(date +%s)
 
     let "tm_delta=${tm_now} - ${tm_lock}"
 
@@ -117,10 +125,9 @@ else
     else
 	msg "Stealing lock from PID $pid which has gone away, locked ${tm_delta} second(s) ago"
 	if ln -f ${LOCKTMP} ${LOCKFILE}; then
-	    set -- $(cat ${LOCKFILE} 2> /dev/null)
-	    pid=$1; tm_lock=$2
-
+	    read pid tm_lock < ${LOCKFILE}
 	    if [ "$pid" -eq "$$" ]; then
+		delete_on_exit $LOCKFILE
 		msg "STOLE LOCK, PROCEEDING"
 	    else
 		msg "Can't steal lock, somone got in before us!? pid=${pid}"
@@ -145,7 +152,7 @@ if [ -n "$1" ]; then
 
     for i in $@
     do
-	local fn="${ME}'.d'/$i"
+	fn="${ME}'.d'/$i"
 	if [ -f $fn ]; then
 	    scripts="${scripts} ${fn}"
 	else
