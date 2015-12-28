@@ -2,13 +2,9 @@
 
 Zonama - The living planet, or in our world an easily deployed development environment for working on the server code of swgemu's Core3 (https://www.swgemu.com/)
 
-## Fast Start
-
-curl http://downloads.lordkator.com/bootstrap.sh | bash
-
 ## Building the "Base Box" from scratch
 
-Download and install VirtualBox and Vagrant
+Download and install Git, VirtualBox and Vagrant
 
 ## Windows Host
 
@@ -18,6 +14,8 @@ Download and install VirtualBox and Vagrant
 * Vagrant for Windows: https://www.vagrantup.com/downloads.html
  
 Launch Git Bash: Start -> Programs -> Git Bash
+or
+Right click in desired directory -> Bit Bash
 
 # Once you have cloned and have a bash shell:
 
@@ -26,7 +24,7 @@ git clone https://github.com/lordkator/ZonamaDev.git
 vagrant plugin install vagrant-reload
 vagrant plugin install vagrant-vbguest
 vagrant plugin install vagrant-triggers
-cd ZonamaDev/basebox
+cd ZonamaDev/fasttrack
 vagrant up
 ```
 
