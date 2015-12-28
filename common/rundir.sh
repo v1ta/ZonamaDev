@@ -145,10 +145,11 @@ if [ -n "$1" ]; then
 
     for i in $@
     do
-	if [ -f "${ME}'.d'/$i" ]; then
-	    scripts="${scripts} ${ME}'.d/'$i"
+	local fn="${ME}'.d'/$i"
+	if [ -f $fn ]; then
+	    scripts="${scripts} ${fn}"
 	else
-	    msg "Invalid step: $i"
+	    msg "Invalid step: $i file: ${fn} not found"
 	fi
     done
 fi
