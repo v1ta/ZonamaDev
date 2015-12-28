@@ -13,6 +13,6 @@
     for i in $(dirname $ME)'/../tarballs/'*
     do
 	msg "unpack $i"
-	tar xpvf $i
+	tar xpf $i
     done
 )
