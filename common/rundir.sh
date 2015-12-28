@@ -29,7 +29,7 @@ if xset q > /dev/null 2>&1; then
 fi
 
 # Run output through some stuff to make display more useful and capture errors
-if [ "X$CHILD_STATUS" = "X" -a "X$1" = "X" ]; then
+if [ "X$CHILD_STATUS" = "X" ]; then
     export CHILD_STATUS="/tmp/${TAG}-status-$$"
     echo 253 > $CHILD_STATUS
     ts=$(type -P ts)
