@@ -44,6 +44,7 @@ if [ "X$CHILD_STATUS" = "X" ]; then
     else
 	logger -i -t ${TAG} -s "** $ME FAILED! STATUS=$st ** ABORT **"
     fi
+    rm -f $CHILD_STATUS
     exit $st
 fi
 
@@ -51,7 +52,7 @@ fi
 ASSETS_DIR=$(dirname $ME)'/../assets'
 
 # Trap various failures
-TMPFILES=''
+TMPFILES=()
 
 trap 'echo $? > '${CHILD_STATUS}';rm -f ${TMPFILES};msg "UNEXPECTED EXIT=$?"' 0
 trap 'msg "UNEXPECTED SIGNAL SIGHUP!";echo 21 > $CHILD_STATUS' HUP
@@ -73,7 +74,7 @@ notice() {
 }
 
 delete_on_exit() {
-    TMPFILES="'${TMPFILES}' '${1}'"
+    TMPFILES+=($1)
 }
 
 error() {
@@ -176,6 +177,7 @@ msg "$ME COMPLETE AFTER $SECONDS SECOND(S)"
 #############
 trap - 0
 echo 0 > $CHILD_STATUS
+rm -f ${TMPFILES}
 exit 0
 
 # vi:sw=4 ft=sh
