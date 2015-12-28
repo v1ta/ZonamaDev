@@ -138,14 +138,18 @@ cd $(dirname $ME)
 scripts=$(echo ${ME}'.d'/*)
 
 # Did the user call us with specific steps?
-if [ -n "$1" -a -f "${ME}'.d'/$1" ]; then
+if [ -n "$1" ]; then
     msg "Custom steps: $@"
     # 00* always run
     scripts=$(echo ${ME}'.d'/00*)
 
     for i in $@
     do
-	scripts="${scripts} ${ME}'.d/'$i"
+	if [ -f "${ME}'.d'/$i" ]; then
+	    scripts="${scripts} ${ME}'.d/'$i"
+	else
+	    msg "Invalid step: $i"
+	fi
     done
 fi
 
