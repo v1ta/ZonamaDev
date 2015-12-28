@@ -8,6 +8,10 @@ Download and install Git, VirtualBox and Vagrant
 
 ## Windows Host
 
+-## Fast Start
+
+curl http://downloads.lordkator.com/bootstrap.sh | bash
+
 ### Downloads
 * Github's Git for Windows: https://git-for-windows.github.io/
 * VirtualBox for Windows: https://www.vagrantup.com/downloads.html
