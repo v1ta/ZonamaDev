@@ -1,0 +1,47 @@
+#!/bin/bash
+#
+# 35berkeley-db - Build swgemu compat bdb
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Tue Dec 29 05:13:34 EST 2015
+#
+
+if [ -f ${BDB_DIR}/include/db.h ]; then
+    echo "Looks like bdb 5.0 is installed"
+    return 0
+fi
+
+(
+    tmpdir=$(mktemp -d /tmp/$(basename $ME).XXXXXX)
+
+    echo "Using ${tmpdir} for download and build."
+
+    cd ${tmpdir}
+
+    wget --progress=dot:mega ${BDB_URL}
+
+    fn=$(basename "${BDB_URL}")
+
+    [ -f "$fn" ] || error "Failed to download Berkeley DB Tar from ${BDB_URL}, look in ${tmpdir} for clues." 135
+
+    tar xf ${fn}
+
+    echo "Building & Installing..."
+    (
+	set -xe
+	cd db-*/build_unix
+	pwd
+	../dist/configure --enable-cxx
+	make
+	make install
+	echo "${BDB_DIR}/lib" >> /etc/ld.so.conf
+	ldconfig
+    )
+
+    [ -f ${BDB_DIR}/include/db.h ] || error "Failed to build Berkeley DB from ${BDB_URL}, look in ${tmpdir} for clues." 135
+
+    cd $HOME
+
+    rm -fr ${tmpdir}
+)
