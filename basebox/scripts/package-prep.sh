@@ -49,8 +49,8 @@ vbpid=$(cat /var/run/vboxadd-service.pid 2> /dev/null)
 # Cleanup all the logs
 find /var/log /etc/machine-id /var/lib/dbus/machine-id -type f | while read fn
 do
-    echo "Zero $f"
-    cp /dev/null "$f"
+    echo "Zero $fn"
+    cp /dev/null "$fn"
 done
 
 echo "Fill filesystem with 0 bytes to reduce box size"
