@@ -163,8 +163,6 @@ if [ -n "$1" ]; then
     done
 fi
 
-echo $scripts
-
 for script in $scripts
 do
     msg "Run $script md5:"$(md5sum $script)
