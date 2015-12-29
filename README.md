@@ -18,6 +18,18 @@ Right click in desired directory -> Git Bash
 
 Type:
 ````
+git clone https://github.com/lordkator/ZonamaDev.git
+
+cd ZonamaDev/fasttrack
+
+./setup.sh
+````
+
+Watch for instructions.
+
+### FIXME
+Type:
+````
 curl http://downloads.lordkator.com/bootstrap.sh | bash
 ````
 
