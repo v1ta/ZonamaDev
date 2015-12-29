@@ -38,7 +38,7 @@ chown -R vagrant:vagrant ~vagrant
 echo ">> Cleanup user files that shouldn't be in the base box image."
 (
     cd ~vagrant
-    rm -rf .suspend_devsetup .bash* .profile .inputrc .vim* .cache /var/mail/*
+    rm -rf .suspend_devsetup .bash* .profile .inputrc .vim* .cache /var/mail/* .ssh/id_rsa*
     sed -e '/ vagrant$/p' -e 'd' -i .ssh/authorized_keys
 ) 2> /dev/null
 
