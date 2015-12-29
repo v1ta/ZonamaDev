@@ -112,7 +112,7 @@ Vagrant.configure(2) do |config|
   end
 
   # Execute {first|each}boot.sh
-  config.vm.provision :shell, name: "firstbooth", run: "always", inline: <<-SHELL
+  config.vm.provision :shell, name: "firstboot", run: "always", inline: <<-SHELL
     if [ ! -f "ZonamaDev/basebox/scripts/firstboot.sh" ]; then
       echo "** Fresh Guest **"
       apt-get update
