@@ -106,8 +106,10 @@ chown -R vagrant:vagrant ~vagrant
 echo ">> Cleanup user files that shouldn't be in the base box image."
 (
     cd ~vagrant
-    rm -rf .suspend_devsetup .bash* .profile .inputrc .vim* .cache /var/mail/* .ssh/id_rsa*
+    rm -rf .suspend_devsetup .bash* .profile .inputrc .vim* .cache /var/mail/* .ssh/id_rsa* .visual .gerrit_username .mysql_history
+    rm -rf .xsession* .gitconfig .lesshst .ssh/id_* .subversion workspace .cache
     sed -e '/ vagrant$/p' -e 'd' -i .ssh/authorized_keys
+    mysql -e 'drop database swgemu' > /dev/null 2>&1 ;
 ) 2> /dev/null
 
 # Basic files
@@ -131,11 +133,16 @@ sleep 5
 ##########################
 ## Cleanup all the logs ##
 ##########################
+rm -fr /var/tmp/* /tmp/* /etc/ssh/ssh_host*_key* /root/.viminfo /root/.bash_history /root/.lesshst /root/.bash_history /root/.ssh/* /var/log/*.gz /var/log/*.[1-9] /var/log/*.old
+
 find /var/log /etc/machine-id /var/lib/dbus/machine-id -type f | while read fn
 do
     echo ">> Zero $fn"
     cp /dev/null "$fn"
 done
+
+# rc.fasttrack should run this on other box
+# /usr/sbin/dpkg-reconfigure openssh-server
 
 ###########################################################
 ## Fill disk free space with zeros to aid in compression ##

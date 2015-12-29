@@ -1,0 +1,3 @@
+if [ ! -f /etc/ssh/ssh_host_rsa_key.pub ]; then
+    /usr/sbin/dpkg-reconfigure openssh-server
+fi
