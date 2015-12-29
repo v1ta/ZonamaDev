@@ -9,8 +9,13 @@
 
 cd ~vagrant
 
-if [ $# -ne 2 -o -n "$1" -o -n "$2" ]; then
-    echo -e "Usage: $0 {version} {builder_name}\n\t{version} - Basebox version x.y.z (e.g. 0.0.3, 0.0.9 or 1.2.3)\n\t{builder_name} - Who is building this box (e.g lordkator, scurby, darthvaderdev)"
+if [ $# -ne 2 -o -z "$1" -o -z "$2" ]; then
+    echo -e "Usage: $0 #=$# {version} {builder_name}\n\t{version} - Basebox version x.y.z (e.g. 0.0.3, 0.0.9 or 1.2.3)\n\t{builder_name} - Who is building this box (e.g lordkator, scurby, darthvaderdev)"
+    exit 1
+fi
+
+if [ $(id -u) -ne 0 ]; then
+    echo "** Must run as root, did you sudo?"
     exit 1
 fi
 
