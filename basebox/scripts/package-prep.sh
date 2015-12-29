@@ -148,7 +148,11 @@ done
 ## Fill disk free space with zeros to aid in compression ##
 ###########################################################
 echo ">> Fill filesystem with 0 bytes to reduce box size"
-dd if=/dev/zero of=/EMPTY bs=1M
+if type pv > /dev/null 2>&1; then
+    pv < /dev/zero > /EMPTY
+else
+    dd if=/dev/zero of=/EMPTY bs=1M
+fi
 rm -f /EMPTY
 
 #################################
