@@ -104,6 +104,15 @@ fi
 
 msg "START $ME $* git-tag: "$(cd $(dirname $ME);git describe --always)
 
+# Check for FORCE flag
+FORCE=false
+
+if [ "X$1" = "X-f" -o "X$1" = "X--force" ]; then
+    FORCE=true
+    shift
+    print "User requested we force the run."
+fi
+
 ## Run LOCK
 LOCKTMP=$(mktemp /tmp/${TAG}.lock-XXXXXX)
 LOCKFILE=/tmp/${TAG}.lock
