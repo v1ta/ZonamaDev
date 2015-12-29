@@ -145,7 +145,7 @@ rm -f /EMPTY
 #################################
 echo "$version" > /.swgemudev.version
 chmod 644 /.swgemudev.version
-echo '{ "build_timestamp": '$(date -u +'%s, "build_datetime": "%Y-%m-%dT%H:%M:%SZ"')', "builder_name": "'$builder_name'" }' | tee /.swgemudev.builinfo.json | python -m json.tool
+echo '{ "build_version": "'$version'", "build_timestamp": '$(date -u +'%s, "build_datetime": "%Y-%m-%dT%H:%M:%SZ"')', "builder_name": "'$builder_name'" }' | tee /.swgemudev.builinfo.json | python -m json.tool
 
 # Wait for sync to disk
 echo ">> Sync disk"
