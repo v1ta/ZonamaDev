@@ -110,6 +110,9 @@ echo ">> Cleanup user files that shouldn't be in the base box image."
     sed -e '/ vagrant$/p' -e 'd' -i .ssh/authorized_keys
 ) 2> /dev/null
 
+# Basic files
+cp -vr /etc/skel/. ~vagrant
+
 ########################
 ## Stop all the noise ##
 ########################
