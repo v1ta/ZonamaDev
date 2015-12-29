@@ -118,11 +118,12 @@ service vboxadd stop
 service mysql stop
 service syslog stop
 
-
 # Make sure VBox service really stops
 vbpid=$(cat /var/run/vboxadd-service.pid 2> /dev/null)
 
 [ -n "$vbpid" ] && kill -9 $vbpid
+
+sleep 5
 
 ##########################
 ## Cleanup all the logs ##
@@ -160,7 +161,9 @@ echo "***********************"
 
 set -x
 
-halt --force --no-wall --poweroff
+sleep 5
+
+sync;halt --force --no-wall --poweroff
 
 # these aren't the droids you're looking for...
 echo "** SHOULD NOT BE HERE! GET HELP! **"

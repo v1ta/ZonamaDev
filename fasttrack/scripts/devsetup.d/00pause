@@ -1,0 +1,2 @@
+# Give X windows a bit of time to stabilize
+sleep 10
