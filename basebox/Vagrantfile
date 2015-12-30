@@ -31,10 +31,13 @@ end
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure(2) do |config|
+  # A bit of a hack, not sure if there is a "right way" to detect that this is the very first provision
+  is_first_provision = !File.exist?("#{File.dirname(__FILE__)}/.vagrant/machines/default/virtualbox/action_provision")
+
   config.vm.hostname = "swgemudev"
 
   # vbguest settings for first up
-  if not File.exist?("#{File.dirname(__FILE__)}/.vagrant/machines/default/virtualbox/action_provision")
+  if is_first_provision
     config.vbguest.auto_update = false
     config.vbguest.no_install = true
   end
@@ -126,20 +129,22 @@ Vagrant.configure(2) do |config|
     exec ZonamaDev/basebox/scripts/firstboot
   SHELL
 
-  # Make sure updated kernel is loaded etc.
-  config.vm.provision :reload
+  if is_first_provision
+    # Make sure updated kernel is loaded etc.
+    config.vm.provision :reload
 
-  # Tell them to be patient!
-  config.vm.provision :shell, name: "firstboot.sh", inline: <<-SHELL
-      chvt 8
-      echo "** Please wait while provisioning continues **" > /dev/console
-  SHELL
+    # Tell them to be patient!
+    config.vm.provision :shell, name: "firstboot.sh", inline: <<-SHELL
+	chvt 8
+	echo "** Please wait while provisioning continues **" > /dev/console
+    SHELL
 
-  # Postponed vbguest, run it now...
-  # config.vm.provision :host_shell, inline: "vagrant vbguest --do install"
-  config.vm.provision :trigger, :force => true do |trigger|
-    trigger.fire do
-      run "vagrant vbguest --do install"
+    # Postponed vbguest, run it now...
+    # config.vm.provision :host_shell, inline: "vagrant vbguest --do install"
+    config.vm.provision :trigger, :force => true do |trigger|
+      trigger.fire do
+	run "vagrant vbguest --do install"
+      end
     end
   end
 
