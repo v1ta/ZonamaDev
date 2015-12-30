@@ -91,6 +91,23 @@ command_window() {
     xfce4-terminal --maximize --icon=${ASSETS_DIR}/swgemu_icon.png --hide-menubar --hide-toolbar --title="$1" --command="$2"
 }
 
+yorn() {
+  if $HAVEX; then
+       zenity --question --text="$@"
+       return $?
+  else
+      if tty -s; then
+	  echo -n -e "$@ Y\b" > /dev/tty
+	  read yorn < /dev/tty
+	  case $yorn in
+	    [Nn]* ) return 1;;
+	  esac
+      fi
+  fi
+
+  return 0
+}
+
 # We at least made it this far!
 echo 252 > $CHILD_STATUS
 
@@ -110,7 +127,7 @@ FORCE=false
 if [ "X$1" = "X-f" -o "X$1" = "X--force" ]; then
     FORCE=true
     shift
-    print "User requested we force the run."
+    echo "**NOTICE** User requested we force the run."
 fi
 
 ## Run LOCK
