@@ -1,0 +1,109 @@
+#!/bin/bash
+#
+# 30mysql - Initial mysql setup
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Wed Dec 30 08:20:10 EST 2015
+#
+
+[ -z "${DEFAULT_MYSQL_PASSWORD}" ] && error "MISSING CONFIG VALUE: DEFAULT_MYSQL_PASSWORD" 130
+
+mysql_init_database() {
+    # Find all the DB settings in config.lua
+    eval $(~/bin/get_config --bash '^DB')
+
+    echo "Using config from ${CFGPATH}"
+
+    if $FORCE; then
+	if yorn "Do you want to drop the database ${DBName} and delete the user ${DBUser}?"; then
+	    echo "User requested database be reset"
+	    mysql -ve "DROP DATABASE ${DBName}" && notice "Dropped Database" "The database ${DBName} was dropped"
+	    mysql -ve "drop user swgemu@'localhost'" && notice "Dropped Mysql User" "The DB user ${DBUser} was deleted."
+	fi
+    fi
+
+    local db=$(mysql -N --batch -e "SHOW DATABASES LIKE '${DBName}'")
+
+    if [ -n "$db" ]; then
+	echo "Found database, will not try to initialize"
+	return
+    fi
+
+    mysql -ve "CREATE USER '${DBUser}'@'localhost' IDENTIFIED BY '${DBPass}';" && notice "Mysql Setup" "Created DB User ${DBUser}"
+
+    for i in ~/workspace/Core3/MMOCoreORB/sql/swgemu.sql ~/workspace/Core3/MMOCoreORB/sql/updates/deletedcharacters_add_dbdeleted.sql ~/workspace/Core3/MMOCoreORB/sql/updates/account_ips.sql
+    do
+	echo "Run $i against database"
+	mysql < $i || error "mysql failed while reading $i" 130
+    done
+
+    mysql -ve "GRANT ALL PRIVILEGES ON ${DBName}.* TO '${DBUser}'@'localhost';" || error "Failed to grant access on ${DBName} to ${DBUser} user!?" 130
+
+    mysql -ve "FLUSH PRIVILEGES;"
+
+    notice "Mysql Database Initialized" "The database ${DBName} was created and initialized and the database user ${DBUser} was granted all privileges."
+}
+
+mysql_setup_auth() {
+    # If they have a ~/.my.cnf see if it lets us connect
+    if [ -f ~/.my.cnf ]; then
+	if mysqladmin -uroot status > /dev/null 2>&1; then
+	    echo "** Looks like your database password is already setup"
+	    return
+	else
+	    # Hmm my.cnf is wrong or maybe it's a blank new db
+	    mv ~/.my.cnf ~/.broken.my.cnf
+	    mysql_save_credentials root ${DEFAULT_MYSQL_PASSWORD}
+	    if mysqladmin -uroot status > /dev/null 2>&1; then
+		notice "Fixed your ~/.my.cnf" "Looks like your old one was bad, it was saved in ~/.broken.my.cnf"
+	    else
+		# Still can't get in, try empty password
+		mysql_save_credentials root ''
+
+		# Empty password, need to lock this database down!
+		if mysqladmin -uroot status > /dev/null 2>&1; then
+		    mysql_setup_secure
+		    return
+		fi
+	    fi
+	fi
+    fi
+
+    if mysqladmin -uroot -p${DEFAULT_MYSQL_PASSWORD} ping > /dev/null 2>&1; then
+	echo "** Looks like mysql password has been set to the default password"
+
+	if [ ! -f ~vagrant/.my.cnf ]; then
+	    echo "** Added missing .my.cnf to user's home dir"
+	    echo -e "[client]\nuser=root\npassword=${DEFAULT_MYSQL_PASSWORD}" > ~/.my.cnf
+	fi
+    else
+	notice "Mysql Password" "Your mysql root password is not the default, this could cause problems later.\n"
+	return
+    fi
+}
+
+mysql_setup_secure() {
+    echo "** You might see some errors here, they should be safe to ignore **"
+    mysql -ve "UPDATE mysql.user SET Password=PASSWORD('$DEFAULT_MYSQL_PASSWORD') WHERE User='root'"
+    mysql -ve "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')"
+    mysql -ve "DELETE FROM mysql.user WHERE User=''"
+    mysql -ve "DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%'"
+    mysql -ve "FLUSH PRIVILEGES"
+    mysql_save_credentials root ${DEFAULT_MYSQL_PASSWORD}
+
+    notice "Mysql Secure Installation" "MySQL security recommendations have been applied."
+}
+
+mysql_save_credentials() {
+    echo -e "[client]\nuser=${1}\npassword=${2}" > ~/.my.cnf
+}
+
+# Make sure mysqld is running, will return 0 even if we fail auth as long as the mysqld is up
+mysqladmin ping > /dev/null 2>&1 || error "Mysql Database is not running!?\n\nMaybe reboot or get some help!" 130
+
+mysql_setup_auth
+
+mysql_init_database
+
+mysqladmin -uroot status || error "MYSQL SETUP FAILED, RET=$?" 130

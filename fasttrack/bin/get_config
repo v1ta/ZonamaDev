@@ -1,0 +1,105 @@
+#!/usr/local/bin/lua
+--[[
+--
+-- get_config - Parse lua config.lua, search for items and print
+--
+-- Author: Lord Kator <lordkator@swgemu.com>
+--
+-- Created: Wed Dec 30 18:06:08 UTC 2015
+--
+]]
+
+function main()
+  paths = { ".", "conf", "bin/conf", os.getenv("HOME") .. "/workspace/Core3/MMOCoreORB/bin/conf" }
+
+  path = ""
+
+  for _, dir in pairs(paths) do
+    local p = dir .. "/config.lua"
+    local f = io.open(p)
+    if f then
+      path = p
+      f:close()
+      break
+    end
+  end
+
+  if path == "" then
+    io.stderr:write(arg[0] .. ": Can't find config.lua\n");
+    os.exit(2)
+  end
+
+  c = load_config(path)
+
+  io.write("CFGPATH='" .. bash_esc(path) .. "';\n")
+
+  selected = { }
+  formatter = tprint
+
+  if arg[1] == "--bash" then
+    formatter = bash
+    table.remove(arg, 1)
+  end
+
+  needle = arg[1] or "."
+
+  for k,v in pairs(c) do
+    if string.match(k, needle) then
+      selected[k] = v
+    end
+  end
+
+  formatter(selected)
+end
+
+function load_config(path)
+    local config = setmetatable({}, {__index=_G})
+    assert(pcall(setfenv(assert(loadfile(path)), config)))
+    setmetatable(config, nil)
+    return config
+end
+
+-- https://gist.github.com/ripter/4270799 
+-- Print contents of `tbl`, with indentation.
+-- `indent` sets the initial level of indentation.
+function tprint (tbl, indent)
+  if not indent then indent = 0 end
+  for k, v in pairs(tbl) do
+    formatting = string.rep("  ", indent) .. k .. ": "
+    if type(v) == "table" then
+      print(formatting)
+      tprint(v, indent+1)
+    elseif type(v) == 'boolean' then
+      print(formatting .. tostring(v))		
+    else
+      print(formatting .. v)
+    end
+  end
+end
+
+function bash_esc(str)
+  s = string.gsub(str, "'", "'\"'\"'")
+  return s
+end
+
+-- Bash doesn't support nested tables for we won't even try
+function bash(tbl)
+  for k, v in pairs(tbl) do
+      if type(v) == "table" then
+	  io.write("declare -A " .. k .. ";\n")
+	  for k2, v2 in pairs(v) do
+	      if type(v2) == "table" then
+		  io.stderr:write("WARNING Config Var [" .. v .. "." .. v2 .. "] is a nested table!")
+	      else
+		  io.write(string.format("%s['%s']='%s';\n", bash_esc(k), bash_esc(k2), bash_esc(v2)))
+	      end
+	  end
+      else
+	  io.write(string.format("%s='%s';\n", k, bash_esc(v)))
+      end
+  end
+end
+
+main()
+
+-- :vi set ft=lua sw=2
