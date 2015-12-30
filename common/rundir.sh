@@ -54,7 +54,7 @@ ASSETS_DIR=$(dirname $ME)'/../assets'
 # Trap various failures
 TMPFILES=()
 
-trap 'echo $? > '${CHILD_STATUS}';rm -f ${TMPFILES[@]};msg "UNEXPECTED EXIT=$?"' 0
+trap 'st=$?;echo $st > '${CHILD_STATUS}';rm -f ${TMPFILES[@]};msg "UNEXPECTED EXIT=$st"' 0
 trap 'msg "UNEXPECTED SIGNAL SIGHUP!";echo 21 > $CHILD_STATUS' HUP
 trap 'msg "UNEXPECTED SIGNAL SIGINT!";echo 22 > $CHILD_STATUS' INT
 trap 'msg "UNEXPECTED SIGNAL SIGTERM!";echo 23 > $CHILD_STATUS' TERM
