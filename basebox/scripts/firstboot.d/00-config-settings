@@ -4,6 +4,7 @@
 #
 # NOTE: This file is named 00-config-settings to make sure it loads first, don't make anything load sooner than this file!
 #
+source $(dirname $ME)/../../common/global.config
 source $(dirname $ME)/../../common/basebox.config
 
 if [ -z "$PACKAGES" ]; then
