@@ -33,7 +33,7 @@ if [ "X$CHILD_STATUS" = "X" ]; then
     export CHILD_STATUS="/tmp/${TAG}-status-$$"
     echo 253 > $CHILD_STATUS
     ts=$(type -P ts)
-    if [ -n "$TS" ]; then
+    if [ -n "$ts" ]; then
 	$ME -- $* 2>&1 | $ts -s | logger -i -t ${TAG} -s 2>&1
     else
 	$ME -- $* 2>&1 | logger -i -t ${TAG} -s 2>&1
