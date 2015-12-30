@@ -100,14 +100,15 @@ Vagrant.configure(2) do |config|
   ###############
 
   # Copy local config into the host
-  [ 'extras', '.bash_profile', '.bashrc', '.vimrc' ].each do |fn|
+  [ 'extras', '.bash_profile', '.bash_login', '.bash_logout', '.bashrc', '.vimrc', '.gitconfig', '.visual', '.gerrit_username', '.id_rsa', '.id_rsa.pub' ].each do |fn|
     src = "#{File.dirname(__FILE__)}/#{fn}"
 
     if File.exist?(src)
-      ## config.env.ui.info("Copy #{fn}")
-      ## TODO figure out right way to output
-      # puts "Copy #{fn} to host.."
-      config.vm.provision :file, source: src, destination: fn
+      dst = fn
+      if src[0..5] == 'id_rsa'
+	dst = ".ssh/" + src
+      end
+      config.vm.provision :file, source: src, destination: dst
     end
   end
 

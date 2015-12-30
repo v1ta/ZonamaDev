@@ -7,3 +7,6 @@ extras
 .bashrc
 .gitconfig
 .vimrc
+.visual
+.gerrit_username
+.id_rsa*
