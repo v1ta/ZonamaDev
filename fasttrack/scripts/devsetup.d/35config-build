@@ -1,0 +1,61 @@
+#!/bin/bash
+#
+# 35config-build - Configure code and kick-off initial build
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Wed Dec 30 14:35:23 EST 2015
+#
+
+config_build() {
+    local missing=''
+
+    for i in $REPOS
+    do
+	if [ -d $WORKSPACE/$i/.git ]; then
+	    echo "Found $i in $WORKSPACE/$i"
+	else
+	    missing="$missing $i"
+	fi
+    done
+
+    if [ -n "$missing" ]; then
+	zenity --error  --text="You're missing the following repos: $missing\n\nWe can't do the build until that is fixed."
+	exit 135
+    fi
+
+    local status_pipe=$(mktemp /tmp/clone-status-pipe-XXXXXX)
+
+    mknod $status_pipe p
+
+    command_window "Config and Build" "tail -f $status_pipe"  &
+
+    local logfile=$WORKSPACE/Core3/MMOCoreORB/initial_build.log
+
+    [ -f $logfile ] && mv ${logfile} ${logfile}'-prev'
+
+    (
+    	SECONDS=0
+	date
+        set -x
+	cd $WORKSPACE/Core3/MMOCoreORB
+	time make config
+	time make clean
+	if time make -k build; then
+	    echo "** BUILD SUCCESS IN $SECONDS SECOND(S) **"
+	else
+	    echo "** BUILD FAILED **"
+	fi
+    ) 2>&1 | tee $status_pipe | tee $logfile
+    result=$(tail -1 $logfile)
+    zenity --info --text="Config and Build process finished.\n\n${result}\n\nYou can find a copy of the output in $logfile\n\nPress [OK] to close the log window"
+    fuser -k $status_pipe
+    rm -f $status_pipe
+}
+
+if [ ! -f $WORKSPACE/Core3/MMOCoreORB/build/unix/config.log ]; then
+    if yorn "Would you like to run the initial config and build process?\n\n(This could run for quite a while)"; then
+	echo "User requested conf-build"
+	config_build
+    fi
+fi

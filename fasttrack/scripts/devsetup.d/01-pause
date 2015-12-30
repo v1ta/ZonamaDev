@@ -1,2 +1,2 @@
 # Give X windows a bit of time to stabilize
-sleep 10
+sleep 5
