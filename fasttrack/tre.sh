@@ -3,17 +3,28 @@
 # tre.sh - Find TRE files on user's HOST system and scp to the guest
 
 trepath=''
+default='/c/SWGEmu'
 
 main() {
     msg "TRE File Copy"
 
-    echo -e "\n** In order to run the server you must copy required '.tre' files from the client"
-    echo -e  "** If you've installed the client on this computer we can copy them for you.\n"
+    # Check for default location
+    if check_emudir $default; then
+	if yorn "\n** We found your tre files in ${default} do you want to copy them to the server now?"; then
+	    :
+	else
+	    msg "** ABORTED BY USER **"
+	    exit 1
+	fi
+    else
+	echo -e "\n** In order to run the server you must copy required '.tre' files from the client"
+	echo -e  "** If you've installed the client on this computer we can copy them for you.\n"
 
-    # TODO do we want to ask?
-    #if yorn "Would you like to try and copy the '.tre' files now?"; then
-	ask_emudir
-    #fi
+	# TODO do we want to ask?
+	#if yorn "Would you like to try and copy the '.tre' files now?"; then
+	    ask_emudir
+	#fi
+    fi
 
     echo -e "\n** Ok we found your files in $trepath, we will now try and copy them to your guest...\n"
 
@@ -82,7 +93,7 @@ ask_emudir() {
 
 check_emudir() {
     local dir=$1
-    local cnt=$(ls $dir/*.tre|wc -l)
+    local cnt=$(ls $dir/*.tre 2> /dev/null|wc -l)
 
     if [ $cnt -eq 0 ]; then
 	return 1
