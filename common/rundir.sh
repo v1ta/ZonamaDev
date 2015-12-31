@@ -21,7 +21,7 @@ if [ -z "$ME" ]; then
 fi
 
 TAG=$(basename $ME)
-
+RUN_STEP="init"
 HAVEX=false
 
 if xset q > /dev/null 2>&1; then
@@ -78,15 +78,19 @@ delete_on_exit() {
 }
 
 error() {
-    msg "ERROR: $1"
-    err=251
+    err_msg=$1
+    err_code=251
     if [ "X$2" != "X" ]; then
-	err=$2
+	err_code=$2
     fi
+
+    msg "ERROR WHILE PROCESSING $RUN_STEP: $err_msg ($err_code)"
+
     if $HAVEX; then
-	zenity --error --title="${TAG} FAILED" --text="The ${TAG} process failed with error $err." < /dev/null > /dev/null 2>&1 &
+	zenity --error --title="${TAG} FAILED" --text="The ${TAG} process failed at step ${RUN_STEP} with error:\n\n${err_msg} (${err_code})" < /dev/null > /dev/null 2>&1 &
     fi
-    exit $err
+
+    exit $err_code
 }
 
 command_window() {
@@ -171,31 +175,36 @@ fi
 
 delete_on_exit $LOCKFILE
 
-cd $(dirname $ME)
+run_dir=$(echo ${ME}'.d')
 
-scripts=$(echo ${ME}'.d'/*)
+cd $run_dir
+
+steps=$(echo ${run_dir}/*)
 
 # Did the user call us with specific steps?
 if [ -n "$1" ]; then
     msg "Custom steps: $@"
     # 00* always run
-    scripts=$(echo ${ME}'.d'/00*)
+    steps=$(echo ${ME}'.d'/00*)
 
     for i in $@
     do
-	fn="${ME}.d/$i"
+	fn="${run_dir}/$i"
 	if [ -f $fn ]; then
-	    scripts="${scripts} ${fn}"
+	    steps="${steps} ${fn}"
 	else
 	    msg "Invalid step: $i file: ${fn} not found"
 	fi
     done
+else
+    echo "Steps: "$(echo "$steps" | sed "s!${run_dir}!!")
 fi
 
-for script in $scripts
+for step in $steps
 do
-    msg "Run $script md5:"$(md5sum $script)
-    source $script
+    RUN_STEP=$(basename $step)
+    msg "Run $step md5:"$(md5sum $step)
+    source $step
 done
 
 msg "$ME COMPLETE AFTER $SECONDS SECOND(S)"
