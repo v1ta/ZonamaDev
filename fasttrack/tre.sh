@@ -20,11 +20,14 @@ main() {
     local sshcfg=$(mktemp)
     trap 'rm -f "'$sshcfg'"' 0
 
-    vagrant up ;
+    echo "** Checking to make sure your guest is up..."
+    vagrant up > /dev/null 2>&1
     
+    echo "** Getting ssh configuration..."
     vagrant ssh-config > $sshcfg || error "Failed to get ssh config, GET HELP!" 11
 
-    ssh -F $sshcfg default mkdir -P Desktop/SWGEmu
+    echo "** Copying files..."
+    ssh -F $sshcfg default mkdir -p Desktop/SWGEmu
 
     if scp -F $sshcfg $trepath/*.tre default:Desktop/SWGEmu; then
 	msg "SUCCESS!"
