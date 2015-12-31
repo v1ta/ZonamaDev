@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# TODO - should we even do this? Doing for now to make it easy but worry about stuff creeping into code with hard coded paths
+
+cd /home
+(
+    l=$(readlink swgemu)
+
+    if [ -z "$l" -o "$l" != "vagrant" ]; then
+	[ -L swgemu ] && rm swgemu
+	ln -s vagrant swgemu && echo "Created /home/swgemu -> /home/vagrant symlink"
+    fi
+)
