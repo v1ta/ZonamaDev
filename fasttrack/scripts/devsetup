@@ -7,6 +7,10 @@
 # Created: Sat Dec 26 15:39:04 EST 2015
 #
 
+pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
+export ME=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
+popd > /dev/null
+
 if [ -n "$CHILD_STATUS" ]; then
     ## TODO do we launch a status bar from here?
 
@@ -20,4 +24,4 @@ if [ -n "$CHILD_STATUS" ]; then
     )
 fi
 
-source ../../common/rundir.sh
+source $(dirname $ME)/../../common/rundir.sh
