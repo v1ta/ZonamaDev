@@ -9,9 +9,9 @@ main() {
     msg "TRE File Copy"
 
     # Check for default location
-    if check_emudir $default; then
+    if check_emudir "$default"; then
 	if yorn "\n** We found your tre files in ${default} do you want to copy them to the server now?"; then
-	    :
+	    trepath="$default"
 	else
 	    msg "** ABORTED BY USER **"
 	    exit 1
@@ -40,7 +40,7 @@ main() {
     echo "** Copying files..."
     ssh -F $sshcfg default mkdir -p Desktop/SWGEmu
 
-    if scp -F $sshcfg $trepath/*.tre default:Desktop/SWGEmu; then
+    if scp -F $sshcfg "$trepath"/*.tre default:Desktop/SWGEmu; then
 	msg "SUCCESS!"
     else
 	msg "SCP SEEMS TO HAVE FAILED WITH ERR=$?, GET HELP!?"
@@ -62,7 +62,7 @@ ask_emudir() {
 	echo "Searching [$path]"
 
 	# Does it look like the right directory?
-	if check_emudir $path; then
+	if check_emudir "$path"; then
 	    # hit the jackpot
 	    trepath=$path
 	    return 0
@@ -73,8 +73,8 @@ ask_emudir() {
 		if [ -n "$fn" ]; then
 		    path=$(dirname $fn)
 
-		    if check_emudir $path; then
-			trepath=$path
+		    if check_emudir "$path"; then
+			trepath="$path"
 			return 0
 		    fi
 		fi
@@ -93,7 +93,7 @@ ask_emudir() {
 
 check_emudir() {
     local dir=$1
-    local cnt=$(ls $dir/*.tre 2> /dev/null|wc -l)
+    local cnt=$(ls "$dir"/*.tre 2> /dev/null|wc -l)
 
     if [ $cnt -eq 0 ]; then
 	return 1
