@@ -33,7 +33,7 @@ check_repos() {
 	(set -x
 	for i in $missing
 	do
-	    git clone ssh://${GERRIT_HOST}/${i}.git
+	    git clone --progress ssh://${GERRIT_HOST}/${i}.git
 	    scp ${GERRIT_HOST}:hooks/commit-msg ${i}/.git/hooks
 	done
 	set +x
