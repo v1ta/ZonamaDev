@@ -9,7 +9,7 @@
 
 [ -z "${DEFAULT_MYSQL_PASSWORD}" ] && error "MISSING CONFIG VALUE: DEFAULT_MYSQL_PASSWORD" 130
 
-mysql_init_database() {
+mysql_get_config() {
     # Find all the DB settings in config.lua
     eval $(~/bin/get_config --bash '^DB')
 
@@ -20,7 +20,9 @@ mysql_init_database() {
     [ -n "$DBPass" ] || error "DBPass not found in ${CFGPATH}" 130
 
     echo "Using config from ${CFGPATH}, Database: ${DBName}, User: ${DBuser}, Password: ${DBPass}"
+}
 
+mysql_init_database() {
     if $FORCE; then
 	if yorn "Do you want to drop the database ${DBName} and delete the user ${DBUser}?"; then
 	    echo "User requested database be reset"
@@ -60,7 +62,7 @@ mysql_setup_auth() {
 	else
 	    # Hmm my.cnf is wrong or maybe it's a blank new db
 	    mv ~/.my.cnf ~/.broken.my.cnf
-	    mysql_save_credentials root ${DEFAULT_MYSQL_PASSWORD}
+	    mysql_save_credentials root "${DEFAULT_MYSQL_PASSWORD}"
 	    if mysqladmin -uroot status > /dev/null 2>&1; then
 		notice "Fixed your ~/.my.cnf" "Looks like your old one was bad, it was saved in ~/.broken.my.cnf"
 	    else
@@ -76,29 +78,50 @@ mysql_setup_auth() {
 	fi
     fi
 
+    # No ~/.my.cnf maybe we're starting from scratch?
+
+    # Try blank password
+    mysql_save_credentials root ''
+
+    # Empty password, need to lock this database down!
+    if mysqladmin -uroot status > /dev/null 2>&1; then
+	mysql_setup_secure
+	return
+    fi
+
     if mysqladmin -uroot -p${DEFAULT_MYSQL_PASSWORD} status > /dev/null 2>&1; then
 	echo "** Looks like mysql password has been set to the default password"
 
 	if [ ! -f ~vagrant/.my.cnf ]; then
 	    echo "** Added missing .my.cnf to user's home dir"
-	    echo -e "[client]\nuser=root\npassword=${DEFAULT_MYSQL_PASSWORD}" > ~/.my.cnf
+	    mysql_save_credentials root "${DEFAULT_MYSQL_PASSWORD}"
 	fi
     else
-	notice "Mysql Password" "Your mysql root password is not the default, this could cause problems later.\n"
+	error "Your mysql root password is not the default, fix your ~/.my.cnf before you continue." 130
 	return
     fi
 }
 
 mysql_setup_secure() {
+    if mysqladmin -uroot password "${DEFAULT_MYSQL_PASSWORD}"; then
+	notice "Mysql Root Password" "Set mysql root password to ${DEFAULT_MYSQL_PASSWORD}"
+    else
+	error "Failed to set mysql root password!" 130
+    fi
+
+    mysql_save_credentials root "${DEFAULT_MYSQL_PASSWORD}"
+
     echo "** You might see some errors here, they should be safe to ignore **"
     mysql -ve "UPDATE mysql.user SET Password=PASSWORD('$DEFAULT_MYSQL_PASSWORD') WHERE User='root'"
     mysql -ve "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')"
     mysql -ve "DELETE FROM mysql.user WHERE User=''"
     mysql -ve "DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%'"
-    mysql -ve "FLUSH PRIVILEGES"
-    mysql_save_credentials root ${DEFAULT_MYSQL_PASSWORD}
 
-    notice "Mysql Secure Installation" "MySQL security recommendations have been applied."
+    if mysql -ve "FLUSH PRIVILEGES"; then
+	notice "Mysql Secure Installation" "MySQL security recommendations have been applied."
+    else
+	error "Failed to secure mysql installation" 130
+    fi
 }
 
 mysql_save_credentials() {
@@ -108,8 +131,12 @@ mysql_save_credentials() {
 # Make sure mysqld is running, will return 0 even if we fail auth as long as the mysqld is up
 mysqladmin ping > /dev/null 2>&1 || error "Mysql Database is not running!?\n\nMaybe reboot or get some help!" 130
 
-mysql_setup_auth
+(
+    mysql_get_config
 
-mysql_init_database
+    mysql_setup_auth
+
+    mysql_init_database
+)
 
 mysqladmin -uroot status || error "MYSQL SETUP FAILED, RET=$?" 130
