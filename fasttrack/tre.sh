@@ -10,6 +10,7 @@ main() {
     echo -e "\n** In order to run the server you must copy required '.tre' files from the client"
     echo -e  "** If you've installed the client on this computer we can copy them for you.\n"
 
+    # TODO do we want to ask?
     #if yorn "Would you like to try and copy the '.tre' files now?"; then
 	ask_emudir
     #fi
@@ -19,9 +20,12 @@ main() {
     local sshcfg=$(mktemp)
     trap 'rm -f "'$sshcfg'"' 0
 
-    vagrant up ; varant ssh-config > $sshcfg
+    vagrant up ;
+    
+    vagrant ssh-config > $sshcfg || error "Failed to get ssh config, GET HELP!" 11
 
     ssh -F $sshcfg default mkdir -P Desktop/SWGEmu
+
     if scp -F $sshcfg $trepath/*.tre default:Desktop/SWGEmu; then
 	msg "SUCCESS!"
     else
@@ -50,7 +54,7 @@ ask_emudir() {
 	    return 0
 	else
 	    if yorn "Didn't find the tre files there, do you mind if I search ${path} for them?"; then
-		local fn=$(find $path -name $last_tre)
+		local fn=$(find $path -name $last_tre 2> /dev/null)
 
 		if [ -n "$fn" ]; then
 		    path=$(dirname $fn)
@@ -98,6 +102,18 @@ yorn() {
       esac
   fi
   return 0
+}
+
+error() {
+    err_msg=$1
+    err_code=251
+    if [ "X$2" != "X" ]; then
+	err_code=$2
+    fi
+
+    msg "ERROR WHILE PROCESSING $RUN_STEP: $err_msg ($err_code)"
+
+    exit $err_code
 }
 
 msg() {
