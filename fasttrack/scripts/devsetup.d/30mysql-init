@@ -13,7 +13,13 @@ mysql_init_database() {
     # Find all the DB settings in config.lua
     eval $(~/bin/get_config --bash '^DB')
 
-    echo "Using config from ${CFGPATH}"
+    # Sanity check config
+    [ -n "$CFGPATH" ] || error "get_config failed to find database settings!" 130
+    [ -n "$DBName" ] || error "DBName not found in ${CFGPATH}" 130
+    [ -n "$DBUser" ] || error "DBUser not found in ${CFGPATH}" 130
+    [ -n "$DBPass" ] || error "DBPass not found in ${CFGPATH}" 130
+
+    echo "Using config from ${CFGPATH}, Database: ${DBName}, User: ${DBuser}, Password: ${DBPass}"
 
     if $FORCE; then
 	if yorn "Do you want to drop the database ${DBName} and delete the user ${DBUser}?"; then
@@ -70,7 +76,7 @@ mysql_setup_auth() {
 	fi
     fi
 
-    if mysqladmin -uroot -p${DEFAULT_MYSQL_PASSWORD} ping > /dev/null 2>&1; then
+    if mysqladmin -uroot -p${DEFAULT_MYSQL_PASSWORD} status > /dev/null 2>&1; then
 	echo "** Looks like mysql password has been set to the default password"
 
 	if [ ! -f ~vagrant/.my.cnf ]; then
