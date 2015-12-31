@@ -197,7 +197,7 @@ if [ -n "$1" ]; then
 	fi
     done
 else
-    echo "Steps: "$(echo "$steps" | sed "s!${run_dir}!!")
+    echo "Steps: "$(echo "$steps" | sed "s!${run_dir}/!!g")
 fi
 
 for step in $steps
