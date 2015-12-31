@@ -1,6 +1,16 @@
 #!/bin/bash
 #
 # tre.sh - Find TRE files on user's HOST system and scp to the guest
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Thu Dec 31 16:41:02 EST 2015
+#
+
+if [ -z "$BASH_VERSION" ]; then
+    echo "** Please use BASH to run this script **"
+    exit 1
+fi
 
 trepath=''
 default='/c/SWGEmu'
@@ -57,17 +67,13 @@ ask_emudir() {
 
 	local path=$(cygpath ${n//\\/\/})
 
-	#local path="${n//\\/\/}"
+	echo -e "\nSearching [$path]\n"
 
-	echo "Searching [$path]"
-
-	# Does it look like the right directory?
 	if check_emudir "$path"; then
-	    # hit the jackpot
 	    trepath=$path
 	    return 0
 	else
-	    if yorn "Didn't find the tre files there, do you mind if I search ${path} for them?"; then
+	    if yorn "\nDidn't find the tre files there, do you mind if I search ${path} for them?"; then
 		local fn=$(find $path -name $last_tre 2> /dev/null)
 
 		if [ -n "$fn" ]; then
@@ -79,7 +85,7 @@ ask_emudir() {
 		    fi
 		fi
 
-		if yorn "Still didn't find them, would you like to try another directory?"; then
+		if yorn "\nStill didn't find them, would you like to try another directory?"; then
 		    :
 		else
 		    return 0
@@ -100,7 +106,7 @@ check_emudir() {
     fi
 
     if [ $cnt -ge ${#trefiles[@]} ]; then
-	# TODO check trefiles array
+	# TODO check trefiles array?
 	return 0
     fi
 
