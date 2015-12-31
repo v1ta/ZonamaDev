@@ -83,6 +83,9 @@ error() {
     if [ "X$2" != "X" ]; then
 	err=$2
     fi
+    if $HAVEX; then
+	zenity --error --title="${TAG} FAILED" --text="The ${TAG} process failed with error $err." < /dev/null > /dev/null 2>&1 &
+    fi
     exit $err
 }
 
