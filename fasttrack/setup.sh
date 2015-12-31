@@ -13,6 +13,11 @@ if [ -z "$BASH_VERSION" ]; then
 fi
 
 main() {
+    if [ ! -f Vagrantfile ]; then
+	echo "** You must run this from the fasttrack directory, please cd there and type: ./setup.sh"
+	exit 1
+    fi
+
     if vagrant login --check; then
 	echo "** You're logged in, if you're using a pre-release copy you should make sure you're in the swgemu org **"
     else
@@ -28,7 +33,16 @@ main() {
     fi
 
     echo "vagrant up"
+
     time vagrant up
+
+    sleep 5
+
+    ./tre.sh
+
+    echo "** Now switch to the linux console and follow the directions!"
+
+    exit 0
 }
 
 yorn() {
