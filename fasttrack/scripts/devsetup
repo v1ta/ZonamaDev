@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+# devsetup - Run the developer setup scripts
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Sat Dec 26 15:39:04 EST 2015
+#
+
+if [ -n "$CHILD_STATUS" ]; then
+    ## TODO do we launch a status bar from here?
+
+    # Try to make sure we have the absolute latest scripts
+    (
+	echo 'START - Pre-run check out latest scripts'
+	set -x
+	cd $(dirname $ME)
+	git stash;git pull;git stash apply
+	echo 'END - Pre-run check out latest scripts'
+    )
+fi
+
+source ../../common/rundir.sh
