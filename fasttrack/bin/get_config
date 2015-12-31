@@ -76,13 +76,13 @@ function tprint (tbl, indent)
 end
 
 function bash_esc(str)
-  s = string.gsub(str, "'", "'\"'\"'")
+  s = string.gsub(str or "nil", "'", "'\"'\"'")
   return s
 end
 
 -- Bash doesn't support nested tables for we won't even try
 function bash(tbl)
-  io.write("CFGPATH='" .. bash_esc(path) .. "';\n")
+  io.write("CFGPATH='" .. bash_esc(config_path) .. "';\n")
   for k, v in pairs(tbl) do
       if type(v) == "table" then
 	  io.write("declare -A " .. k .. ";\n")
