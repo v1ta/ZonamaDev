@@ -166,6 +166,9 @@ echo "$version" > /.swgemudev.version
 chmod 644 /.swgemudev.version
 echo '{ "build_version": "'$version'", "build_timestamp": '$(date -u +'%s, "build_datetime": "%Y-%m-%dT%H:%M:%SZ"')', "builder_name": "'$builder_name'" }' | tee /.swgemudev.builinfo.json | python -m json.tool
 
+# Ok let rc.fasttrack free on first boot of fasttrack box
+rm -f ~vagrant/.suspend_fasttrack
+
 # Wait for sync to disk
 echo ">> Sync disk"
 sync; sync

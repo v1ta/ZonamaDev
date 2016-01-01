@@ -1,0 +1,2 @@
+date +%s > ~vagrant/.suspend_devsetup
+date +%s > ~vagrant/.suspend_fasttrack
