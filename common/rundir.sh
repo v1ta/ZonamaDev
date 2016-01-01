@@ -185,7 +185,7 @@ steps=$(echo ${run_dir}/*)
 if [ -n "$1" ]; then
     msg "Custom steps: $@"
     # 00* always run
-    steps=$(echo ${ME}'.d'/00*)
+    steps=$(echo ${run_dir}/00*)
 
     for i in $@
     do
@@ -196,6 +196,9 @@ if [ -n "$1" ]; then
 	    msg "Invalid step: $i file: ${fn} not found"
 	fi
     done
+
+    # 99* always run
+    steps="$steps $(echo ${run_dir}/99*)"
 else
     echo "Steps: "$(echo "$steps" | sed "s!${run_dir}/!!g")
 fi
