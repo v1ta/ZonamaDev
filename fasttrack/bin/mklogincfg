@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+# mklogincfg - Generate swgemu_login.cfg for this machine
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Thu Dec 31 23:03:49 UTC 2015
+#
+
+HAVEX=false
+
+if [ -n "$DISPLAY" ] && xset q > /dev/null 2>&1; then
+    HAVEX=true
+fi
+
+read -a aa <<<$(ip -o route show|egrep '^default')
+read -a aa <<<$(ip -o -4 addr show ${aa[4]})
+
+server_ip=$(echo ${aa[3]}|cut -d/ -f1)
+
+eval $(set -x;~/bin/get_config --bash 'Login..')
+
+if [ -z "$CFGPATH" ]; then
+    cfg="** Failed to get port config from config.lua"
+else
+    cfg="[ClientGame]\n\tloginServerPort0=${LoginPort}\n\tloginServerAddress0=${server_ip}\n[Station]\n\tsubscriptionFeatures=1\n\tgameFeatures=65535\n"
+fi
+
+if $HAVEX; then
+    echo -e "$cfg" | zenity --text-info --title="Cut and Paste this into your swgemu_login.cfg" --width 450 --height 250
+else
+    echo -e "Cut-and-paste this into your swgemu_login.cfg file...\n\n--CUT---CUT---CUT---CUT---CUT--"
+    echo -e $cfg
+    echo -e "\n--CUT---CUT---CUT---CUT---CUT--"
+fi
