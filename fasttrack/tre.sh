@@ -38,7 +38,7 @@ main() {
 
     echo -e "\n** Ok we found your files in $trepath, we will now try and copy them to your guest...\n"
 
-    local sshcfg=$(mktemp)
+    local sshcfg=$(mktemp /tmp/tre-ssh.XXXXXX)
     trap 'rm -f "'$sshcfg'"' 0
 
     echo "** Checking to make sure your guest is up..."
@@ -65,7 +65,7 @@ ask_emudir() {
 	echo
 	read -rp "Where did you install the swgemu client? " n
 
-	local path=$(cygpath ${n//\\/\/})
+	local path=$(cygpath ${n//\\/\/} 2> /dev/null || echo $n)
 
 	echo -e "\nSearching [$path]\n"
 
