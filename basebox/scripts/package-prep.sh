@@ -130,16 +130,18 @@ vbpid=$(cat /var/run/vboxadd-service.pid 2> /dev/null)
 
 sleep 5
 
+ps -fu vagrant
+
 ##########################
 ## Cleanup all the logs ##
 ##########################
+echo ">> Cleanup /var/log"
 find /var/log -name \*.gz -o -name \*.[0-9] | xargs -t rm 
 
 rm -fr /var/tmp/* /tmp/* /etc/ssh/ssh_host*_key* /root/.viminfo /root/.bash_history /root/.lesshst /root/.bash_history /root/.ssh/* /var/log/*.gz /var/log/*.[1-9]* /var/log/*.old /var/spool/anacron/*
 
 find /var/log /etc/machine-id /var/lib/dbus/machine-id -type f | while read fn
 do
-    echo ">> Zero $fn"
     cp /dev/null "$fn"
 done
 
