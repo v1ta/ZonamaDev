@@ -30,4 +30,5 @@ if [ -f $SUSPEND_FLAG ]; then
     let "tm_delta=$tm_now - $tm_then"
     notice "$(basename $ME) suspended" "Suspended because ${SUSPEND_FLAG} exists for the last ${tm_delta} second(s), ignore this if you're working on building the basebox."
     msg "SUSPENDING SETUP BECAUSE ${SUSPEND_FLAG} EXISTS"
+    exit 0
 fi
