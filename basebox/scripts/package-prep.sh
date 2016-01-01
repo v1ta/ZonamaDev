@@ -136,7 +136,7 @@ ps -fu vagrant
 ## Cleanup all the logs ##
 ##########################
 echo ">> Cleanup /var/log"
-find /var/log -name \*.gz -o -name \*.[0-9] | xargs -t rm 
+find /var/log -name \*.gz -o -name \*.[0-9] | xargs --no-run-if-empty -t rm 
 
 rm -fr /var/tmp/* /tmp/* /etc/ssh/ssh_host*_key* /root/.viminfo /root/.bash_history /root/.lesshst /root/.bash_history /root/.ssh/* /var/log/*.gz /var/log/*.[1-9]* /var/log/*.old /var/spool/anacron/*
 

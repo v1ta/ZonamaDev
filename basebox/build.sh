@@ -42,6 +42,7 @@ build_box() {
 	    rm -f package.box
 	else
 	    echo "** ABORTED BY USER **"
+	    exit 0
 	fi
     fi
 
@@ -49,6 +50,7 @@ build_box() {
 	:
     else
 	echo "** ABORTED BY USER **"
+	exit 0
     fi
 
     SCREEN=$(type -P screen)
@@ -110,11 +112,11 @@ get_version() {
     fi
 
     # TODO should we check x.y.z format?
-
     if yorn "\nAre you sure you want to use version [$version] for this box?"; then
-	:
+	echo -e "\nNew Version: ${version}\n"
     else
 	echo "** ABORTED BY USER **"
+	exit 0
     fi
 }
 
@@ -130,7 +132,7 @@ package_box() {
 	exit 1
     fi
 
-    local sshcfg=$(mktemp)
+    local sshcfg=$(mktemp /tmp/build-basebox.XXXXXX)
     trap 'rm -f "'$sshcfg'"' 0
 
     echo "** Getting ssh configuration..."
@@ -140,7 +142,7 @@ package_box() {
 
     echo "** Pulling latest greatest ${ZONAMADEV_URL}..."
     if ssh -F $sshcfg default "rm -fr ZonamaDev;git clone ${ZONAMADEV_URL}"; then
-	msg "SUCCESS!"
+	:
     else
 	msg "git clone ${ZONAMADEV_URL} SEEMS TO HAVE FAILED WITH ERR=$?, fix it and after that try: ./build.sh package"
 	exit 1
@@ -151,8 +153,16 @@ package_box() {
     if ssh -F $sshcfg default "exec sudo ZonamaDev/basebox/scripts/package-prep.sh '$version' '$builder'"; then
 	msg "SUCCESS!"
     else
-	msg "package-prep.sh SEEMS TO HAVE FAILED WITH ERR=$?, fix it and after that try: ./build.sh package"
-	exit 1
+	local st=$?
+
+	# When the server shuts us down ssh looks like it returns 255
+	if [ $st -eq 255 ]; then
+            :
+	else
+	    # Anything else was not expected
+	    msg "package-prep.sh SEEMS TO HAVE FAILED WITH ERR=$?, fix it and after that try: ./build.sh package"
+	    exit 1
+	fi
     fi
 
     echo "** Ok now build the package!"
@@ -166,16 +176,42 @@ package_box() {
     fi
 
     if [ -f package.box ]; then
-	mv package.box package-${version}.box
+	local fn=package-${version}.box
+	mv package.box $fn
 
-	ls -l $PWD/package-${version}.box
+	ls -l "$PWD/$fn"
 
-	echo "Ok upload to atlas, don't forget to set the version to ${version} and release it too!"
+	echo 
+	echo "Ok upload $PWD/$fn to atlas, don't forget to set the version to ${version} and release it too!"
+	echo
+	echo "When you're ready please edit ../fasttrack/Vagrantfile and change:"
+	echo
+	echo "From: "$(grep config.vm.box_version ../fasttrack/Vagrantfile)
+	echo 'To  : config.vm.box_version = "'${version}'"'
+	echo
+	echo "Test, and then push the new fasttrack/Vagrantfile to the master branch"
     else
 	echo "** Something strange happened did not get a package.box file!?"
     fi
 
     exit 0
+}
+
+msg() {
+    local hd="##"$(echo "$1"|sed 's/./#/g')"##"
+    echo -e "$hd\n# $1 #\n$hd"
+}
+
+error() {
+    err_msg=$1
+    err_code=251
+    if [ "X$2" != "X" ]; then
+	err_code=$2
+    fi
+
+    msg "ERROR: $err_msg ($err_code)"
+
+    exit $err_code
 }
 
 yorn() {
@@ -193,6 +229,6 @@ yorn() {
   return 0
 }
 
-main
+main $@
 
 exit 0
