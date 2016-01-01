@@ -1,5 +1,5 @@
 extras
-package.box*
+package*.box*
 .vagrant/*
 .bundle/*
 .bash_profile

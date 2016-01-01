@@ -53,14 +53,9 @@ build_box() {
 	exit 0
     fi
 
-    SCREEN=$(type -P screen)
+    date
 
-    if [ -n "$SCREEN" ]; then
-	mv screenlog.0 screenlog.0-prev > /dev/null 2>&1
-	SCREEN="${SCREEN} -L"
-    fi
-
-    $SCREEN time vagrant up
+    time vagrant up
 
     echo
     echo "*** Manual Steps ***"
@@ -75,47 +70,6 @@ build_box() {
 	package_box
     else
 	echo "** When you're ready to package type: ./build.sh package"
-	exit 0
-    fi
-}
-
-get_version() {
-    if [ -n "$2" ]; then
-	version=$2
-    else
-	local suggest_version=""
-
-	# Try to guess a good version number
-	local prev_version=$(grep config.vm.box_version ../fasttrack/Vagrantfile | tr -d '['"'"'"]' | sed -e 's/.*=[ ]*//' -e 's/;//')
-
-	if [ -n "$prev_version" ]; then
-	    echo -e "\nPrevious version: $prev_version\n"
-
-	    local point=$(echo $prev_version | cut -d. -f3)
-
-	    let "point=$point + 1"
-
-	    suggest_version=$(echo $prev_version | sed 's/\.[0-9][0-9]*$/.'$point'/')
-	fi
-
-	local suggest=""
-	
-	if [ -n "$suggest_version" ]; then
-	    suggest=" (ENTER for default of '$suggest_version')"
-	fi
-
-	read -p "What version do you want to use for this box$suggest? " version
-
-	if [ -z "$version" ]; then
-	    version=$suggest_version
-	fi
-    fi
-
-    # TODO should we check x.y.z format?
-    if yorn "\nAre you sure you want to use version [$version] for this box?"; then
-	echo -e "\nNew Version: ${version}\n"
-    else
-	echo "** ABORTED BY USER **"
 	exit 0
     fi
 }
@@ -141,7 +95,7 @@ package_box() {
     builder=$(cat .builder 2> /dev/null)
 
     echo "** Pulling latest greatest ${ZONAMADEV_URL}..."
-    if ssh -F $sshcfg default "rm -fr ZonamaDev;git clone ${ZONAMADEV_URL}"; then
+    if ssh -t -F $sshcfg default "rm -fr ZonamaDev;git clone ${ZONAMADEV_URL}"; then
 	:
     else
 	msg "git clone ${ZONAMADEV_URL} SEEMS TO HAVE FAILED WITH ERR=$?, fix it and after that try: ./build.sh package"
@@ -150,7 +104,7 @@ package_box() {
 
     echo "** Executing package prep on guest..."
 
-    if ssh -F $sshcfg default "exec sudo ZonamaDev/basebox/scripts/package-prep.sh '$version' '$builder'"; then
+    if ssh -t -F $sshcfg default "exec sudo ZonamaDev/basebox/scripts/package-prep.sh '$version' '$builder'"; then
 	msg "SUCCESS!"
     else
 	local st=$?
@@ -195,6 +149,47 @@ package_box() {
     fi
 
     exit 0
+}
+
+get_version() {
+    if [ -n "$2" ]; then
+	version=$2
+    else
+	local suggest_version=""
+
+	# Try to guess a good version number
+	local prev_version=$(grep config.vm.box_version ../fasttrack/Vagrantfile | tr -d '['"'"'"]' | sed -e 's/.*=[ ]*//' -e 's/;//')
+
+	if [ -n "$prev_version" ]; then
+	    echo -e "\nPrevious version: $prev_version\n"
+
+	    local point=$(echo $prev_version | cut -d. -f3)
+
+	    let "point=$point + 1"
+
+	    suggest_version=$(echo $prev_version | sed 's/\.[0-9][0-9]*$/.'$point'/')
+	fi
+
+	local suggest=""
+	
+	if [ -n "$suggest_version" ]; then
+	    suggest=" (ENTER for default of '$suggest_version')"
+	fi
+
+	read -p "What version do you want to use for this box$suggest? " version
+
+	if [ -z "$version" ]; then
+	    version=$suggest_version
+	fi
+    fi
+
+    # TODO should we check x.y.z format?
+    if yorn "\nAre you sure you want to use version [$version] for this box?"; then
+	echo -e "\nNew Version: ${version}\n"
+    else
+	echo "** ABORTED BY USER **"
+	exit 0
+    fi
 }
 
 msg() {
