@@ -1,0 +1,85 @@
+#!/bin/bash
+#
+# 50openresty - Build openresty for the server instance
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Fri Jan  1 05:41:23 EST 2016
+#
+# Depends: OPENRESTY_REPO
+# Optional: OPENRESTY_VERSION
+
+# Required
+[ -n "$OPENRESTY_REPO" ] || error "Missing OPENRESTY_REPO, please fix." 150
+
+if [ -z "$OPENRESTY_VERSION" ]; then
+    echo "OPENRESTY_VERSION not set, assuming 'latest'"
+    OPENRESTY_VERSION='latest'
+fi
+
+mkdir -p "$OPENRESTY_DIR" && echo "Created openresty directory: '${OPENRESTY_DIR}'"
+mkdir ${EXTERNAL_SRC_DIR} && echo "Created ${EXTERNAL_SRC_DIR} directory"
+mkdir ${EXTERNAL_SRC_DIR}/tarballs && echo "Created ${EXTERNAL_SRC_DIR}/tarballs directory"
+pushd ${EXTERNAL_SRC_DIR}
+
+if [ $OPENRESTY_VERSION = 'latest' ]; then
+    echo "Get version 'latest' from openresty from ${OPENRESTY_REPO}"
+
+    OPENRESTY_VERSION=$(git ls-remote --tags https://github.com/openresty/ngx_openresty | sed -ne '/tags/s!.*tags/v!!p'|sort -b -t . -k 1,1nr -k 2,2nr -k 3,3r -k 4,4r -k 5,5r|head -1)
+
+    [ -n "$OPENRESTY_VERSION" ] || error "Failed to determine latest version" 130
+fi
+
+url="https://openresty.org/download/ngx_openresty-$OPENRESTY_VERSION.tar.gz"
+
+pushd ${EXTERNAL_SRC_DIR}/tarballs
+
+wget --progress=dot "$url" || error "Failed to download $url" 130
+
+OPENRESTY_TAR=$PWD/$(basename "$url")
+
+popd
+
+[ -f $OPENRESTY_TAR ] || error "Can't find downloaded file: $OPENRESTY_TAR" 130
+
+if type pv > /dev/null 2>&1; then
+    pv < $OPENRESTY_TAR | tar xzf -
+else
+    tar xzf $OPENRESTY_TAR
+fi
+
+dir="${EXTERNAL_SRC_DIR}/"$(basename $OPENRESTY_TAR .tar.gz)
+
+cd $dir || error "Failed to cd to dir"
+
+export MAKE=$(type -P make)' -j'$(nproc)
+
+echo "Building in ${PWD} using $MAKE"
+
+trap 'st=$?;exec 1>&2;error "UNEXPECTED EXIT FROM BUILD" $st' 0
+
+set -xe
+
+time ./configure --with-luajit --with-http_stub_status_module --with-http_ssl_module  --prefix="${OPENRESTY_DIR}" > configure.out 2>&1
+
+time $MAKE > make.out 2>&1
+
+time $MAKE install > make-install.out 2>&1
+
+mkdir "${OPENRESTY_DIR}/nginx/lua" && echo "Created ${OPENRESTY_DIR}/nginx/lua"
+
+# TODO should we delete these? Or leave them for the user to sniff around?
+# make clean
+# cd ..;rm -fr $OPENRESTY_TAR $dir
+
+# Configure to listen on 8080 fasttrack/scripts/rc.fasttrack.d/10openresty will forward 80 to 8080
+# We do this so the server runs as the swgemu server id doesn't have to run as root
+sed 's/listen \([ ]*\)80;/listen\1 8080;/' -i ${OPENRESTY_DIR}/nginx/conf/nginx.conf
+
+# Number of workers, cpus/2 or at least 2
+let "n=$(nproc) / 2"
+sed 's/worker_processes \([ ]*\)[0-9][0-9]*/worker_processes\1 '$(($n>1?$n:2))'/' -i ${OPENRESTY_DIR}/nginx/conf/nginx.conf
+
+set +xe
+trap - 0
+popd
