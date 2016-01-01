@@ -106,7 +106,7 @@ chown -R vagrant:vagrant ~vagrant
 echo ">> Cleanup user files that shouldn't be in the base box image."
 (
     cd ~vagrant
-    rm -rf .suspend_devsetup .bash* .profile .inputrc .vim* .cache /var/mail/* .ssh/id_rsa* .ssh/config .visual .gerrit_username .mysql_history
+    rm -rf .bash* .profile .inputrc .vim* .cache /var/mail/* .ssh/id_rsa* .ssh/config .visual .gerrit_username .mysql_history
     rm -rf .xsession* .gitconfig .lesshst .ssh/id_* .subversion workspace .cache
     sed -e '/ vagrant$/p' -e 'd' -i .ssh/authorized_keys
     mysql -e 'drop database swgemu' > /dev/null 2>&1 ;
@@ -133,13 +133,17 @@ sleep 5
 ##########################
 ## Cleanup all the logs ##
 ##########################
-rm -fr /var/tmp/* /tmp/* /etc/ssh/ssh_host*_key* /root/.viminfo /root/.bash_history /root/.lesshst /root/.bash_history /root/.ssh/* /var/log/*.gz /var/log/*.[1-9] /var/log/*.old
+find /var/log -name \*.gz -o -name \*.[0-9] | xargs -t rm 
+
+rm -fr /var/tmp/* /tmp/* /etc/ssh/ssh_host*_key* /root/.viminfo /root/.bash_history /root/.lesshst /root/.bash_history /root/.ssh/* /var/log/*.gz /var/log/*.[1-9]* /var/log/*.old /var/spool/anacron/*
 
 find /var/log /etc/machine-id /var/lib/dbus/machine-id -type f | while read fn
 do
     echo ">> Zero $fn"
     cp /dev/null "$fn"
 done
+
+mv /var/log/syslog /var/log/syslog.1 > /dev/null 2>&1
 
 # rc.fasttrack should run this on other box
 # /usr/sbin/dpkg-reconfigure openssh-server
@@ -177,7 +181,7 @@ set -x
 
 sleep 5
 
-sync;halt --force --no-wall --poweroff
+sync;init 0
 
 # these aren't the droids you're looking for...
 echo "** SHOULD NOT BE HERE! GET HELP! **"

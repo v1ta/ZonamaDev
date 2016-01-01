@@ -11,3 +11,4 @@ package.box*
 .visual
 .gerrit_username
 .id_rsa*
+.builder
