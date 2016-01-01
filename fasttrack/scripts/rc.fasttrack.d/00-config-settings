@@ -19,3 +19,15 @@ fi
 
 SWGEMUDEV_VERSION=$(cat /.swgemudev.version)
 SWGEMUDEV_GITURL=$(cat /.swgemudev.giturl)
+
+#
+## Check for suspend flag
+SUSPEND_FLAG=~vagrant/.suspend_fasttrack
+
+if [ -f $SUSPEND_FLAG ]; then
+    tm_now=$(date +%s)
+    tm_then=$(<$SUSPEND_FLAG)
+    let "tm_delta=$tm_now - $tm_then"
+    notice "$(basename $ME) suspended" "Suspended because ${SUSPEND_FLAG} exists for the last ${tm_delta} second(s), ignore this if you're working on building the basebox."
+    msg "SUSPENDING SETUP BECAUSE ${SUSPEND_FLAG} EXISTS"
+fi
