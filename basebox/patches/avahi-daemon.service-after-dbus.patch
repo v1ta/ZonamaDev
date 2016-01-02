@@ -1,0 +1,10 @@
+--- /lib/systemd/system/avahi-daemon.service	2016-01-02 12:06:25.694297856 +0000
++++ avahi-daemon.service-after-dbus	2016-01-02 12:06:22.990268631 +0000
+@@ -18,6 +18,7 @@
+ [Unit]
+ Description=Avahi mDNS/DNS-SD Stack
+ Requires=avahi-daemon.socket
++After=dbus.socket
+
+ [Service]
+ Type=dbus
