@@ -11,10 +11,35 @@ usermod -c "vagrant" vagrant
 usermod vagrant -a -G adm
 
 # Add rc.fasttrak
-echo -e '## ZonamaDev Boot\n(set +e;cd ~vagrant;(git clone https://github.com/lordkator/ZonamaDev.git || (cd ZonamaDev;git stash;git pull)) 2> /dev/null;ZonamaDev/fasttrack/scripts/rc.fasttrack;exit 0) > /tmp/rc.fasttrack.out 2>&1' >> /etc/rc.local
+if [ ! -d /etc/systemd ]; then
+    echo "Using /etc/rc.local for rc.fasttrack"
+    echo -e '## ZonamaDev Boot\n/bin/su vagrant -c "cd;set -x;pwd;git clone https://github.com/lordkator/ZonamaDev.git || (cd ZonamaDev;git stash;git pull)"' >> /etc/rc.local
+    sed -e '/^exit/{H;d}' -e '${p;x}' -i /etc/rc.local
+    return
+fi
 
-echo -e '## Avahi often blows up before dbus can get up, try a restart here..\nservice avahi-daemon restart || echo "Restarted avahi-daemon"' >> /etc/rc.local
+echo "Using systemd for rc.fasttrack"
 
-# Move exit to end (if any)
-sed -e '/^exit/{H;d}' -e '${p;x}' -i /etc/rc.local
+cat << ! > /lib/systemd/system/rc.fasttrack.service
+# This file is part of ZonamaDev
+#
+# See https://github.com/lordkator/ZonamaDev for more details
+#
+[Unit]
+Description=ZonamaDev Boot Script
+Documentation=https://github.com/lordkator/ZonamaDev
+Before=systemd-user-sessions.service
+After=dbus.socket
 
+[Service]
+Type=forking
+ExecStartPre=/bin/su vagrant -c 'cd;set -x;pwd;git clone https://github.com/lordkator/ZonamaDev.git || (cd ZonamaDev;git stash;git pull)'
+ExecStart=/home/vagrant/ZonamaDev/fasttrack/scripts/rc.fasttrack
+TimeoutSec=0
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+!
+
+systemctl enable rc.fasttrack
