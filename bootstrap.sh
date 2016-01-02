@@ -29,13 +29,34 @@ main() {
     check_vagrant_$OS
 
     ## Clone Repo
-    git clone https://github.com/lordkator/ZonamaDev.git
+    if git clone https://github.com/lordkator/ZonamaDev.git; then
+	:
+    else
+	case $PWD in
+	*ZonamaDev* ) : ;;
+	* ) echo "** Something is wrong, did you try and run this in the right directory? **"
+	    echo "** We suggest you run it from $HOME **"
+	    exit 1
+	    ;;
+	esac
+
+	if git pull; then
+	    :
+	else
+	    echo "** Failed to clone too, you might need help!"
+	    exit 1
+	fi
+    fi
 
     ## hand off to next script
-    cd ZonamaDev/fasttrack
-    exec ./setup.sh < /dev/tty
+    cd ${PWD/ZonamaDev*/}"/ZonamaDev/fasttrack"
+
+    echo "** Running in $PWD **"
+
+    exec ./setup.sh
 
     echo "** Something went wrong, get help **"
+
     exit 11
 }
 
