@@ -1,0 +1,71 @@
+#!/bin/bash
+
+main() {
+    case $1 in
+	'start' ) server_start ;;
+	'startx' ) server_start 'x' ;;
+	'status' ) server_status ;;
+    esac
+}
+
+server_start() {
+    if server_status; then
+	echo "** Already running **"
+	if [ "X$1" = "Xx" ]; then
+	    xfce4-terminal --maximize --icon=${ASSETS_DIR}/swgemu_icon.png --hide-menubar --hide-toolbar --title="Core3 Server" --command="screen -D -RR" &
+	else
+	    exec screen -D -RR
+	fi
+	exit
+    fi
+
+    server_update_ip
+
+    cd ~/workspace/Core3/MMOCoreORB/bin
+
+    for i in 5 4 3 2 1
+    do
+	let "j=$i-1"
+	mv o_screenlog.${j}.gz o_screenlog.${i}.gz 2> /dev/null
+    done
+
+    mv screenlog.0 o_screenlog.0
+
+    gzip -f o_screenlog.0 &
+
+    if [ "X$1" = "Xx" ]; then
+	xfce4-terminal --maximize --icon=${ASSETS_DIR}/swgemu_icon.png --hide-menubar --hide-toolbar --title="Core3 Server" --command="screen -L ./core3" &
+    else
+	exec screen -L ./core3
+    fi
+}
+
+server_status() {
+    local pid=$(pgrep core3)
+
+    if [ -z "$pid" ]; then
+	echo "Server is not running"
+	return 1
+    fi
+
+    local uptime=$(ps -p $pid -ho etime)
+
+    echo "Server running on $pid, uptime: $uptime"
+
+    return 0
+}
+
+server_update_ip() {
+    read -a aa <<<$(ip -o route show|egrep '^default')
+    read -a aa <<<$(ip -o -4 addr show ${aa[4]})
+    local server_ip=$(echo ${aa[3]}|cut -d/ -f1)
+
+    echo "Suggested IP: $server_ip"
+
+    mysql swgemu -ve "UPDATE galaxy SET ip = '${server_ip}'";
+    sed -e "/server_ip/s/server_ip = '[^']*'/server_ip = '"${server_ip}"'/" -i /home/vagrant/server/emuyoda/yoda-config.lua
+}
+
+main $@
+
+exit 0
