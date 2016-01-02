@@ -85,6 +85,8 @@ Vagrant.configure(2) do |config|
         v.customize ["modifyvm", :id, "--accelerate3d", "on"]
         v.customize ["modifyvm", :id, "--vram", "128"]
         v.customize 'post-boot', ["controlvm", :id, "setvideomodehint", "1280", "720", "24"]
+	# TODO need to test this more and see if we can optimize the network more, for now ethtool -i eth0 gro off seems to help
+	# v.customize ["modifyvm", :id, "--nictype1", "virtio"]
         # v.customize ["modifyvm", :id, "--ioapic", "On"]
         # v.customize ["modifyvm", :id, "--audio", "coreaudio"]
         # v.customize ["modifyvm", :id, "--audiocontroller", "ac97"]
