@@ -20,7 +20,7 @@ main() {
     if git --version > /dev/null 2>&1; then
 	:
     else
-	eval install_git_$OS()
+	eval install_git_$OS
     fi
 
     ## Clone Repo
