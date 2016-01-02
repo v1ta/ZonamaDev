@@ -1,1 +1,1 @@
-date +%s > ~vagrant/rc.fasttrack.ran
+date +%s > ~vagrant/.rc.fasttrack.ran
