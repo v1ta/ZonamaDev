@@ -95,7 +95,7 @@ check_vagrant_win() {
 	exit 1
     fi
 
-    echo "Vagrant version $version"
+    echo "** Vagrant version $ver **"
 }
 
 yorn() {
