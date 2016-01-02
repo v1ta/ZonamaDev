@@ -1,1 +1,2 @@
-rm -f ~vagrant/.suspend_devsetup
+rm -f ~vagrant/.suspend_devsetup 2> /dev/null
+date +%s > ~vagrant/rc.fasttrack.ran

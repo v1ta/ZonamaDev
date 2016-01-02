@@ -107,7 +107,7 @@ echo ">> Cleanup user files that shouldn't be in the base box image."
 (
     cd ~vagrant
     rm -rf .bash* .profile .inputrc .vim* .cache /var/mail/* .ssh/id_rsa* .ssh/config .visual .gerrit_username .mysql_history
-    rm -rf .xsession* .gitconfig .lesshst .ssh/id_* .subversion workspace .cache
+    rm -rf .xsession* .gitconfig .lesshst .ssh/id_* .subversion workspace/* .cache
     sed -e '/ vagrant$/p' -e 'd' -i .ssh/authorized_keys
     mysql -e 'drop database swgemu' > /dev/null 2>&1 ;
 ) 2> /dev/null
