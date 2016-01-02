@@ -8,7 +8,7 @@ Zonama - The living planet, or in our world an easily deployed development envir
 
 #### Downloads
 * Github's Git for Windows: https://git-for-windows.github.io/
-* VirtualBox for Windows: https://www.vagrantup.com/downloads.html
+* VirtualBox for Windows: https://www.virtualbox.org/wiki/Downloads
 * Vagrant for Windows: https://www.vagrantup.com/downloads.html
  
 #### Bootstrap
