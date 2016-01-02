@@ -23,7 +23,7 @@ end
 # If we had to install anything they need to restart
 if plugins_installed
   puts "Some plugins had to be installed, please re-run your command"
-  exit 1
+  exit 101
 end
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
@@ -39,7 +39,10 @@ Vagrant.configure(2) do |config|
   config.vm.box_check_update = true
 
   # TODO Setup for LAN testing
-  # config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 80,    host_ip: '127.0.0.1', host: 80
+  config.vm.network "forwarded_port", guest: 44453, host_ip: '127.0.0.1', host: 44453, protocol: 'udp'
+  config.vm.network "forwarded_port", guest: 44462, host_ip: '127.0.0.1', host: 44462, protocol: 'udp'
+  config.vm.network "forwarded_port", guest: 44463, host_ip: '127.0.0.1', host: 44463, protocol: 'udp'
 
   # TODO: Can we autoconfig this rather than prompting for which interface to bridge?
   # config.vm.network "public_network", use_dhcp_assigned_default_route: true, auto_config: true
