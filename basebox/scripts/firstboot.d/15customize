@@ -33,10 +33,12 @@ After=dbus.socket
 
 [Service]
 Type=forking
-ExecStartPre=/bin/su vagrant -c 'cd;set -x;pwd;git clone https://github.com/lordkator/ZonamaDev.git || (cd ZonamaDev;git stash;git pull)'
+ExecStartPre=/bin/su vagrant -c '(cd;set -x;pwd;git clone https://github.com/lordkator/ZonamaDev.git || (cd ZonamaDev;git stash;git pull))|logger -t rc.fasttrack.ExecStartPre'
 ExecStart=/home/vagrant/ZonamaDev/fasttrack/scripts/rc.fasttrack
 TimeoutSec=0
 RemainAfterExit=yes
+StandardOutput=null
+StandardError=null
 
 [Install]
 WantedBy=multi-user.target
