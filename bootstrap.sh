@@ -82,7 +82,9 @@ check_virtualbox_win() {
 }
 
 check_vagrant_win() {
-    if type vagrant > /dev/null 2>&1; then
+    local ver=$(vagrant --version | cut -d' ' -f2 2> /dev/null)
+
+    if [ -z "$ver" ]; then
 	echo -e "** You need to install Vagrant **\n"
 
 	if yorn "Would you like me to take you to: https://www.vagrantup.com/downloads.html?"; then
@@ -92,6 +94,8 @@ check_vagrant_win() {
 	echo "** Please close this window, install Vagrant and try again **"
 	exit 1
     fi
+
+    echo "Vagrant version $version"
 }
 
 yorn() {
