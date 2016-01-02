@@ -3,25 +3,27 @@
 main() {
     case $1 in
 	'start' ) server_start ;;
-	'startx' ) server_start 'x' ;;
 	'status' ) server_status ;;
     esac
 }
 
+ICON=/home/vagrant/ZonamaDev/fasttrack/assets/swgemu_icon.png
+
 server_start() {
     if server_status; then
 	echo "** Already running **"
-	if [ "X$1" = "Xx" ]; then
-	    xfce4-terminal --maximize --icon=${ASSETS_DIR}/swgemu_icon.png --hide-menubar --hide-toolbar --title="Core3 Server" --command="screen -D -RR" &
-	else
-	    exec screen -D -RR
-	fi
-	exit
+	exec screen -D -RR
+	exit 1
     fi
 
     server_update_ip
 
     cd ~/workspace/Core3/MMOCoreORB/bin
+
+    if [ ! -x core3 ]; then
+	echo "** Server not built? **"
+	exit 2
+    fi
 
     for i in 5 4 3 2 1
     do
@@ -33,11 +35,7 @@ server_start() {
 
     gzip -f o_screenlog.0 &
 
-    if [ "X$1" = "Xx" ]; then
-	xfce4-terminal --maximize --icon=${ASSETS_DIR}/swgemu_icon.png --hide-menubar --hide-toolbar --title="Core3 Server" --command="screen -L ./core3" &
-    else
-	exec screen -L ./core3
-    fi
+    exec screen -L ./core3
 }
 
 server_status() {
