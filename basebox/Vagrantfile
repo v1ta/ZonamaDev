@@ -89,6 +89,12 @@ Vagrant.configure(2) do |config|
         v.customize ["modifyvm", :id, "--accelerate3d", "on"]
         v.customize ["modifyvm", :id, "--vram", "128"]
         v.customize 'post-boot', ["controlvm", :id, "setvideomodehint", "1280", "720", "24"]
+	# Will this make it install faster?
+	# see https://github.com/mitchellh/vagrant/issues/1807
+	## NOPE 2016-01-02:
+	## v.customize ["modifyvm", :id, "--nictype1", "virtio" ]
+	## v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+	## v.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
       end
     end
   end
@@ -114,8 +120,9 @@ Vagrant.configure(2) do |config|
   config.vm.provision :shell, name: "firstboot", run: "always", inline: <<-SHELL
     if [ ! -f "ZonamaDev/basebox/scripts/firstboot.sh" ]; then
       echo "** Fresh Guest **"
+      ethtool -K eth0 gro off
       apt-get update
-      apt-get -y install git moreutils
+      apt-get -y install git moreutils ethtool
       git clone https://github.com/lordkator/ZonamaDev.git
     else
       echo "** Existing Guest **"
@@ -131,6 +138,7 @@ Vagrant.configure(2) do |config|
     # Tell them to be patient!
     config.vm.provision :shell, name: "firstboot.sh", inline: <<-SHELL
 	chvt 8
+	ethtool -K eth0 gro off
 	echo "** Please wait while provisioning continues **" > /dev/console
     SHELL
 
