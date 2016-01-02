@@ -36,6 +36,11 @@ main() {
 
     time vagrant up
 
+    if [ $? == 101 ]; then
+	echo "** Running vagrant up again after plugin install **"
+	time vagrant up
+    fi
+
     sleep 5
 
     ./tre.sh

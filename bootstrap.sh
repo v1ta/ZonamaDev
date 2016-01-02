@@ -76,7 +76,7 @@ check_virtualbox_win() {
 	    explorer "https://www.virtualbox.org/wiki/Downloads"
 	fi
 
-	echo "** Please close this window, install VirtualBox and try again **"
+	echo "** Please close this window, install VirtualBox, REBOOT and try again **"
 	exit 1
     fi
 }
