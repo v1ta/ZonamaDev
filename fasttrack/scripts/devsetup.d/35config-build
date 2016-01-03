@@ -30,7 +30,7 @@ config_build() {
 
     command_window "Config and Build" "tail -f $status_pipe"  &
 
-    local logfile=$WORKSPACE/Core3/MMOCoreORB/initial_build.log
+    local logfile=$WORKSPACE/Initial_Core3_Build.log
 
     [ -f $logfile ] && mv ${logfile} ${logfile}'-prev'
 
