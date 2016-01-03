@@ -16,7 +16,7 @@ check_repos() {
 	if [ -d $i/.git ]; then
 	    echo "Repo $i is already cloned in $WORKSPACE/$i"
 	else
-	    missing="$missing $i"
+	    missing="$missing   $i"
 	fi
     done
 
@@ -24,13 +24,14 @@ check_repos() {
 	return
     fi
 
-    if zenity --question  --text="You're missing the following repos:\n\n\t\t$missing\n\nWould you like to clone them now?"; then
+    if zenity --question  --text="You're missing the following repos:\n\n$missing\n\nWould you like to clone them now?"; then
 	local status_pipe=$(mktemp /tmp/clone-status-pipe-XXXXXX)
 	local status_file=$(mktemp /tmp/clone-status-file-XXXXXX)
 
 	echo 255 > $status_file
 	mknod $status_pipe p
 	command_window "Clone Status" "tail -f $status_pipe"  &
+	sleep 3
 
 	(
 	echo 254 > $status_file
