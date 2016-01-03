@@ -8,11 +8,19 @@
 #
 
 main() {
+    get_lock
+
     case $1 in
 	'start' ) server_start ;;
 	'status' ) server_status ;;
 	'backup' ) server_backup ;;
+	'build' ) server_build ;;
+	* ) echo "Usage: $0 {start|status|backup|build}"; exit 1 ;;
     esac
+
+    release_lock
+
+    exit 0
 }
 
 ICON=/home/vagrant/ZonamaDev/fasttrack/assets/swgemu_icon.png
@@ -71,6 +79,38 @@ server_status() {
     return 0
 }
 
+server_build() {
+    if server_status; then
+	echo "** Server is running **"
+
+	if yorn "Would you like to join the console so you can shut it down?"; then
+	    screen -D -RR swgemu-server
+	else
+	    echo "** USER ABORTED BUILD **"
+	    exit 12
+	fi
+    fi
+
+    cd ~/workspace/Core3/MMOCoreORB
+
+    if [ ! -f ~/workspace/Core3/MMOCoreORB/build/unix/config.log ]; then
+	if time make config; then
+	    :
+	else
+	    echo "** make config failed **"
+	    exit 10
+	fi
+    fi
+
+    if time make -k build; then
+	echo "** BUILD SUCCESS IN $SECONDS SECOND(S) **"
+	exit 0
+    else
+	echo "** BUILD FAILED **"
+	exit 11
+    fi
+}
+
 server_update_ip() {
     local server_ip='127.0.0.1'
     local i2=$(netstat -ni|grep eth2)
@@ -99,7 +139,7 @@ server_backup() {
 	echo "** Server is running **"
 
 	if yorn "Would you like to join the console so you can shut it down?"; then
-	    screen -D -RR
+	    screen -D -RR swgemu-server
 	else
 	    echo "** USER ABORTED BACKUP **"
 	    exit 12
@@ -114,43 +154,45 @@ server_backup() {
 
     TMPDIR=$(mktemp -d ${BUDIR}/swgemu-backup-temp.XXXXXX)
 
-    trap 'set +xe;st=$?;echo "** UNEXPECTED EXIT=$st, PARTIAL BACKUP LEFT IN ${TMPDIR} **";rm -f ${SWGEMU_LOCKFILE};exit $st' 0
+    (
+	trap 'set +xe;st=$?;echo "** UNEXPECTED EXIT=$st, PARTIAL BACKUP LEFT IN ${TMPDIR} **";rm -f ${SWGEMU_LOCKFILE};exit $st' 0
 
-    NOW=$(date +%s)
+	NOW=$(date +%s)
 
-    STAMP=$(date -d@${NOW} '+%Y%m%d%H%M%S%Z')
+	STAMP=$(date -d@${NOW} '+%Y%m%d%H%M%S%Z')
 
-    BUFILE=${BUDIR}/swgemu-backup-${STAMP}.tar.gz
+	BUFILE=${BUDIR}/swgemu-backup-${STAMP}.tar.gz
 
-    echo "** Backing up to ${BUFILE} **"
+	echo "** Backing up to ${BUFILE} **"
 
-    set -xe
+	set -xe
 
-    mysqldump --opt swgemu > "${TMPDIR}/mysqldump.sql"
+	mysqldump --opt swgemu > "${TMPDIR}/mysqldump.sql"
 
-    cd ~/workspace/Core3/MMOCoreORB/bin
+	cd ~/workspace/Core3/MMOCoreORB/bin
 
-    cp -rv conf databases ${TMPDIR}
+	cp -rv conf databases ${TMPDIR}
 
-    cd ${TMPDIR}
+	cd ${TMPDIR}
 
-    files=$(echo *)
+	files=$(echo *)
 
-    read sz dir <<< $(du -s --block-size=1 .)
+	read sz dir <<< $(du -s --block-size=1 .)
 
-    # TODO - Other useful metadata here?
-    echo '{"backup_size_bytes":"'${sz}'","backup_date":"'$(date -d@${NOW})'","backup_isodate":"'$(date -d@${NOW} -Iseconds)'","backup_unixepoc":"'${NOW}'"}' > ${TMPDIR}/metadata.json
+	# TODO - Other useful metadata here?
+	echo '{"backup_size_bytes":"'${sz}'","backup_date":"'$(date -d@${NOW})'","backup_isodate":"'$(date -d@${NOW} -Iseconds)'","backup_unixepoc":"'${NOW}'"}' > ${TMPDIR}/metadata.json
 
-    # TODO do we need the __db files if the db is closed?
-    tar cvzf ${BUFILE} metadata.json $(find $files -type f|sort)
+	# TODO do we need the __db files if the db is closed?
+	tar cvzf ${BUFILE} metadata.json $(find $files -type f|sort)
 
-    rm -fr ${TMPDIR}
+	rm -fr ${TMPDIR}
 
-    set +xe
+	set +xe
 
-    trap - 0
+	trap - 0
 
-    echo "** SUCCESS: Backup saved to ${BUFILE} **"
+	echo "** SUCCESS: Backup saved to ${BUFILE} **"
+    )
 
     exit 0
 }
@@ -216,12 +258,6 @@ get_lock() {
     trap 'release_lock;' 0
 }
 
-get_lock
-
-(
-    main $@
-)
-
-release_lock
+main $@
 
 exit 0
