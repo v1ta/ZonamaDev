@@ -13,7 +13,7 @@ check_repos() {
 
     for i in $REPOS
     do
-	if [ -d $i/.git ]; then
+	if [ -d $i/.git/HEAD ]; then
 	    echo "Repo $i is already cloned in $WORKSPACE/$i"
 	else
 	    missing="$missing   $i"
@@ -51,6 +51,7 @@ check_repos() {
 	    fi
 	done
 	set +xe
+	echo -e '\n\n\n'
 	echo -e 'H4sIAJ00iVYAA1NQBgEFBSBSAJNQPoxWVkZmwMS5YMrx0wro4lzYxRVw01wKaA7EUAF1F5oDFVCU\n47YI3TpyPYYebkSGIxcAebZM9YABAAA='|base64 -d|gunzip
 	trap - 0
 	echo 0 > $status_file
