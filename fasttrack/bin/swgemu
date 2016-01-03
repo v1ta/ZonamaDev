@@ -39,7 +39,14 @@ server_start() {
 
     if [ ! -x core3 ]; then
 	echo "** Server not built? **"
-	exit 2
+
+	if yorn "Would you like to build the server now?"; then
+	    if server_build; then
+		:
+	    else
+		exit $?
+	    fi
+	fi
     fi
 
     for i in 5 4 3 2 1
