@@ -54,9 +54,13 @@ check_repos() {
 	trap - 0
 	echo 0 > $status_file
 	) 2>&1 | tee $status_pipe
-	local ret=(cat $status_file 2> /dev/null)
+	local ret=$(cat $status_file 2> /dev/null)
 
-	if [ -z "$ret" -o $ret -gt 0 ]; then
+	if [ -x "$ret" ]; then
+	    ret=256
+	fi
+
+	if [ $ret -gt 0 ]; then
 	    error "Clone failed with error code $ret\n\nReview the log output for clues." 125
 	else
 	    zenity --info --text="Clone process success.\n\nPress [OK] to discard the log window"
