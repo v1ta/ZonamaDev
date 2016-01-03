@@ -13,7 +13,7 @@ check_repos() {
 
     for i in $REPOS
     do
-	if [ -d $i/.git/HEAD ]; then
+	if [ -f $i/.git/HEAD ]; then
 	    echo "Repo $i is already cloned in $WORKSPACE/$i"
 	else
 	    missing="$missing   $i"
