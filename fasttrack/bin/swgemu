@@ -46,6 +46,9 @@ server_start() {
 	    else
 		exit $?
 	    fi
+	else
+	    echo "** USER ABORTED **"
+	    exit 2
 	fi
     fi
 
