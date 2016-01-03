@@ -1,10 +1,20 @@
 #!/bin/bash
+#
+# swgemu - Control swgemu server on this machine
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Sun Jan  3 13:30:33 UTC 2016
+#
 
 main() {
     case $1 in
 	'start' ) server_start ;;
 	'status' ) server_status ;;
+	'backup' ) server_backup ;;
     esac
+
+    exit 0
 }
 
 ICON=/home/vagrant/ZonamaDev/fasttrack/assets/swgemu_icon.png
@@ -73,6 +83,77 @@ server_update_ip() {
     sed -e "/server_ip/s/server_ip = '[^']*'/server_ip = '"${server_ip}"'/" -i /home/vagrant/server/emuyoda/yoda-config.lua
 }
 
-main $@
+server_backup() {
+    if server_status; then
+	echo "** Server is running **"
 
-exit 0
+	if yorn "Would you like to join the console so you can shut it down?"; then
+	    screen -D -RR
+	else
+	    echo "** USER ABORTED BACKUP **"
+	    exit 12
+	fi
+    fi
+
+    # NOTE: not the most space efficent way to do it but will work as it's simple for people to understand the format
+
+    BUDIR=~/server/swgemu/backups
+
+    mkdir -p ${BUDIR} 2> /dev/null && echo "** Created ${BUDIR} directory **"
+
+    TMPDIR=$(mktemp -d ${BUDIR}/swgemu-backup-temp.XXXXXX)
+
+    trap 'set +xe;st=$?;echo "** UNEXPECTED EXIT=$st, PARTIAL BACKUP LEFT IN ${TMPDIR} **";exit $st' 0
+
+    NOW=$(date +%s)
+
+    STAMP=$(date -d@${NOW} '+%Y%m%d%H%M%S%Z')
+
+    BUFILE=${BUDIR}/swgemu-backup-${STAMP}.tar.gz
+
+    echo "** Backing up to ${BUFILE} **"
+
+    set -xe
+
+    mysqldump --opt swgemu > "${TMPDIR}/mysqldump.sql"
+
+    cd ~/workspace/Core3/MMOCoreORB/bin
+
+    cp -rv conf databases ${TMPDIR}
+
+    cd ${TMPDIR}
+
+    files=$(echo *)
+
+    read sz dir <<< $(du -s --block-size=1 .)
+
+    # TODO - Other useful metadata here?
+    echo '{"backup_size_bytes":"'${sz}'","backup_date":"'$(date -d@${NOW})'","backup_isodate":"'$(date -d@${NOW} -Iseconds)'","backup_unixepoc":"'${NOW}'"}' > ${TMPDIR}/metadata.json
+
+    # TODO do we need the __db files if the db is closed?
+    tar cvzf ${BUFILE} metadata.json $(find $files -type f|sort)
+
+    rm -fr ${TMPDIR}
+
+    set +xe
+
+    trap - 0
+
+    echo "** SUCCESS: Backup saved to ${BUFILE} **"
+
+    exit 0
+}
+
+yorn() {
+  if tty -s; then
+      echo -n -e "$@ Y\b" > /dev/tty
+      read yorn < /dev/tty
+      case $yorn in
+	[Nn]* ) return 1;;
+      esac
+  fi
+
+  return 0
+}
+
+main $@
