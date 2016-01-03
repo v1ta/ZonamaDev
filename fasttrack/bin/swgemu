@@ -13,8 +13,6 @@ main() {
 	'status' ) server_status ;;
 	'backup' ) server_backup ;;
     esac
-
-    exit 0
 }
 
 ICON=/home/vagrant/ZonamaDev/fasttrack/assets/swgemu_icon.png
@@ -22,8 +20,9 @@ ICON=/home/vagrant/ZonamaDev/fasttrack/assets/swgemu_icon.png
 server_start() {
     if server_status; then
 	echo "** Already running **"
-	exec screen -D -RR
-	exit 1
+	release_lock
+	screen -D -RR swgemu-server
+	exit 0
     fi
 
     server_update_ip
@@ -45,7 +44,16 @@ server_start() {
 
     gzip -f o_screenlog.0 &
 
-    exec screen -L ./core3
+    # Start server detached
+    screen -dmS swgemu-server -L ./core3
+
+    # Free lock
+    release_lock
+
+    # TODO Spawn a watcher to alert when the server is up
+
+    # Join the session so they can watch along..
+    exec screen -D -RR swgemu-server
 }
 
 server_status() {
@@ -56,7 +64,7 @@ server_status() {
 	return 1
     fi
 
-    local uptime=$(ps -p $pid -ho etime)
+    read uptime <<< $(ps -p $pid -ho etime)
 
     echo "Server running on $pid, uptime: $uptime"
 
@@ -79,7 +87,10 @@ server_update_ip() {
 
     echo "Suggested IP: $server_ip"
 
-    mysql swgemu -ve "UPDATE galaxy SET ip = '${server_ip}'";
+    eval $(~/bin/get_config --bash ZoneGalaxyID)
+
+    mysql swgemu -ve "UPDATE galaxy SET address = '${server_ip}' WHERE galaxy_id = ${ZoneGalaxyID}";
+    mysql swgemu -ve "UPDATE galaxy SET name = 'swgemudev' WHERE galaxy_id = ${ZoneGalaxyID} AND name = 'Core3'";
     sed -e "/server_ip/s/server_ip = '[^']*'/server_ip = '"${server_ip}"'/" -i /home/vagrant/server/emuyoda/yoda-config.lua
 }
 
@@ -103,7 +114,7 @@ server_backup() {
 
     TMPDIR=$(mktemp -d ${BUDIR}/swgemu-backup-temp.XXXXXX)
 
-    trap 'set +xe;st=$?;echo "** UNEXPECTED EXIT=$st, PARTIAL BACKUP LEFT IN ${TMPDIR} **";exit $st' 0
+    trap 'set +xe;st=$?;echo "** UNEXPECTED EXIT=$st, PARTIAL BACKUP LEFT IN ${TMPDIR} **";rm -f ${SWGEMU_LOCKFILE};exit $st' 0
 
     NOW=$(date +%s)
 
@@ -156,4 +167,61 @@ yorn() {
   return 0
 }
 
-main $@
+release_lock() {
+    if $HAVELOCK; then
+	rm -f ${SWGEMU_LOCKFILE}
+    fi
+}
+
+get_lock() {
+    ## Run LOCK
+    export HAVELOCK=false
+    local locktmp=$(mktemp /tmp/swgemu.lock-XXXXXX)
+    export SWGEMU_LOCKFILE=/tmp/swgemu.lock
+
+    echo "$$ "$(date +%s) > ${locktmp}
+
+    if ln ${locktmp} ${SWGEMU_LOCKFILE} 2> /dev/null; then
+	rm -f ${locktmp}
+	export HAVELOCK=true
+    else
+	read pid tm_lock < ${SWGEMU_LOCKFILE}
+	tm_now=$(date +%s)
+
+	let "tm_delta=${tm_now} - ${tm_lock}"
+
+	if kill -0 $pid; then
+	    echo ">> PID $pid HAS HAD LOCK FOR ${tm_delta} SECOND(S), EXITING"
+	    exit 0
+	else
+	    echo ">> Stealing lock from PID $pid which has gone away, locked ${tm_delta} second(s) ago"
+	    if ln -f ${locktmp} ${SWGEMU_LOCKFILE}; then
+		rm -f ${locktmp}
+		read pid tm_lock < ${SWGEMU_LOCKFILE}
+		if [ "$pid" -eq "$$" ]; then
+		    echo ">> STOLE LOCK, PROCEEDING"
+		else
+		    echo ">> Can't steal lock, somone got in before us!? pid=${pid}"
+		    exit 2
+		fi
+	    else
+		rm -f ${locktmp}
+		echo ">> Failed to steal lock, **ABORT**"
+		exit 1
+	    fi
+	fi
+    fi
+
+    export HAVELOCK=true
+    trap 'release_lock;' 0
+}
+
+get_lock
+
+(
+    main $@
+)
+
+release_lock
+
+exit 0
