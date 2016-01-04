@@ -1,0 +1,68 @@
+#!/usr/local/bin/lua
+--[[
+--
+-- sentinel - Watch server log for events
+--
+-- Author: Lord Kator <lordkator@swgemu.com>
+--
+-- Created: Mon Jan  4 05:15:20 EST 2016
+--
+]]
+
+require 'socket'
+
+local havex = false
+
+function main()
+    if os.getenv("DISPLAY") then
+	if os.execute("xset q > /dev/null 2>&1") == 0 then
+	    havex = true
+	end
+    end
+
+    local pos = 0
+    local server_time = 0
+
+    while true do
+	local fh = io.open("screenlog.0", 'r')
+
+	print("Read from " .. pos)
+	fh:seek("set", pos)
+
+	-- [Core] initialized
+	for ln in fh:lines() do
+	    ln = string.gsub(ln, "\r", "")
+
+	    -- Timestamp? 
+	    -- Mon Jan  4 01:06:42 2016 [1451869602618 msec] .. blah
+	    local stamp = string.match(ln, "%[(%d+) msec%]")
+
+	    if stamp ~= nil then
+		server_time = math.floor(stamp / 1000)
+	    end
+
+	    if string.find(ln, '%[Core%] initialized') then
+		notice("Sentinel: Server Started", os.date("%c: ") .. ln)
+	    end
+	end
+
+	pos = fh:seek()
+
+	print("Wait... @" .. pos)
+	while fh:seek("end") == pos do
+	    socket.select(nil, nil, 1)
+	end
+	print("More..." .. fh:seek("end"))
+    end
+end
+
+function notice(title, msg)
+    if havex then
+	os.execute('notify-send --icon=/home/vagrant/ZonamaDev/fasttrack/assets/swgemu_icon.png --expire-time=30000 "' .. title .. '" "' .. msg .. '"')
+    end
+    print(title .. " [[" .. msg .. "]]")
+end
+
+main()
+
+-- :vi set ft=lua sw=2
