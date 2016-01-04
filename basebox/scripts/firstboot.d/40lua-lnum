@@ -9,10 +9,19 @@
 
 LUA_LNUM_TEST_FILE="/usr/local/lib/liblua.a"
 
+LUA_BIGNUM='4611686018427387904' # 2^62
+
 if [ -f ${LUA_LNUM_TEST_FILE} ]; then
-    echo "Looks like ${LUA_LNUM_REPO} is already installed"
-    echo "To force rebuild do: sudo rm -f ${LUA_LNUM_TEST_FILE}"
-    return 0
+    # Check of we have 64 bit ints
+    bignum=$(echo 'print('${LUA_BIGNUM}')' | /usr/local/bin/lua -)
+    if [ "$bignum" != "${LUA_BIGNUM}" ]; then
+	echo "** /usr/local/bin/lua not built with 64bit ints!"
+	echo "** Will rebuild with LNUM_INT64"
+    else
+	echo "Looks like ${LUA_LNUM_REPO} is already installed"
+	echo "To force rebuild do: sudo rm -f ${LUA_LNUM_TEST_FILE}"
+	return 0
+    fi
 fi
 
 (
@@ -63,9 +72,10 @@ fi
 	    args='-j'$($nproc)
 	fi
 
+	## Make sure to use 64Ints
+	sed -i '/^#define lconfig_h/a#define LNUM_INT64' src/luaconf.h
 	make $args linux 2> ${tmpdir}/make.err | tee make.out
 	make test
-	# TODO make a real test ? link to check lnum correct behavior?
 	make install
 	trap - 0
     ) | tee build.out | while read ln
@@ -84,3 +94,9 @@ fi
 
     rm -fr ${tmpdir}
 )
+
+# Check of we have 64 bit ints
+bignum=$(echo 'print('${LUA_BIGNUM}')' | /usr/local/bin/lua -)
+if [ "$bignum" != "${LUA_BIGNUM}" ]; then
+    error "** /usr/local/bin/lua not built with 64bit ints!" 140
+fi
