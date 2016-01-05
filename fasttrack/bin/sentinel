@@ -12,21 +12,114 @@
 require 'socket'
 
 local havex = false
+local options = {
+    ['debug'] = false,
+    ['quiet'] = false,
+    ['seek'] = false,
+    ['stop-at-init'] = false,
+    ['stop-next-backup'] = false,
+    ['stop-next-prompt'] = false,
+    ['tail'] = false,
+}
+
+local termcap = {
+    ['smso'] = "\n** ",
+    ['rmso'] = " ** \n",
+}
 
 function main()
+    local i = 1
+    while i <= #arg do
+	local opt = string.match(arg[i], "^%-%-(.*)")
+
+	if opt == nil or options[opt] == nil then
+	    usage()
+	end
+
+	options[opt] = true
+
+	i = i + 1
+
+	if opt == 'seek' then
+	    options[opt] = tonumber(arg[i])
+	    i = i + 1
+	end
+    end
+
     if os.getenv("DISPLAY") then
 	if os.execute("xset q > /dev/null 2>&1") == 0 then
 	    havex = true
 	end
     end
 
+    for k, _ in pairs(termcap) do
+	local fh = io.popen("tput " .. k, 'r')
+	termcap[k] = fh:read("*a")
+	fh:close()
+    end
+
+    read_loop()
+end
+
+function usage()
+    local sep=''
+
+    io.stderr:write("Usage: " .. arg[0] .. " {")
+
+    for opt, _ in pairs(options) do
+	io.stderr:write(sep .. "--" .. opt)
+	sep = '|'
+    end
+
+    io.stderr:write("}\n")
+    os.exit(1)
+end
+
+-- Put things you want to look for in here..
+function process_event(event_time, event_line)
+    if options['tail'] then
+	print(os.date("%c: ", event_time) .. event_line)
+    end
+
+    if string.find(event_line, '%[Core%] initialized') then
+	notice("Server Started", os.date("%c: ", event_time) .. event_line)
+
+	if options["stop-at-init"] then
+	    os.exit(0)
+	end
+    end
+
+    if options['stop-next-prompt'] and string.sub(event_line, 0, 2) == '> ' then
+	notice("Saw Next Prompt", os.date("%c: ", event_time) .. event_line)
+	os.exit(0)
+    end
+
+    if options['stop-next-backup'] and string.match(event_line, "%[ObjectBrokerAgent%] backup finished$") then
+	notice("Saw Next Backup", os.date("%c: ", event_time) .. event_line)
+	os.exit(0)
+    end
+end
+
+function read_loop()
     local pos = 0
+    local pos_start = 0
     local server_time = 0
+    local server_boot = 0
+    local stamp, offset
+    local fh = io.open("screenlog.0", 'r')
+
+    if options['stop-next-prompt'] or options['stop-next-backup'] then
+	pos_start = fh:seek("end")
+	debug("seek from " .. pos_start)
+    end
+
+    if options['seek'] then
+	pos_start = fh:seek("set", options['seek'])
+	debug("seek to " .. pos_start)
+    end
 
     while true do
-	local fh = io.open("screenlog.0", 'r')
-
-	print("Read from " .. pos)
+	debug("Read from " .. pos)
 	fh:seek("set", pos)
 
 	-- [Core] initialized
@@ -35,32 +128,59 @@ function main()
 
 	    -- Timestamp? 
 	    -- Mon Jan  4 01:06:42 2016 [1451869602618 msec] .. blah
-	    local stamp = string.match(ln, "%[(%d+) msec%]")
+	    stamp, offset = string.match(ln, "%[(%d+) msec%] %((%d+) s%)")
 
 	    if stamp ~= nil then
 		server_time = math.floor(stamp / 1000)
+
+		-- Estimate boot time based on offset
+		if server_boot == 0 then
+		    server_boot = server_time - offset
+		    debug("server_boot = [" .. os.date("%c", server_boot) .. "]")
+		end
 	    end
 
-	    if string.find(ln, '%[Core%] initialized') then
-		notice("Sentinel: Server Started", os.date("%c: ") .. ln)
+	    offset = string.match(ln, "^%((%d+) s%)")
+
+	    if offset ~= nil then
+		if server_time == 0 then
+		    server_time = os.time()
+		else
+		    server_time = server_boot + offset
+		end
+	    end
+
+	    if fh:seek() > pos_start then
+		process_event(server_time, ln)
 	    end
 	end
 
 	pos = fh:seek()
 
-	print("Wait... @" .. pos)
+	debug("Wait... @" .. pos)
 	while fh:seek("end") == pos do
 	    socket.select(nil, nil, 1)
 	end
-	print("More..." .. fh:seek("end"))
+	debug("More..." .. fh:seek("end"))
     end
 end
 
 function notice(title, msg)
-    if havex then
-	os.execute('notify-send --icon=/home/vagrant/ZonamaDev/fasttrack/assets/swgemu_icon.png --expire-time=30000 "' .. title .. '" "' .. msg .. '"')
+    if options['quiet'] then
+	return
     end
-    print(title .. " [[" .. msg .. "]]")
+
+    if havex then
+	os.execute('notify-send --icon=/home/vagrant/ZonamaDev/fasttrack/assets/swgemu_icon.png --expire-time=30000 "Server Sentinel: ' .. title .. '" "' .. msg .. '"')
+    end
+
+    print("\n" .. termcap['smso'] .. "NOTICE: " .. title .. " - " .. msg .. termcap['rmso'] .. "\n")
+end
+
+function debug(msg)
+    if options['debug'] then
+	print(">> DEBUG: " .. msg)
+    end
 end
 
 main()

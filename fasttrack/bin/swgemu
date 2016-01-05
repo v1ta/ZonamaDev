@@ -7,20 +7,33 @@
 # Created: Sun Jan  3 13:30:33 UTC 2016
 #
 
+# TODO make these use global config
+BUILD_DIR=~/workspace/Core3/MMOCoreORB
+RUN_DIR=~/workspace/Core3/MMOCoreORB/bin
+
 main() {
     get_lock
 
-    case $1 in
+    local cmd=$1
+    local ret=255
+
+    shift
+
+    case $cmd in
 	'start' ) server_start ;;
 	'status' ) server_status ;;
 	'backup' ) server_backup ;;
 	'build' ) server_build ;;
+	'send' ) server_send $@ ;;
+	'stop' ) server_stop;;
 	* ) echo "Usage: $0 {start|status|backup|build}"; exit 1 ;;
     esac
 
+    ret=$?
+
     release_lock
 
-    exit 0
+    exit $ret
 }
 
 ICON=/home/vagrant/ZonamaDev/fasttrack/assets/swgemu_icon.png
@@ -28,14 +41,18 @@ ICON=/home/vagrant/ZonamaDev/fasttrack/assets/swgemu_icon.png
 server_start() {
     if server_status; then
 	echo "** Already running **"
-	release_lock
-	screen -D -RR swgemu-server
+	if yorn "Would you like to stop the sever?"; then
+	    server_stop
+	else
+	    release_lock
+	    screen -D -RR swgemu-server
+	fi
 	exit 0
     fi
 
     server_update_ip
 
-    cd ~/workspace/Core3/MMOCoreORB/bin
+    cd "${RUN_DIR}"
 
     if [ ! -x core3 ]; then
 	echo "** Server not built? **"
@@ -69,6 +86,7 @@ server_start() {
     release_lock
 
     # TODO Spawn a watcher to alert when the server is up
+    ~/bin/sentinel --stop-at-init &
 
     # Join the session so they can watch along..
     exec screen -D -RR swgemu-server
@@ -76,17 +94,85 @@ server_start() {
 
 server_status() {
     local pid=$(pgrep core3)
+    local verbose=true
+
+    if [ "X$1" = "X-q" ]; then
+        verbose=false
+    fi
 
     if [ -z "$pid" ]; then
-	echo "Server is not running"
+	if $verbose; then
+	    echo "Server is not running"
+	fi
 	return 1
     fi
 
-    read uptime <<< $(ps -p $pid -ho etime)
+    if $verbose; then
+	read uptime <<< $(ps -p $pid -ho etime)
 
-    echo "Server running on $pid, uptime: $uptime"
+	echo "Server running on $pid, uptime: $uptime"
+    fi
 
     return 0
+}
+
+server_send() {
+    if server_status -q; then
+	:
+    else
+	echo "** Server not running **"
+	return 0
+    fi
+
+    local string="$*^M"
+
+    local sz=$(stat -c '%s' screenlog.0)
+
+    screen -S swgemu-server -X stuff "$string"
+
+    ~/bin/sentinel --stop-next-prompt --tail --seek $sz
+
+    return 1
+}
+
+server_stop() {
+    if server_status -q; then
+	:
+    else
+	echo "** Server not running **"
+	exit 0
+    fi
+
+    cd "${RUN_DIR}"
+
+    if [ ! -f "screenlog.0" ]; then
+	echo "** screenlog is missing, did you run the server from $0?"
+	exit 1
+    fi
+
+    local sz=$(stat -c '%s' screenlog.0)
+    local pid=$(pgrep core3)
+
+    echo "** send 'save' command to server **"
+
+    screen -S swgemu-server -X stuff "save^M"
+
+    # TODO add timeout?
+
+    if ~/bin/sentinel --stop-next-backup --seek $sz; then
+	echo "** server backup complete **"
+	echo -n "** sending SIGINT.."
+	kill -INT $pid
+	while pgrep core3 > /dev/null 2>&1
+	do
+	    echo -n "."
+	    sleep 1
+	done
+	echo -e "\n** server stopped **"
+	exit 0
+    else
+	echo "** sentinel failed with err=$?"
+    fi
 }
 
 server_build() {
@@ -101,9 +187,9 @@ server_build() {
 	fi
     fi
 
-    cd ~/workspace/Core3/MMOCoreORB
+    cd "${BUILD_DIR}"
 
-    if [ ! -f ~/workspace/Core3/MMOCoreORB/build/unix/config.log ]; then
+    if [ ! -f build/unix/config.log ]; then
 	if time make config; then
 	    :
 	else
@@ -123,6 +209,11 @@ server_build() {
 
 server_update_ip() {
     local server_ip='127.0.0.1'
+
+    if [ -f ~/.force_ip ]; then
+	server_ip=$(cat ~/.force_ip)
+    fi
+
     local i2=$(netstat -ni|grep eth2)
 
     # If they have an eth2 they might have enabled the "public" interface
@@ -179,7 +270,7 @@ server_backup() {
 
 	mysqldump --opt swgemu > "${TMPDIR}/mysqldump.sql"
 
-	cd ~/workspace/Core3/MMOCoreORB/bin
+	cd "${RUN_DIR}"
 
 	cp -rv conf databases ${TMPDIR}
 
