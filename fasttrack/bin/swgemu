@@ -26,7 +26,7 @@ main() {
 	'build' ) server_build ;;
 	'send' ) server_send $@ ;;
 	'stop' ) server_stop;;
-	* ) echo "Usage: $0 {start|status|backup|build}"; exit 1 ;;
+	* ) echo "Usage: $0 {start|stop|status|backup|build}"; exit 1 ;;
     esac
 
     ret=$?
