@@ -34,6 +34,10 @@ Vagrant.configure(2) do |config|
   # A bit of a hack, not sure if there is a "right way" to detect that this is the very first provision
   is_first_provision = !File.exist?("#{File.dirname(__FILE__)}/.vagrant/machines/default/virtualbox/action_provision")
 
+  if is_first_provision then
+    is_first_provision = !File.exist?("#{File.dirname(__FILE__)}/.vagrant/machines/default/vmware_fusion/action_provision")
+  end
+
   config.vm.hostname = "swgemudev"
 
   # vbguest settings for first up
