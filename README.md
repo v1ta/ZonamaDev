@@ -2,6 +2,14 @@
 
 Zonama - The living planet, or in our world an easily deployed development environment for working on the server code of swgemu's Core3 (https://www.swgemu.com/)
 
+## ALPHA SIGNUP
+
+Please make an account at: https://atlas.hashicorp.com/account/new
+
+Post an issue with your username to https://github.com/lordkator/ZonamaDev/issues and Kator will get you access.
+
+We expect to open the boxes up this weekend if you want to wait for that.
+
 ## Windows Host
 
 ### Fast Start
