@@ -36,7 +36,13 @@ main() {
 	#fi
     fi
 
-    echo -e "\n** Ok we found your files in $trepath, we will now try and copy them to your guest...\n"
+    if [ -z "${trepath}" ]; then
+	echo -e "\nThe server won't start until you have the tre files copied into the guest.\n"
+	echo -e "When you're ready try: cd "$(dirname $PWD)";./tre.sh"
+	exit 2
+    fi
+
+    echo -e "\n** Ok we found your files in ${trepath}, we will now try and copy them to your guest...\n"
 
     local sshcfg=$(mktemp /tmp/tre-ssh.XXXXXX)
     trap 'rm -f "'$sshcfg'"' 0
@@ -50,7 +56,7 @@ main() {
     echo "** Copying files..."
     ssh -F $sshcfg default mkdir -p Desktop/SWGEmu
 
-    if scp -F $sshcfg "$trepath"/*.tre default:Desktop/SWGEmu; then
+    if scp -F $sshcfg "${trepath}"/*.tre default:Desktop/SWGEmu; then
 	msg "SUCCESS!"
     else
 	msg "SCP SEEMS TO HAVE FAILED WITH ERR=$?, GET HELP!?"
@@ -65,7 +71,7 @@ ask_emudir() {
 	echo
 	read -rp "Where did you install the swgemu client? " n
 
-	local path=$(cygpath ${n//\\/\/} 2> /dev/null || echo $n)
+	local path=$(cygpath "${n//\\/\/}" 2> /dev/null || echo $n)
 
 	echo -e "\nSearching [$path]\n"
 
@@ -73,7 +79,7 @@ ask_emudir() {
 	    trepath=$path
 	    return 0
 	else
-	    if yorn "\nDidn't find the tre files there, do you mind if I search ${path} for them?"; then
+	    if yorn "\nDidn't find the tre files there, shall we search '${path}' for them?"; then
 		local fn=$(find $path -name $last_tre 2> /dev/null)
 
 		if [ -n "$fn" ]; then
