@@ -7,7 +7,7 @@
 # Created: Sun Dec 27 15:04:30 EST 2015
 #
 
-check_repos() {
+clone_repos() {
     # is it cloned already?
     local missing=''
 
@@ -25,53 +25,77 @@ check_repos() {
     fi
 
     if zenity --question  --text="You're missing the following repos:\n\n$missing\n\nWould you like to clone them now?"; then
-	local status_pipe=$(mktemp /tmp/clone-status-pipe-XXXXXX)
-	local status_file=$(mktemp /tmp/clone-status-file-XXXXXX)
-
-	echo 255 > $status_file
-	mknod $status_pipe p
-	command_window "Clone Status" "tail -f $status_pipe"  &
-	sleep 3
-
-	(
-	echo 254 > $status_file
-	echo -e 'H4sIACYziVYAA5WSYQpAIQiD/3eKwe5/x8h8ZaweKlE2PmyMyFEA6Y0Xff90P9vSA2UdRf+BrU/D\nc2VhU9PwMH7CyUAMFvp+f8UXpqrFKhxfBraT12QCBRuswPJvNJAZXwcxETL5fgIAAA=='|base64 -d|gunzip
-	trap 'echo $? > '${status_file}';echo -e "H4sIAC81iVYAA1NWBgMFIAATQArMg3IUlKHyEIoLJgxSAFOvgKwchUZSjzATv3plZOuVMdWjynOh\nO5NY9+A0n6B6qP0owQIPHi4ArjNqZE8BAAA="|base64 -d|gunzip' 0
-	set -xe
-	for i in $missing
-	do
-	    git clone --progress ssh://${GERRIT_HOST}/${i}.git
-	    scp ${GERRIT_HOST}:hooks/commit-msg ${i}/.git/hooks
-	done
-	set +x
-	for i in $missing
-	do
-	    if [ "X$i" = "XCore3" ]; then
-		(set -x;cd $i;git checkout -b unstable origin/unstable; sed -e '/push = /d' -e '/url/s!$!\n\tpush = HEAD:refs/for/unstable!' -i .git/config)
-	    fi
-	done
-	set +xe
-	echo -e '\n\n\n'
-	echo -e 'H4sIAJ00iVYAA1NQBgEFBSBSAJNQPoxWVkZmwMS5YMrx0wro4lzYxRVw01wKaA7EUAF1F5oDFVCU\n47YI3TpyPYYebkSGIxcAebZM9YABAAA='|base64 -d|gunzip
-	trap - 0
-	echo 0 > $status_file
-	) 2>&1 | tee $status_pipe
-	local ret=$(cat $status_file 2> /dev/null)
-
-	if [ -x "$ret" ]; then
-	    ret=256
-	fi
-
-	if [ $ret -gt 0 ]; then
-	    error "Clone failed with error code $ret\n\nReview the log output for clues." 125
-	else
-	    zenity --info --text="Clone process success.\n\nPress [OK] to discard the log window"
-	fi
-	fuser -k $status_pipe
-	rm -f $status_pipe $status_file
+	:
     else
 	notice "Git Repositories Missing" "Need to clone: $missing\nYou will not be able to build the server until you complete this step."
 	exit 203
+    fi
+
+    msg "Clone missing repos: $missing"
+
+    local status_pipe=$(mktemp /tmp/clone-status-pipe-XXXXXX)
+    local status_file=$(mktemp /tmp/clone-status-file-XXXXXX)
+
+    echo 255 > $status_file
+    mknod $status_pipe p
+    command_window "Clone Status" "tail -f $status_pipe"  &
+    sleep 3
+
+    (
+    echo 254 > $status_file
+    echo -e 'H4sIACYziVYAA5WSYQpAIQiD/3eKwe5/x8h8ZaweKlE2PmyMyFEA6Y0Xff90P9vSA2UdRf+BrU/D\nc2VhU9PwMH7CyUAMFvp+f8UXpqrFKhxfBraT12QCBRuswPJvNJAZXwcxETL5fgIAAA=='|base64 -d|gunzip
+    trap 'echo $? > '${status_file}';echo -e "H4sIAC81iVYAA1NWBgMFIAATQArMg3IUlKHyEIoLJgxSAFOvgKwchUZSjzATv3plZOuVMdWjynOh\nO5NY9+A0n6B6qP0owQIPHi4ArjNqZE8BAAA="|base64 -d|gunzip' 0
+    set -xe
+    for i in $missing
+    do
+	git clone --progress ssh://${GERRIT_HOST}/${i}.git
+	scp ${GERRIT_HOST}:hooks/commit-msg ${i}/.git/hooks
+    done
+    set +x
+    for i in $missing
+    do
+	if [ "X$i" = "XCore3" ]; then
+	    (set -x;cd $i;git checkout -b unstable origin/unstable; sed -e '/push = /d' -e '/url/s!$!\n\tpush = HEAD:refs/for/unstable!' -i .git/config)
+	fi
+    done
+    set +xe
+    echo -e '\n\n\n'
+    echo -e 'H4sIAJ00iVYAA1NQBgEFBSBSAJNQPoxWVkZmwMS5YMrx0wro4lzYxRVw01wKaA7EUAF1F5oDFVCU\n47YI3TpyPYYebkSGIxcAebZM9YABAAA='|base64 -d|gunzip
+    trap - 0
+    echo 0 > $status_file
+    ) 2>&1 | tee $status_pipe
+    local ret=$(cat $status_file 2> /dev/null)
+
+    if [ -x "$ret" ]; then
+	ret=256
+    fi
+
+    if [ $ret -gt 0 ]; then
+	error "Clone failed with error code $ret\n\nReview the log output for clues." 125
+    else
+	zenity --info --text="Clone process success.\n\nPress [OK] to discard the log window"
+    fi
+    fuser -k $status_pipe
+    rm -f $status_pipe $status_file
+}
+
+check_repos() {
+    local gerrit_url = "ssh://${GERRIT_HOST}/${i}.git"
+
+    for i in $REPOS
+    do
+	echo "** Check $i repo"
+	read name url junk <<< $(cd $i;git remote -v)
+
+	if [ "$url" != "$gerrit_url" ]; then
+	    echo "Switching $i repo from ${url} to ${gerrit_url}"
+	    (set -x;cd $i;git remote set-url "${gerrit_url}";git remote -v;git stash --include-untracked;git pull)
+	    scp ${GERRIT_HOST}:hooks/commit-msg ${i}/.git/hooks && echo "Added commit-msg hook to $i"
+	fi
+    done
+
+    if [ ! -f ~/.devsetup.ran ]; then
+	(set -x;cd Core3;git checkout -b unstable origin/unstable;sed -e '/push = /d' -e '/url/s!$!\n\tpush = HEAD:refs/for/unstable!' -i .git/config)
     fi
 }
 
@@ -109,6 +133,11 @@ make_links() {
 }
 
 pushd $WORKSPACE
-check_repos
-make_links
+
+    clone_repos
+
+    check_repos
+
+    make_links
+
 popd
