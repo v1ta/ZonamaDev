@@ -124,9 +124,9 @@ Vagrant.configure(2) do |config|
   config.vm.provision :shell, name: "firstboot", run: "always", inline: <<-SHELL
     if [ ! -f "ZonamaDev/basebox/scripts/firstboot.sh" ]; then
       echo "** Fresh Guest **"
-      ethtool -K eth0 gro off
       apt-get update
       apt-get -y install git moreutils ethtool
+      ethtool -K eth0 gro off
       git clone https://github.com/lordkator/ZonamaDev.git
     else
       echo "** Existing Guest **"
