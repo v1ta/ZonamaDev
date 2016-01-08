@@ -80,7 +80,9 @@ clone_repos() {
 }
 
 check_repos() {
-    local gerrit_url = "ssh://${GERRIT_HOST}/${i}.git"
+    msg "Check Repos"
+
+    local gerrit_url="ssh://${GERRIT_HOST}/${i}.git"
 
     for i in $REPOS
     do
@@ -100,6 +102,7 @@ check_repos() {
 }
 
 make_links() {
+    msg "Make links"
     ( set -x
 	rm -f MMOCoreORB MMOEngine Core3/MMOEngine
 	[ -d Core3 ] && (cd $PWD/Core3;ln -s ../PublicEngine/MMOEngine .)
