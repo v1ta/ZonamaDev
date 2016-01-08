@@ -1,0 +1,80 @@
+#!/bin/bash
+#
+# 55clone - Clone the git repos from public URL
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Fri Jan  8 07:19:47 EST 2016
+#
+# Depends: REPO_PUBLIC_URL REPO WORKSPACE
+#
+
+[ -n "$WORKSPACE" ] || error "Required setting WORKSPACE missing." 155
+[ -n "$REPO_PUBLIC_URL" ] || error "Required setting REPO_PUBLIC_URL missing." 155
+[ -n "$REPOS" ] || error "Reqiured setting REPO missing." 155
+
+check_repos() {
+    # is it cloned already?
+    local missing=''
+
+    for i in $REPOS
+    do
+	if [ -f $i/.git/HEAD ]; then
+	    echo "Repo $i is already cloned in $WORKSPACE/$i"
+	else
+	    missing="$missing   $i"
+	fi
+    done
+
+    if [ -z "$missing" ]; then
+	return
+    fi
+
+    msg "Repos to Clone: $missing"
+
+    for i in $missing
+    do
+	echo "Clone $i from ${REPO_PUBLIC_URL}"
+
+	git clone --progress ${REPO_PUBLIC_URL}/${i}.git
+    done
+}
+
+make_links() {
+    ( set -x
+	rm -f MMOCoreORB MMOEngine Core3/MMOEngine
+	[ -d Core3 ] && (cd $PWD/Core3;ln -s ../PublicEngine/MMOEngine .)
+	[ -d PublicEngine ] && ln -s PublicEngine/MMOEngine .
+	[ -d Core3 ] && ln -s Core3/MMOCoreORB .
+	if [ -f PublicEngine/MMOEngine/bin/idlc -a ! -x /usr/local/bin/idlc ]; then
+	    (echo export CLASSPATH=$PWD/PublicEngine/MMOEngine/bin/idlc.jar;cat PublicEngine/MMOEngine/bin/idlc) | sudo tee /usr/local/bin/idlc
+	    sudo chmod 755 /usr/local/bin/idlc
+	fi
+    )
+
+    local englib=PublicEngine/MMOEngine/lib/unix/libengine3.a
+
+    if [ ! -L $englib ]; then
+	echo "Setup unix library link"
+	mkdir -p PublicEngine/MMOEngine/lib/unix > /dev/null 2>&1
+	(
+	    cd PublicEngine/MMOEngine/lib/unix
+	    if [ $(uname -s) = "Darwin" ]; then
+		ln -s ../lion64/libengine3.a
+	    else
+	    case $(uname -m) in
+		x86_64 ) ln -s ../linux64/libengine3.a ;;
+		i386 ) ln -s ../linux32/libengine3.a ;;
+	    esac
+	    fi
+	)
+    fi
+
+    echo "Using engine library: $(readlink $englib)"
+}
+
+[ ! -d $WORKSPACE ] && mkdir $WORKSPACE && echo "Created $WORKSPACE"
+pushd $WORKSPACE
+check_repos
+make_links
+popd

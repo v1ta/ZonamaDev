@@ -23,8 +23,5 @@ EDITORS='vim nano gedit'
 PINGTEST_HOST=www.cisco.com # This has worked for eons, hope they keep it up
 NETWORK_SLOW_SECONDS=5 # If the internet tests take longer than this we will warn them with a notice
 #
-## Source settings
-WORKSPACE=$HOME/workspace
-REPOS='Core3 PublicEngine Tools'
 #
 # vi:set ft=sh
