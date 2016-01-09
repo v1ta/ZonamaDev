@@ -91,7 +91,7 @@ check_repos() {
 
 	if [ "$url" != "$gerrit_url" ]; then
 	    echo "Switching $i repo from ${url} to ${gerrit_url}"
-	    (set -x;cd $i;git remote set-url "${gerrit_url}";git remote -v;git stash --include-untracked;git pull)
+	    (set -x;cd $i;git remote set-url origin "${gerrit_url}";git remote -v;git stash --include-untracked;git pull)
 	    scp ${GERRIT_HOST}:hooks/commit-msg ${i}/.git/hooks && echo "Added commit-msg hook to $i"
 	fi
     done
