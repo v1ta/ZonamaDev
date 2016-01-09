@@ -12,14 +12,18 @@ do
     fi
 done
 
-echo "Missing ${count} files."
-
-# find $HOME -iname \*.tre -print
-
 let "height=100 + $count * 20"
 
 if [ "$height" -gt 600 ]; then
     height=600
 fi
 
-echo -ne "$need" | sort | zenity --list --title "Missing TRE Files" --text="${count} TRE files are missing in $TrePath\n" --column "Missing Filename" --height $height
+if [ $count -gt 0 ]; then
+    echo "Missing ${count} .tre files."
+    echo -ne "$need" | sort | zenity --list --title "Missing TRE Files" --text="${count} TRE files are missing in $TrePath\n" --column "Missing Filename" --height $height
+    exit $count
+fi
+
+echo "All expected .tre files where found in ${TrePath}"
+
+exit 0

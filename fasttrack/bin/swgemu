@@ -62,6 +62,25 @@ server_start() {
 	retun 0
     fi
 
+    if ~/bin/tre_check; then
+	:
+    else
+	echo
+	echo "************************************************************************"
+	echo "**                                                                    **"
+	echo "** You need to copy the original game .tre files in to the guest.     **"
+	echo "**                                                                    **"
+	echo "** On the host from your ZonamaDev/fasttrack server try this command: **"
+	echo "**                                                                    **"
+	echo "**    ./tre.sh                                                        **"
+	echo "**                                                                    **"
+	echo "** From inside of a Git Bash window.                                  **"
+	echo "**                                                                    **"
+	echo "************************************************************************"
+	echo
+	return 13
+    fi
+
     server_update_ip
 
     cd "${RUN_DIR}"
