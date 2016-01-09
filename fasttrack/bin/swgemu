@@ -14,6 +14,13 @@ RUN_DIR=~/workspace/Core3/MMOCoreORB/bin
 main() {
     get_lock
 
+    local panel=false
+
+    if [ "X$1" == "X--panel" ]; then
+        panel=true
+	shift
+    fi
+
     local cmd=$1
     local ret=255
 
@@ -33,6 +40,11 @@ main() {
 
     release_lock
 
+    if $panel; then
+        echo
+	read -p "Press <ENTER> to close the window: "
+    fi
+
     exit $ret
 }
 
@@ -47,7 +59,7 @@ server_start() {
 	    release_lock
 	    screen -D -RR swgemu-server
 	fi
-	exit 0
+	retun 0
     fi
 
     server_update_ip
@@ -61,11 +73,11 @@ server_start() {
 	    if server_build; then
 		:
 	    else
-		exit $?
+		return $?
 	    fi
 	else
 	    echo "** USER ABORTED **"
-	    exit 2
+	    return 2
 	fi
     fi
 
@@ -140,14 +152,14 @@ server_stop() {
 	:
     else
 	echo "** Server not running **"
-	exit 0
+	return 0
     fi
 
     cd "${RUN_DIR}"
 
     if [ ! -f "screenlog.0" ]; then
 	echo "** screenlog is missing, did you run the server from $0?"
-	exit 1
+	return 1
     fi
 
     local sz=$(stat -c '%s' screenlog.0)
@@ -169,7 +181,7 @@ server_stop() {
 	    sleep 1
 	done
 	echo -e "\n** server stopped **"
-	exit 0
+	return 0
     else
 	echo "** sentinel failed with err=$?"
     fi
@@ -183,7 +195,7 @@ server_build() {
 	    screen -D -RR swgemu-server
 	else
 	    echo "** USER ABORTED BUILD **"
-	    exit 12
+	    return 12
 	fi
     fi
 
@@ -194,16 +206,16 @@ server_build() {
 	    :
 	else
 	    echo "** make config failed **"
-	    exit 10
+	    return 10
 	fi
     fi
 
     if time make -k build; then
 	echo "** BUILD SUCCESS IN $SECONDS SECOND(S) **"
-	exit 0
+	return 0
     else
 	echo "** BUILD FAILED **"
-	exit 11
+	return 11
     fi
 }
 
@@ -243,7 +255,7 @@ server_backup() {
 	    screen -D -RR swgemu-server
 	else
 	    echo "** USER ABORTED BACKUP **"
-	    exit 12
+	    return 12
 	fi
     fi
 
@@ -295,7 +307,7 @@ server_backup() {
 	echo "** SUCCESS: Backup saved to ${BUFILE} **"
     )
 
-    exit 0
+    return 0
 }
 
 yorn() {
@@ -335,7 +347,7 @@ get_lock() {
 
 	if kill -0 $pid; then
 	    echo ">> PID $pid HAS HAD LOCK FOR ${tm_delta} SECOND(S), EXITING"
-	    exit 0
+	    return 0
 	else
 	    echo ">> Stealing lock from PID $pid which has gone away, locked ${tm_delta} second(s) ago"
 	    if ln -f ${locktmp} ${SWGEMU_LOCKFILE}; then
@@ -345,12 +357,12 @@ get_lock() {
 		    echo ">> STOLE LOCK, PROCEEDING"
 		else
 		    echo ">> Can't steal lock, somone got in before us!? pid=${pid}"
-		    exit 2
+		    return 2
 		fi
 	    else
 		rm -f ${locktmp}
 		echo ">> Failed to steal lock, **ABORT**"
-		exit 1
+		return 1
 	    fi
 	fi
     fi
