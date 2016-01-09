@@ -119,6 +119,9 @@ package_box() {
 	fi
     fi
 
+    # Wait for virtualbox to cleanly exit
+    sleep 5
+
     echo "** Ok now build the package!"
 
     # TODO - Include a Vagrantfile with hints/metadata?
@@ -224,6 +227,6 @@ yorn() {
   return 0
 }
 
-time main $@
+main $@
 
 exit 0
