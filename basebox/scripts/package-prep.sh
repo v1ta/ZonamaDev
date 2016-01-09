@@ -51,7 +51,7 @@ fi
 eclipse_width=$(sed -n '/IDEWindow/s/.*width="\([0-9]*\)".*/\1/p' workspace/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi)
 eclipse_height=$(sed -n '/IDEWindow/s/.*height="\([0-9]*\)".*/\1/p' workspace/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi)
 
-if [ $eclipse_width -lt 1280 -o $eclipse_height -lt 720 ]; then
+if [ $eclipse_width -lt 1270 -o $eclipse_height -lt 710 ]; then
     echo "** Eclipse reports IDE window size as ${eclipse_width}x${eclipse_height}"
     echo "** Please resize to 1280x720 or more"
     echo "** DO NOT MAXIMIZE, RESIZE THE WINDOW SO THE BOTTOM PANEL IS AVAILABLE TO AVOID CONFUSING PEOPLE"
@@ -107,7 +107,7 @@ echo ">> Cleanup user files that shouldn't be in the base box image."
 (
     cd ~vagrant
     rm -rf .bash* .profile .inputrc .vim* .cache /var/mail/* .ssh/id_rsa* .ssh/config .visual .gerrit_username .mysql_history
-    rm -rf .xsession* .gitconfig .lesshst .ssh/id_* .subversion workspace/* .cache
+    rm -rf .xsession* .gitconfig .lesshst .ssh/id_* .subversion .cache
     sed -e '/ vagrant$/p' -e 'd' -i .ssh/authorized_keys
     mysql -e 'drop database swgemu' > /dev/null 2>&1 ;
 ) 2> /dev/null
