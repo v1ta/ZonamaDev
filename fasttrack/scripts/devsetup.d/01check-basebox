@@ -16,17 +16,17 @@ if [ -f $SUSPEND_FLAG ]; then
     let "tm_delta=$tm_now - $tm_then"
     if $HAVEX; then
 	if zenity --question  --text="Developer setup has been suspended for ${tm_delta} seconds so far.\n\nDo you want to continue to suspend developer setup?\n(usually YES on basebox build beofre packaging)"; then
-	    notice "setup suspended" "Developer setup has been suspended for ${tm_delta} seconds so far."
+	    alert "setup suspended" "Developer setup has been suspended for ${tm_delta} seconds so far."
 	    exit 0
 	else
 	    if zenity --question  --text="Should I remove the suspend flag?\n(usually NO basebox build)"; then
 		msg "USER ASKED US TO REMOVE ${SUSPEND_FLAG}"
 		rm -f ${SUSPEND_FLAG}
-		notice "setup resumed" "Removed ${SUSPEND_FLAG}"
+		alert "setup resumed" "Removed ${SUSPEND_FLAG}"
 	    fi
 	fi
     else
-	notice "setup suspended" "Suspended because ${SUSPEND_FLAG} exists, ignore this if you're working on building the basebox."
+	alert "setup suspended" "Suspended because ${SUSPEND_FLAG} exists, ignore this if you're working on building the basebox."
 	msg "SUSPENDING SETUP BECAUSE ${SUSPEND_FLAG} EXISTS"
 	exit 0
     fi

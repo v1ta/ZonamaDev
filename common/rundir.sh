@@ -64,9 +64,18 @@ msg() {
     echo -e "$hd\n# $1 #\n$hd"
 }
 
-notice() {
+alert() {
     if $HAVEX; then
 	notify-send --icon=${ASSETS_DIR}/swgemu_icon.png --expire-time=0 "$1" "$2"
+	echo "USER ALERT: $1 - $2"
+    else
+	echo "**ALERT** $1: $2"
+    fi
+}
+
+notice() {
+    if $HAVEX; then
+	notify-send --icon=${ASSETS_DIR}/swgemu_icon.png --expire-time=10 "$1" "$2"
 	echo "USER NOTICE: $1 - $2"
     else
 	echo "**NOTICE** $1: $2"

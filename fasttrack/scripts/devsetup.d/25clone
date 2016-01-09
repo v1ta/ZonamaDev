@@ -27,7 +27,7 @@ clone_repos() {
     if zenity --question  --text="You're missing the following repos:\n\n$missing\n\nWould you like to clone them now?"; then
 	:
     else
-	notice "Git Repositories Missing" "Need to clone: $missing\nYou will not be able to build the server until you complete this step."
+	alert "Git Repositories Missing" "Need to clone: $missing\nYou will not be able to build the server until you complete this step."
 	exit 203
     fi
 
@@ -82,17 +82,24 @@ clone_repos() {
 check_repos() {
     msg "Check Repos"
 
-    local gerrit_url="ssh://${GERRIT_HOST}/${i}.git"
-
     for i in $REPOS
     do
 	echo "** Check $i repo"
+
+	gerrit_url="ssh://${GERRIT_HOST}/${i}.git"
+
 	read name url junk <<< $(cd $i;git remote -v)
 
 	if [ "$url" != "$gerrit_url" ]; then
 	    echo "Switching $i repo from ${url} to ${gerrit_url}"
 	    (set -x;cd $i;git remote set-url origin "${gerrit_url}";git remote -v;git stash --include-untracked;git pull)
 	    scp ${GERRIT_HOST}:hooks/commit-msg ${i}/.git/hooks && echo "Added commit-msg hook to $i"
+	else
+	    if [ ! -f ~/.devsetup.ran ]; then
+		notice "Pulling Latest" "Pulling latest changes for $i repo."
+		(set -x;cd $i;git stash --include-untracked;git pull)
+		alert "Pulled Latest" "Pulled latest changes for $i repo."
+	    fi
 	fi
     done
 

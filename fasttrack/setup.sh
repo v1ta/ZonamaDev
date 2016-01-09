@@ -59,7 +59,7 @@ yorn() {
     return 0
 }
 
-main
+time main
 
 exit 0
 

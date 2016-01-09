@@ -29,10 +29,10 @@ setup_gerrit() {
 	echo "url=[$url]"
 	
         if xsel -b -i < ~/.ssh/id_rsa.pub; then
-	    notice "SSH Key" "Your ssh key has been added to the clipboard so you can paste it into Gerrit's registration form"
+	    alert "SSH Key" "Your ssh key has been added to the clipboard so you can paste it into Gerrit's registration form"
 	fi
 
-	notice 'Login and Register with Gerrit' 'Please follow these steps:\n  1) Login to your openID provider\n  2) Set your gerrit username\n  3) Paste you SSH key into the ssh field and hit [Add]\n  4) Exit the browser to continue'
+	alert 'Login and Register with Gerrit' 'Please follow these steps:\n  1) Login to your openID provider\n  2) Set your gerrit username\n  3) Paste you SSH key into the ssh field and hit [Add]\n  4) Exit the browser to continue'
 
 	$BROWSER "$url" > /dev/null 2>&1
 
@@ -48,7 +48,7 @@ setup_gerrit() {
 	    setup_sshconfig
 	    GERRIT_FIRSTTIME=true
 	else
-	    notice "Gerrit Registration Required" "You must register, pick a username and set you ssh key before you can continue!"
+	    alert "Gerrit Registration Required" "You must register, pick a username and set you ssh key before you can continue!"
 	    exit 202
 	fi
     fi
@@ -62,17 +62,17 @@ check_gerrit() {
 	echo "Gerrit seems happy with us!"
 
 	if $GERRIT_FIRSTTIME; then
-	    notice "Gerrit Success" "Gerrit registration was successful."
+	    alert "Gerrit Success" "Gerrit registration was successful."
 	fi
     else
-	notice "Gerrit Failure" "Gerrit does not appear to be setup correctly."
+	alert "Gerrit Failure" "Gerrit does not appear to be setup correctly."
 
 	if zenity --question  --text="Do you want to try and repair your Gerrit setup?"; then
 	    rm -f ~/.gerrit_username
 	    GERRIT_RETRY=true
 	    return
 	else
-	    notice "Gerrit Broken" "Until you fix Gerrit you will not be able to continue with setup."
+	    alert "Gerrit Broken" "Until you fix Gerrit you will not be able to continue with setup."
 	    exit 203
 	fi
     fi
@@ -81,7 +81,7 @@ check_gerrit() {
 }
 
 if [ -z "$BROWSER" -o ! -x "$BROWSER" ]; then
-    notice "Can't find web browser!" "You must have a web browser installed to setup gerrit, did you remove it!?"
+    alert "Can't find web browser!" "You must have a web browser installed to setup gerrit, did you remove it!?"
     return
 fi
 
@@ -96,5 +96,5 @@ if $HAVEX; then
 	check_gerrit
     done
 else
-    notice "Must run under X" "You need X windows to display your web browser for gerrit setup!"
+    alert "Must run under X" "You need X windows to display your web browser for gerrit setup!"
 fi

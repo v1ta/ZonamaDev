@@ -26,8 +26,8 @@ mysql_init_database() {
     if $FORCE; then
 	if yorn "Do you want to drop the database ${DBName} and delete the user ${DBUser}?"; then
 	    echo "User requested database be reset"
-	    mysql -ve "DROP DATABASE ${DBName}" && notice "Dropped Database" "The database ${DBName} was dropped"
-	    mysql -ve "drop user swgemu@'localhost'" && notice "Dropped Mysql User" "The DB user ${DBUser} was deleted."
+	    mysql -ve "DROP DATABASE ${DBName}" && alert "Dropped Database" "The database ${DBName} was dropped"
+	    mysql -ve "drop user swgemu@'localhost'" && alert "Dropped Mysql User" "The DB user ${DBUser} was deleted."
 	fi
     fi
 
@@ -50,7 +50,7 @@ mysql_init_database() {
 
     mysql -ve "FLUSH PRIVILEGES;"
 
-    notice "Mysql Database Initialized" "The database ${DBName} was created and initialized and the database user ${DBUser} was granted all privileges."
+    alert "Mysql Database Initialized" "The database ${DBName} was created and initialized and the database user ${DBUser} was granted all privileges."
 }
 
 mysql_setup_auth() {
@@ -64,7 +64,7 @@ mysql_setup_auth() {
 	    mv ~/.my.cnf ~/.broken.my.cnf
 	    mysql_save_credentials root "${DEFAULT_MYSQL_PASSWORD}"
 	    if mysqladmin -uroot status > /dev/null 2>&1; then
-		notice "Fixed your ~/.my.cnf" "Looks like your old one was bad, it was saved in ~/.broken.my.cnf"
+		alert "Fixed your ~/.my.cnf" "Looks like your old one was bad, it was saved in ~/.broken.my.cnf"
 	    else
 		# Still can't get in, try empty password
 		mysql_save_credentials root ''
