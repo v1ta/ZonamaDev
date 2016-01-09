@@ -13,10 +13,23 @@ if [ -n "$DISPLAY" ] && xset q > /dev/null 2>&1; then
     HAVEX=true
 fi
 
-read -a aa <<<$(ip -o route show|egrep '^default')
-read -a aa <<<$(ip -o -4 addr show ${aa[4]})
+server_ip='127.0.0.1'
 
-server_ip=$(echo ${aa[3]}|cut -d/ -f1)
+if [ -f ~/.force_ip ]; then
+    server_ip=$(cat ~/.force_ip)
+fi
+
+i2=$(netstat -ni|grep eth2)
+
+# If they have an eth2 they might have enabled the "public" interface
+if [ -n "$i2" ]; then
+    # Find the default route
+    read -a aa <<<$(ip -o route show|egrep '^default')
+    # What's the address of the interface with default route?
+    read -a aa <<<$(ip -o -4 addr show ${aa[4]})
+    # Let's suggest that ip
+    server_ip=$(echo ${aa[3]}|cut -d/ -f1)
+fi
 
 eval $(set -x;~/bin/get_config --bash 'Login..')
 
