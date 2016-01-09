@@ -12,6 +12,11 @@ BUILD_DIR=~/workspace/Core3/MMOCoreORB
 RUN_DIR=~/workspace/Core3/MMOCoreORB/bin
 
 main() {
+    if [ $(id -u) -eq 0 ]; then
+	echo "** DO NOT RUN THIS AS ROOT **"
+	exit 250
+    fi
+
     get_lock
 
     local panel=false
