@@ -82,6 +82,10 @@ clone_repos() {
 check_repos() {
     msg "Check Repos"
 
+    if [ ! -f ~/.devsetup.ran ]; then
+	notice "Pull Latest" "Doing initial pull for latest changes."
+    fi
+
     for i in $REPOS
     do
 	echo "** Check $i repo"
@@ -96,7 +100,6 @@ check_repos() {
 	    scp ${GERRIT_HOST}:hooks/commit-msg ${i}/.git/hooks && echo "Added commit-msg hook to $i"
 	else
 	    if [ ! -f ~/.devsetup.ran ]; then
-		notice "Pulling Latest" "Pulling latest changes for $i repo."
 		(set -x;cd $i;git stash --include-untracked;git pull)
 		alert "Pulled Latest" "Pulled latest changes for $i repo."
 	    fi
@@ -105,6 +108,7 @@ check_repos() {
 
     if [ ! -f ~/.devsetup.ran ]; then
 	(set -x;cd Core3;git checkout -b unstable origin/unstable;sed -e '/push = /d' -e '/url/s!$!\n\tpush = HEAD:refs/for/unstable!' -i .git/config)
+	notice "Repos Updates" "All repos are up to date."
     fi
 }
 
