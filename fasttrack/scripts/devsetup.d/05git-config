@@ -30,8 +30,8 @@ setup_gitconfig() {
 
 	if [ -z "$r" -o "$r" = "/" ]; then
 	    if zenity --question  --text="Are you sure you want to continue without setting up git?"; then
-		msg "User aborted git setup"
-		return
+		alert "User Aborted Setup" "You will need to logout or reboot to continue setup"
+		exit 0
 	    else
 	        continue
 	    fi
