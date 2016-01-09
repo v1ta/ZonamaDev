@@ -1,0 +1,56 @@
+#!/bin/bash
+#
+# 42luarocks - Install luarocks and luasocket
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Sat Jan  9 12:04:15 EST 2016
+#
+
+LUAROCKS_TEST_FILE="/usr/local/bin/luarocks"
+
+if [ ! -f ${LUAROCKS_TEST_FILE} ]; then
+(
+    umask 022
+
+    tmpdir=$(mktemp -d /tmp/$(basename $ME).XXXXXX)
+
+    echo "Using ${tmpdir} for download and build."
+
+    chmod 755 "${tmpdir}"
+
+    cd "${tmpdir}"
+
+    wget --progress=dot ${LUAROCKS_URL}
+
+    tar xvf $(basename "${LUAROCKS_URL}")
+
+    dir=$(basename "${LUAROCKS_URL}" .tar.gz)
+
+    [ -d "${dir}" ] || error "Failed to download luarocks from ${LUAROCKS_URL}, look in ${tmpdir} for clues." 142
+
+    cd "${dir}"
+
+    ./configure
+
+    make bootstrap
+
+    [ -f ${LUAROCKS_TEST_FILE} ] || error "Failed to build luarocks from ${LUAROCKS_URL}, look in ${tmpdir} for clues." 142
+
+    cd $HOME
+
+    rm -fr ${tmpdir}
+)
+fi
+
+if [ ! -f /usr/local/lib/lua/5.1/socket/unix.so ]; then
+    echo "Install luasocket"
+    luarocks install luasocket
+fi
+
+if echo 'require "socket"'|lua -; then
+    echo "Lua socket installed"
+else
+    error "Failed to install luasocket using: luarocks install luasocket, get help!" 142
+fi
+
