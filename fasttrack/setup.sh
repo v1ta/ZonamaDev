@@ -18,20 +18,6 @@ main() {
 	exit 1
     fi
 
-    if vagrant login --check; then
-	echo "** You're logged in, if you're using a pre-release copy you should make sure you're in the swgemu org **"
-    else
-	echo "** You're not logged in, if you're trying to use a pre-release box you're going to fail! **"
-
-	until vagrant login --check; do
-	    if yorn "** Do you want to login now? Y\b"; then
-		vagrant login
-	    else
-		break
-	    fi
-	done
-    fi
-
     echo "vagrant up"
 
     time vagrant up
