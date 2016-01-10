@@ -47,6 +47,12 @@ main() {
 
     if $panel; then
         echo
+	if [ $ret -eq 0 ]; then
+	    echo -e $(tput setaf 2)"\n** SUCCESS **\n"$(tput sgr0)
+	else
+	    echo -e $(tput setab 3;tput setaf 0)"\nWARNING: ${cmd} command returned error code ${ret}\n"$(tput sgr0)
+	fi
+
 	read -p "Press <ENTER> to close the window: "
     fi
 
@@ -116,7 +122,7 @@ server_start() {
     gzip -f o_screenlog.0 &
 
     # Start server detached
-    screen -dmS swgemu-server -L ./core3
+    screen -dmS swgemu-server -L gdb --command=$HOME/bin/gdb_settings  ./core3
 
     # Free lock
     release_lock
@@ -141,6 +147,18 @@ server_status() {
 	    echo "Server is not running"
 	fi
 	return 1
+    fi
+
+    local state=$(ps -p $pid -ho state)
+
+    shopt -s nocasematch
+
+    if [[ "${state}" != "S" && "${state}" != "R" ]]; then
+	echo -e $(tput setab 3;tput setaf 0)"WARNING: Server state is ${state}, it is not running or sleeping, something is wrong!"$(tput sgr0)
+
+	if $verbose; then
+	    return 2
+	fi
     fi
 
     if $verbose; then
@@ -188,27 +206,63 @@ server_stop() {
 
     local sz=$(stat -c '%s' screenlog.0)
     local pid=$(pgrep core3)
+    local state=$(ps -p $pid -ho state)
+    local ppid=$(ps -p $pid -ho ppid)
+    local pcmd=$(ps -p $ppid -ho cmd)
+    local gdb=false
+
+    if [[ $pcmd =~ ^gdb ]]; then
+	gdb=true
+	echo "** running under gdb **"
+    fi
 
     echo "** send 'save' command to server **"
 
-    screen -S swgemu-server -X stuff "save^M"
+    # Just in case don't compare case
+    shopt -s nocasematch
 
-    # TODO add timeout?
+    if [[ "${state}" == "S" || "${state}" == "R" ]]; then
+	screen -S swgemu-server -X stuff "save^M"
 
-    if ~/bin/sentinel --stop-next-backup --seek $sz; then
-	echo "** server backup complete **"
-	echo -n "** sending SIGINT.."
-	kill -INT $pid
-	while pgrep core3 > /dev/null 2>&1
-	do
-	    echo -n "."
-	    sleep 1
-	done
-	echo -e "\n** server stopped **"
-	return 0
+	# TODO add timeout?
+	if ~/bin/sentinel --stop-next-backup --seek $sz; then
+	    echo "** server backup complete **"
+	else
+	    echo "** sentinel failed with err=$?"
+	fi
     else
-	echo "** sentinel failed with err=$?"
+	echo -e $(tput setab 3;tput setaf 0)"WARNING: Server state is ${state}, it is not running or sleeping, something is wrong!"$(tput sgr0)
     fi
+
+    echo -n "** sending SIGINT to core3($pid).."
+
+    if $gdb; then
+	echo -n ". State: "
+    fi
+
+    kill -INT $pid
+
+    while pgrep core3 > /dev/null 2>&1
+    do
+	if $gdb; then
+	    # Look for state 't'
+	    local state=$(ps -p $pid -ho state)
+	    echo -n $state
+
+	    if [[ "${state}" == "t" || "${state}" == "Z" ]]; then
+		echo -en "\n** killing gdb($ppid) **"
+		kill $ppid
+		break
+	    fi
+	else
+	    echo -n "."
+	fi
+	sleep 1
+    done
+
+    echo -e $(tput setaf 2)"\n** server stopped **"$(tput sgr0)
+
+    return 0
 }
 
 server_build() {

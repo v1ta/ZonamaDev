@@ -1,6 +1,6 @@
 #!/bin/bash
 
-eval $(get_config --bash '^Tre')
+eval $(~/bin/get_config --bash '^Tre')
 
 count=0
 need=''
@@ -19,8 +19,11 @@ if [ "$height" -gt 600 ]; then
 fi
 
 if [ $count -gt 0 ]; then
-    echo "Missing ${count} .tre files."
-    echo -ne "$need" | sort | zenity --list --title "Missing TRE Files" --text="${count} TRE files are missing in $TrePath\n" --column "Missing Filename" --height $height
+    echo "Missing ${count} .tre files:"
+    echo -ne "$need"|sort
+    if xset q > /dev/null 2>&1; then
+	echo -ne "$need" | sort | zenity --list --title "Missing TRE Files" --text="${count} TRE files are missing in $TrePath\n" --column "Missing Filename" --height $height > /dev/null 2>&1 &
+    fi
     exit $count
 fi
 
