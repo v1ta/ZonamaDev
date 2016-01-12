@@ -38,6 +38,7 @@ main() {
 	'build' ) server_build ;;
 	'send' ) server_send $@ ;;
 	'stop' ) server_stop;;
+	'version' ) show_version;;
 	* ) echo "Usage: $0 {start|stop|status|backup|build}"; exit 1 ;;
     esac
 
@@ -362,7 +363,7 @@ server_backup() {
 
 	cd "${RUN_DIR}"
 
-	cp -rv conf databases ${TMPDIR}
+	cp -rv conf databases scripts/managers/resource_manager_spawns.lua ${TMPDIR}
 
 	cd ${TMPDIR}
 
@@ -386,6 +387,31 @@ server_backup() {
     )
 
     return 0
+}
+
+show_version()
+{
+    pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
+    local me=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
+    popd > /dev/null
+
+    local git_remote=$(cd ${BUILD_DIR};git ls-remote origin refs/heads/unstable | cut -f1)
+    local git_local=$(cd ${BUILD_DIR};git rev-parse refs/heads/unstable)
+    local me_md5=$(md5sum < $me|cut -d' ' -f1)
+    local zd_tag=$(cd ~/ZonamaDev;git describe --tag)
+
+    read name url junk <<< $(cd ${BUILD_DIR};git remote -v)
+
+    local json="{ "
+
+	json="${json} "'"server_version":{"remote-'${name}'":"'${url}'","remote-git-tag":"'${git_remote}'","local-get-tag":"'${git_local}'","asof_isodate":"'$(date -Iseconds)'","swgemu-script":"'${me}'","swgemu-md5":"'${me_md5}'","zd-tag":"'${zd_tag}'"}'
+	json="${json}, "'"box_buildinfo":'$(< /.swgemudev.builinfo.json)
+
+    json="$json }"
+
+    # echo $json
+
+    echo $json | python -m json.tool
 }
 
 yorn() {
