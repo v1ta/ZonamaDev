@@ -32,14 +32,15 @@ main() {
     shift
 
     case $cmd in
-	'start' ) server_start ;;
-	'status' ) server_status ;;
 	'backup' ) server_backup ;;
 	'build' ) server_build ;;
+	'latest' ) server_latest $@ ;;
 	'send' ) server_send $@ ;;
+	'start' ) server_start ;;
+	'status' ) server_status ;;
 	'stop' ) server_stop;;
 	'version' ) show_version;;
-	* ) echo "Usage: $0 {start|stop|status|backup|build}"; exit 1 ;;
+	* ) echo "Usage: $0 {backup|build|latest|send|start|status|stop|version}"; exit 1 ;;
     esac
 
     ret=$?
@@ -412,6 +413,44 @@ show_version()
     # echo $json
 
     echo $json | python -m json.tool
+}
+
+server_latest()
+{
+    if server_status; then
+	echo "** Server is running **"
+
+	if yorn "Would you like to shut it down?"; then
+	    if server_stop; then
+		:
+	    else
+		echo "** server stop error=$? **"
+		return 15
+	    fi
+	else
+	    echo "** USER ABORTED **"
+	    return 16
+	fi
+    fi
+
+    (
+	set -xe
+	cd ${BUILD_DIR}
+	git stash save "swgemu-latest "$(date)
+	git pull
+	git stash pop
+	cd ~/workspace/PublicEngine
+	git pull
+    )
+
+    local ret=$?
+
+    if [ $ret -gt 0 ]; then
+	echo "** Latest pull failed, look at errors above for clues. **"
+	return 17
+    fi
+
+    return $ret
 }
 
 yorn() {
