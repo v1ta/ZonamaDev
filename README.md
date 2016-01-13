@@ -5,10 +5,11 @@ Zonama - The living planet, or in our world an easily deployed development envir
 ## Windows Host
 
 #### Minimum requirements
-- Virtualization enabled cpu
+- Virtualization enabled cpu (Check your BIOS if virtualbox fails to boot box)
 - 2 Cores
 - 2G Ram
-- Dynamically sized 40G HD (Approx 15G on first boot)
+- Dynamically sized 40G HD (Approx 15G on first boot) (Usually $HOME/ZonamaDev)
+- 2.5Gb in your $HOME directory for base box image (On windows this is usually C:\ )
 
 ### Fast Start
 
