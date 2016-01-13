@@ -6,7 +6,7 @@ if [ ! -f ~/.tzdata.ran ]; then
     curtz=$(date +%Z)
 
     if yorn "The current time zone is ${curtz} on this machine.\n\nWould you like to change the time zone? "; then
-	sudo apt-get install libgnome2-perl
+	sudo apt-get -y install libgnome2-perl
 	sudo -E dpkg-reconfigure --frontend=gnome tzdata
     else
 	alert "Timezone not set" "You can open a terminal later and run:\nsudo dpkg-reconfigure tzdata"
