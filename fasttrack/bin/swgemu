@@ -17,7 +17,12 @@ main() {
 	exit 250
     fi
 
-    get_lock
+    if get_lock; then
+	:
+    else
+	panel_pause
+	exit 251
+    fi
 
     local panel=false
 
@@ -48,14 +53,7 @@ main() {
     release_lock
 
     if $panel; then
-        echo
-	if [ $ret -eq 0 ]; then
-	    echo -e $(tput setaf 2)"\n** SUCCESS **\n"$(tput sgr0)
-	else
-	    echo -e $(tput setab 3;tput setaf 0)"\nWARNING: ${cmd} command returned error code ${ret}\n"$(tput sgr0)
-	fi
-
-	read -p "Press <ENTER> to close the window: "
+	panel_pause
     fi
 
     exit $ret
@@ -467,6 +465,17 @@ yorn() {
   return 0
 }
 
+panel_pause() {
+    echo
+    if [ $ret -eq 0 ]; then
+	echo -e $(tput setaf 2)"\n** SUCCESS **\n"$(tput sgr0)
+    else
+	echo -e $(tput setab 3;tput setaf 0)"\nWARNING: ${cmd} command returned error code ${ret}\n"$(tput sgr0)
+    fi
+
+    read -p "Press <ENTER> to close the window: "
+}
+
 release_lock() {
     if $HAVELOCK; then
 	rm -f ${SWGEMU_LOCKFILE}
@@ -492,7 +501,7 @@ get_lock() {
 
 	if kill -0 $pid; then
 	    echo ">> PID $pid HAS HAD LOCK FOR ${tm_delta} SECOND(S), EXITING"
-	    return 0
+	    return 1
 	else
 	    echo ">> Stealing lock from PID $pid which has gone away, locked ${tm_delta} second(s) ago"
 	    if ln -f ${locktmp} ${SWGEMU_LOCKFILE}; then
