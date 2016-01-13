@@ -83,7 +83,9 @@ check_repos() {
     msg "Check Repos"
 
     if [ ! -f ~/.devsetup.ran ]; then
-	notice "Pull Latest" "Doing initial pull for latest changes."
+	notice "Pull Latest" "Please wait while we pull latest changes from repos.\n"
+    else
+	return 0
     fi
 
     for i in $REPOS
