@@ -4,6 +4,12 @@ Zonama - The living planet, or in our world an easily deployed development envir
 
 ## Windows Host
 
+#### Minimum requirements
+- Virtualization enabled cpu
+- 2 Cores
+- 2G Ram
+- Dynamically sized 40G HD (Approx 15G on first boot)
+
 ### Fast Start
 
 #### Downloads
