@@ -20,7 +20,7 @@ main() {
     if get_lock; then
 	:
     else
-	panel_pause
+	panel_pause 251
 	exit 251
     fi
 
@@ -53,7 +53,7 @@ main() {
     release_lock
 
     if $panel; then
-	panel_pause
+	panel_pause $ret
     fi
 
     exit $ret
@@ -466,6 +466,8 @@ yorn() {
 }
 
 panel_pause() {
+    local ret=$1
+
     echo
     if [ $ret -eq 0 ]; then
 	echo -e $(tput setaf 2)"\n** SUCCESS **\n"$(tput sgr0)
