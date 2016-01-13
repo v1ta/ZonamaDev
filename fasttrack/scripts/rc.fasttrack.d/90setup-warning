@@ -1,0 +1,54 @@
+#!/bin/bash
+#
+# 90setup-warning - Setup warning for user in case they try to open a tty too soon
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Wed Jan 13 00:06:02 UTC 2016
+#
+
+setup_warning() {
+    local msg='
+         ######      #     #     #   #####   #######  ######
+         #     #    # #    ##    #  #     #  #        #     #
+         #     #   #   #   # #   #  #        #        #     #
+         #     #  #     #  #  #  #  #  ####  #####    ######
+         #     #  #######  #   # #  #     #  #        #   #
+         #     #  #     #  #    ##  #     #  #        #    #
+         ######   #     #  #     #   #####   #######  #     #
+
+
+    "TOO SOON!
+       YOU HAVE AWAKENED ME TOO SOON, EXECUTUS!
+         WHAT IS THE MEANING OF THIS INTRUSION?"
+
+     If you continue without completing the devsetup process you will most
+     likely have numerous problems.  Please follow all the prompts, if you
+     stopped the process you can reboot to start again.
+
+    '
+
+    local fn=''
+    for i in ~vagrant/.bash_login ~vagrant/.profile
+    do
+	if [ -f $i ]; then
+	    fn=$i
+	    break
+	fi
+    done
+
+    echo "Checking $fn"
+
+    if grep '## START SETUP WARNING ##' $fn > /dev/null 2>&1; then
+	echo "Remove old warning"
+	sed '/^## START SETUP WARNING ##/,/^## END SETUP WARNING ##/d' -i $fn
+    fi
+
+    if [ ! -f ~vagrant/.devsetup.ran ]; then
+	# Append our warning code (if needed)
+	echo "Add new warning"
+	echo -e "## START SETUP WARNING ##\n[ -f ~/.devsetup.ran ]||echo '${msg}'\n## END SETUP WARNING ##" >> $fn
+    fi
+}
+
+setup_warning
