@@ -29,7 +29,7 @@ setup_warning() {
     '
 
     local fn=''
-    for i in ~vagrant/.bash_login ~vagrant/.profile
+    for i in ~vagrant/.bashrc ~vagrant/.profile
     do
 	if [ -f $i ]; then
 	    fn=$i
