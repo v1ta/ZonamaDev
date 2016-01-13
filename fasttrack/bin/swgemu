@@ -180,6 +180,8 @@ server_send() {
 	return 0
     fi
 
+    cd ${RUN_DIR}
+
     local string="$*^M"
 
     local sz=$(stat -c '%s' screenlog.0)
