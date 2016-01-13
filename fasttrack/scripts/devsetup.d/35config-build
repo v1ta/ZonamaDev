@@ -34,19 +34,8 @@ config_build() {
 
     [ -f $logfile ] && mv ${logfile} ${logfile}'-prev'
 
-    (
-    	SECONDS=0
-	date
-        set -x
-	cd $WORKSPACE/Core3/MMOCoreORB
-	time make config
-	time make clean
-	if time make -k build; then
-	    echo "** BUILD SUCCESS IN $SECONDS SECOND(S) **"
-	else
-	    echo "** BUILD FAILED **"
-	fi
-    ) 2>&1 | tee $status_pipe | tee $logfile
+    (date;set -x;~/bin/swgemu build) 2>&1 | tee $status_pipe | tee $logfile
+
     result=$(tail -1 $logfile)
     zenity --info --text="Config and Build process finished.\n\n${result}\n\nYou can find a copy of the output in $logfile\n\nPress [OK] to close the log window"
     fuser -k $status_pipe
