@@ -502,7 +502,7 @@ get_lock() {
 	let "tm_delta=${tm_now} - ${tm_lock}"
 
 	if kill -0 $pid; then
-	    echo ">> PID $pid HAS HAD LOCK FOR ${tm_delta} SECOND(S), EXITING"
+	    echo ">> PID $pid HAS HAD LOCK FOR ${tm_delta} SECOND(S) RUNNING:\n\t"$(ps -p $pid -ho cmd)"\n\nAborting, can't continue until other command is done."
 	    return 1
 	else
 	    echo ">> Stealing lock from PID $pid which has gone away, locked ${tm_delta} second(s) ago"
