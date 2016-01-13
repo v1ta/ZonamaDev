@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 90setup-warning - Setup warning for user in case they try to open a tty too soon
+# 00setup-warning - Setup warning for user in case they try to open a tty too soon
 #
 # Author: Lord Kator <lordkator@swgemu.com>
 #
@@ -47,7 +47,9 @@ setup_warning() {
     if [ ! -f ~vagrant/.devsetup.ran ]; then
 	# Append our warning code (if needed)
 	echo "Add new warning"
+	ls -l $fn
 	echo -e "## START SETUP WARNING ##\n[ -f ~/.devsetup.ran ]||echo '${msg}'\n## END SETUP WARNING ##" >> $fn
+	ls -l $fn
     fi
 }
 
