@@ -396,14 +396,14 @@ show_version()
     local me=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
     popd > /dev/null
     local tmp=$(mktemp /tmp/swgemu-version-temp.XXXXXX)
-    local git_remote=$(cd ${BUILD_DIR};git ls-remote origin refs/heads/unstable 2> ${tmp} | cut -f1)
+    local git_remote=$(cd ${BUILD_DIR};git ls-remote origin refs/heads/unstable 2>> ${tmp} | cut -f1)
     local git_local=$(cd ${BUILD_DIR};git rev-parse refs/heads/unstable 2>> ${tmp})
     local zd_tag=$(cd ~/ZonamaDev;git describe --tag 2>> ${tmp})
     local me_md5=$(md5sum < $me|cut -d' ' -f1 2>&1)
 
     read name url junk <<< $(cd ${BUILD_DIR};git remote -v 2>>${tmp})
 
-    local errors=$(<${tmp})
+    local errors=$(tr '\r' ' ' <${tmp})
 
     rm -f "${tmp}"
 
