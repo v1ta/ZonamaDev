@@ -396,12 +396,12 @@ show_version()
     local me=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
     popd > /dev/null
 
-    local git_remote=$(cd ${BUILD_DIR};git ls-remote origin refs/heads/unstable | cut -f1)
-    local git_local=$(cd ${BUILD_DIR};git rev-parse refs/heads/unstable)
-    local me_md5=$(md5sum < $me|cut -d' ' -f1)
-    local zd_tag=$(cd ~/ZonamaDev;git describe --tag)
+    local git_remote=$(cd ${BUILD_DIR};git ls-remote origin refs/heads/unstable | cut -f1 2>&1)
+    local git_local=$(cd ${BUILD_DIR};git rev-parse refs/heads/unstable 2>&1)
+    local me_md5=$(md5sum < $me|cut -d' ' -f1 2>&1)
+    local zd_tag=$(cd ~/ZonamaDev;git describe --tag 2>&1)
 
-    read name url junk <<< $(cd ${BUILD_DIR};git remote -v)
+    read name url junk <<< $(cd ${BUILD_DIR};git remote -v 2>&1)
 
     local json="{ "
 
