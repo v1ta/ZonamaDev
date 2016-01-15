@@ -517,6 +517,9 @@ post_debug_body() {
     local debug_commands=(
 	"show_version"
 	"tail -5 ${HOME}/workspace/Initial_Core3_Build.log"
+	"${HOME}/bin/get_config --bash 'Zone..'"
+	"${HOME}/bin/get_config --bash 'Tre..'"
+	"${HOME}/bin/tre_check"
 	"tail -100 ${HOME}/workspace/Core3/MMOCoreORB/bin/screenlog.0"
 	"tail -100 ${HOME}/workspace/Core3/MMOCoreORB/bin/log/core3.log"
 	"uname -a"
@@ -536,13 +539,21 @@ post_debug_body() {
        echo "$i: "$(<$i)
     done
 
+    # Make sure commands don't try and use X windows
+    local old_display="$DISPLAY"
+    unset DISPLAY
+
     # Commands to run and capture ouput
     for cmd in "${debug_commands[@]}"
     do
 	echo -e '\n```\n---\n'"${cmd}"'\n```\n'
-	$cmd
+	eval $cmd
     done
     echo -e '\n```'
+
+    if [ -n "$old_display" ]; then
+	export DISPLAY="${old_display}"
+    fi
 }
 
 server_latest()
