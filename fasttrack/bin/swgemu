@@ -507,7 +507,7 @@ post_debug_body() {
     #       see: xargs --show-limits < /dev/null
     #
     exec 2>&1
-    echo -e "swgemu postdebug - ${title}\n\n"
+    echo -e "swgemu postdebug - ${title}\n\nZonamaDev Automated Post\n\n"
     date
     echo -e "\nDescription: ${desc}\n\n"
 
