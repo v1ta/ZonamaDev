@@ -435,7 +435,22 @@ post_debug()
     local desc="$2"
     local gori="$3"
 
-    echo -e "** Post Debug Message **\n"
+    echo -e "**\n** Post Debug Message\n**"
+
+    echo -e "** This will create a dump of numerous files and status information and post them to the internet via a github gist or an issue.\n**"
+
+    echo -e "** Attempts are made to make sure the post does not include sensitive data but we cannot 100% guarantee that sensitive data won't be posted.\n**"
+
+    echo -e "** If you're worried you can follow the prompt to post a [G]ist and DO NOT LOGIN to GitHub so your gist will be 100% annonymous.\n**"
+
+    echo -e "** By default if you do post a gist and login the gist is created as private so you can review it before sharing.\n**"
+
+    echo -e "** Most people will want to post an [I]ssue and login to github to get immediate feedback and quicker support.\n**"
+
+    if [ -z "$gori" ]; then
+	read -p 'Post a [G]ist or an [I]ssue? ' gori
+	echo
+    fi
 
     if [ -z "$title" ]; then
 	read -p "Title: " title
@@ -445,10 +460,6 @@ post_debug()
     if [ -z "$desc" ]; then
 	read -p "One-line description of your problem: " desc
 	echo
-    fi
-
-    if [ -z "$gori" ]; then
-	read -p 'Post a [G]ist or an [I]ssue? ' gori
     fi
 
     local url=""
