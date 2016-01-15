@@ -435,6 +435,8 @@ post_debug()
     local desc="$2"
     local gori="$3"
 
+    echo -e "** Post Debug Message **\n"
+
     if [ -z "$title" ]; then
 	read -p "Title: " title
 	echo
