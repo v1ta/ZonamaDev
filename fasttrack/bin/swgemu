@@ -498,6 +498,12 @@ post_debug()
     fi
 
     echo -e "\nShare this URL to get help: ${url}"
+
+    if xset q > /dev/null 2>&1; then
+	local browser=$( (for i in chromium google-chrome chromium-browser firefox; do type -P $i; done)|head -1)
+	nohup $browser $url > /dev/null 2>&1 &
+    fi
+
     return 0
 }
 
@@ -506,6 +512,16 @@ post_debug_body() {
     # Note: Can't be too long as it goes into the command line with ghi and thus is limited
     #       see: xargs --show-limits < /dev/null
     #
+    local debug_commands=(
+	"show_version"
+	"tail -5 ${HOME}/workspace/Initial_Core3_Build.log"
+	"tail -100 ${HOME}/workspace/Core3/MMOCoreORB/bin/screenlog.0"
+	"tail -100 ${HOME}/workspace/Core3/MMOCoreORB/bin/log/core3.log"
+	"uname -a"
+	"df -h"
+	"top -Hbn 1"
+    )
+
     exec 2>&1
     echo -e "swgemu postdebug - ${title}\n\nZonamaDev Automated Post\n\n"
     date
@@ -519,14 +535,7 @@ post_debug_body() {
     done
 
     # Commands to run and capture ouput
-    for cmd in \
-        'show_version' \
-	'tail -5 ~/workspace/Initial_Core3_Build.log' \
-        'tail -100 ~/workspace/Core3/MMOCoreORB/bin/log/core3.log' \
-        'uname -a' \
-	'df -h' \
-	'top -Hbn 1' \
-
+    for cmd in "${debug_commands[@]}"
     do
 	echo -e '\n```\n---\n'"${cmd}"'\n```\n'
 	$cmd
