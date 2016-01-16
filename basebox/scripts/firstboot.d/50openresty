@@ -76,6 +76,9 @@ mkdir "${OPENRESTY_DIR}/nginx/lua" && echo "Created ${OPENRESTY_DIR}/nginx/lua"
 # We do this so the server runs as the swgemu server id doesn't have to run as root
 sed 's/listen \([ ]*\)80;/listen\1 8080;/' -i ${OPENRESTY_DIR}/nginx/conf/nginx.conf
 
+# Add /zonama-instance-id service
+perl -pe 'print("        location /zonama-instance-id { alias /var/lib/dbus/machine-id; }\n\n") if(m!location /\s+{!)' -i nginx.conf
+
 # Number of workers, cpus/2 or at least 2
 let "n=$(nproc) / 2"
 sed 's/worker_processes \([ ]*\)[0-9][0-9]*/worker_processes\1 '$(($n>1?$n:2))'/' -i ${OPENRESTY_DIR}/nginx/conf/nginx.conf
