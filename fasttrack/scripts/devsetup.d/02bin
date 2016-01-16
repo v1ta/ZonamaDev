@@ -21,7 +21,7 @@ setup_bindir() {
     fi
 
     # Append our new path
-    echo -e '## START DEVSETUP ##\nexport PATH=$HOME/bin:$PATH\n## END DEVSETUP ##' >> ~/.bashrc
+    echo -e '## START DEVSETUP ##\nexport PATH=$HOME/bin:$PATH\n$HOME/bin/swgemu status\n## END DEVSETUP ##' >> ~/.bashrc
     chmod 600 ~/.bashrc
 }
 
