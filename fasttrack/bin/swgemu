@@ -10,54 +10,41 @@
 # TODO make these use global config
 BUILD_DIR=~/workspace/Core3/MMOCoreORB
 RUN_DIR=~/workspace/Core3/MMOCoreORB/bin
+IS_PANEL=false
 
 main() {
-    if [ $(id -u) -eq 0 ]; then
-	echo "** DO NOT RUN THIS AS ROOT **"
-	exit 250
+    local ret=255
+    local cmd=$1
+    shift
+
+    if is_setup_pending "$cmd"; then
+	return 251
     fi
 
     if get_lock; then
 	:
     else
-	panel_pause 251
-	exit 251
+	return 252
     fi
-
-    local panel=false
-
-    if [ "X$1" == "X--panel" ]; then
-        panel=true
-	shift
-    fi
-
-    local cmd=$1
-    local ret=255
-
-    shift
 
     case $cmd in
-	'backup' ) server_backup ;;
-	'build' ) server_build ;;
-	'latest' ) server_latest "$@" ;;
-	'postdebug' ) post_debug "$@";;
-	'send' ) server_send "$@" ;;
-	'start' ) server_start ;;
-	'status' ) server_status ;;
-	'stop' ) server_stop;;
-	'version' ) show_version;;
-	* ) echo "Usage: $0 {backup|build|postdebug|latest|send|start|status|stop|version}"; exit 1 ;;
+	'backup' )	server_backup	"$@";;
+	'build' )	server_build	"$@";;
+	'latest' )	server_latest	"$@";;
+	'postdebug' )	post_debug	"$@";;
+	'send' )	server_send	"$@";;
+	'start' )	server_start	"$@";;
+	'status' )	server_status	"$@";;
+	'stop' )	server_stop	"$@";;
+	'version' )	show_version	"$@";;
+	'help' | * ) echo "Usage: $0 [backup|build|postdebug|latest|send|start|status|stop|version]"; return 1 ;;
     esac
 
     ret=$?
 
     release_lock
 
-    if $panel; then
-	panel_pause $ret
-    fi
-
-    exit $ret
+    return $ret
 }
 
 ICON=/home/vagrant/ZonamaDev/fasttrack/assets/swgemu_icon.png
@@ -615,6 +602,34 @@ server_latest()
     return $ret
 }
 
+is_setup_pending() {
+    if [ -f ~vagrant/.devsetup.ran ]; then
+	return 1
+    fi
+
+    echo '
+         ######      #     #     #   #####   #######  ######
+         #     #    # #    ##    #  #     #  #        #     #
+         #     #   #   #   # #   #  #        #        #     #
+         #     #  #     #  #  #  #  #  ####  #####    ######
+         #     #  #######  #   # #  #     #  #        #   #
+         #     #  #     #  #    ##  #     #  #        #    #
+         ######   #     #  #     #   #####   #######  #     #
+
+
+    "TOO SOON!
+       YOU HAVE AWAKENED ME TOO SOON, EXECUTUS!
+         WHAT IS THE MEANING OF THIS INTRUSION?"
+
+     If you continue without completing the devsetup process you will most
+     likely have numerous problems.  Please follow all the prompts, if you
+     stopped the process you can reboot to start again.
+
+    '
+
+    return 0
+}
+
 yorn() {
   if tty -s; then
       echo -n -e "$@ Y\b" > /dev/tty
@@ -625,19 +640,6 @@ yorn() {
   fi
 
   return 0
-}
-
-panel_pause() {
-    local ret=$1
-
-    echo
-    if [ $ret -eq 0 ]; then
-	echo -e $(tput setaf 2)"\n** SUCCESS **\n"$(tput sgr0)
-    else
-	echo -e $(tput setab 3;tput setaf 0)"\nWARNING: ${cmd} command returned error code ${ret}\n"$(tput sgr0)
-    fi
-
-    read -p "Press <ENTER> to close the window: "
 }
 
 release_lock() {
@@ -689,6 +691,25 @@ get_lock() {
     trap 'release_lock;' 0
 }
 
+if [ "X$1" == "X--panel" ]; then
+    IS_PANEL=true
+    shift
+fi
+
 main "$@"
 
-exit 0
+ret=$?
+
+echo
+
+if $IS_PANEL; then
+    if [ $ret -eq 0 ]; then
+	echo -e $(tput setaf 2)"\n** SUCCESS **\n"$(tput sgr0)
+    else
+	echo -e $(tput setab 3;tput setaf 0)"\nWARNING: ${cmd} command returned error code ${ret}\n"$(tput sgr0)
+    fi
+
+    read -p "Press <ENTER> to close the window: "
+fi
+
+exit $ret
