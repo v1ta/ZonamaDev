@@ -1,0 +1,94 @@
+#!/bin/bash
+#
+# 20iplist - Discover IP's we could use for this server
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Sat Jan 16 10:37:28 EST 2016
+#
+# Depends: IPLIST
+#
+# NOTE: It doesn't need root but it does take a while to run, it's started here to give it a head start
+#
+
+[ -n "$IPLIST" ] || error "Missing IPLIST configuration"
+
+update_iplist() {
+    local pub_ip=$(dig @ns1.google.com -t txt o-o.myaddr.l.google.com +short | tr -d '"')
+
+    # Simple lock file so others can see if it's done later
+    echo "$$ "$(date +%s) > ${IPLIST}.lock
+    trap 'rm -f '${IPLIST}.lock 0
+
+    cp /dev/null ${IPLIST}
+
+    if [ -n "$pub_ip" ]; then
+	echo "** Failed to find public ip so we can't reverse engineer the LAN network address"
+	return 1
+    fi
+
+    local pub_rev=$(dig +short -x ${pub_ip})
+
+    if [ -n "$pub_rev" ]; then
+	pub_rev=" (${pub_rev})"
+    fi
+
+    echo "${pub_ip},Public Internet IP${pub_rev}" >> ${IPLIST}
+
+    echo -ne "** Searching for Local Area Network..."
+
+    IFS='.' read -ra t <<<${pub_ip}
+
+    # Just guessing it's a class B most of the time
+    local regex="${t[0]}\.${t[1]}\.${t[2]}.*"
+
+    # Find last ip before our public subnet (again quick and dirty guess)
+    local guess_lan_router=$(traceroute -nw 2 -q 2 -m 10 www.cisco.com | perl -ne '@a = split; if($a[1] =~ /'${regex}'/) {  print $p; exit(0) }; $p = $a[1];')
+
+    echo -e "\n** Found Lan Router: ${guess_lan_router}"
+
+    echo "** Public IP       : ${pub_ip}"
+
+    # A unique id so we can see these across multiple logs etc.
+    local scan_token=$(date|md5sum|cut -d' ' -f1)
+
+    read -a instance_query <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:8080/zonama-instance-id?scantoken='$scan_token 2> /dev/null)
+
+    if [ "${instance_query[1]}" != "200" ]; then
+	echo "Local zonama-instance-id service is not running on port 8080 as expected, giving up."
+	return 1
+    fi
+
+    local our_instance="${instance_query[${#instance_query[@]}-1]}"
+
+    echo "** Scanning to find ourselves on the lan.."
+
+    # Typical home network
+    IFS='.' read -ra t <<<${guess_lan_router}
+    local subnet="${t[0]}.${t[1]}.${t[2]}."
+    local lan_ip=''
+
+    for i in {1..254}
+    do
+	# echo -ne "\r$i\t"
+	local addr="${subnet}${i}"
+	local result=$(curl -s -A zonamaipscan --connect-timeout 0.02 -m 0.02 'http://'${addr}':8080/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
+
+	if [ "X$result" = "X$our_instance" ]; then
+	    # TODO do we need to double check nginx log local just in case?
+	    lan_ip=$addr
+	    break
+	fi
+    done
+
+    echo "** Local Network IP: ${lan_ip}"
+
+    echo "${lan_ip},Local Network IP" >> ${IPLIST}
+
+    return 0
+}
+
+if [ ! -f "${IPLIST}" ]; then
+    # Try and run in the background
+    nohup update_iplist < /dev/null 2>&1 | logger -i -t "rc.fasttrack-"$(basename $ME) -s > /tmp/iplist.out 2>&1 &
+fi
