@@ -627,6 +627,11 @@ is_setup_pending() {
 
     '
 
+    # Allow these to get through in case they have problems with setup
+    if [ "$1" = "postdebug" ]; then
+	return 1
+    fi
+
     return 0
 }
 
