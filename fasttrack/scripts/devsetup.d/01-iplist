@@ -14,6 +14,7 @@
 [ -n "$IPLIST" ] || error "Missing IPLIST configuration"
 
 update_iplist() {
+  (
     local pub_ip=$(dig @ns1.google.com -t txt o-o.myaddr.l.google.com +short | tr -d '"')
 
     # Simple lock file so others can see if it's done later
@@ -27,6 +28,8 @@ update_iplist() {
 	return 1
     fi
 
+    echo "** Public IP: ${pub_ip}"
+
     local pub_rev=$(dig +short -x ${pub_ip})
 
     if [ -n "$pub_rev" ]; then
@@ -35,19 +38,17 @@ update_iplist() {
 
     echo "${pub_ip},Public Internet IP${pub_rev}" >> ${IPLIST}
 
-    echo -ne "** Searching for Local Area Network..."
-
     IFS='.' read -ra t <<<${pub_ip}
 
     # Just guessing it's a class B most of the time
     local regex="${t[0]}\.${t[1]}\.${t[2]}.*"
 
+    echo -ne "** Searching for Local Area Network...(${regex})"
+
     # Find last ip before our public subnet (again quick and dirty guess)
     local guess_lan_router=$(traceroute -nw 2 -q 2 -m 10 www.cisco.com | perl -ne '@a = split; if($a[1] =~ /'${regex}'/) {  print $p; exit(0) }; $p = $a[1];')
 
     echo -e "\n** Found Lan Router: ${guess_lan_router}"
-
-    echo "** Public IP       : ${pub_ip}"
 
     # A unique id so we can see these across multiple logs etc.
     local scan_token=$(date|md5sum|cut -d' ' -f1)
@@ -61,12 +62,12 @@ update_iplist() {
 
     local our_instance="${instance_query[${#instance_query[@]}-1]}"
 
-    echo "** Scanning to find ourselves on the lan.."
-
     # Typical home network
     IFS='.' read -ra t <<<${guess_lan_router}
     local subnet="${t[0]}.${t[1]}.${t[2]}."
     local lan_ip=''
+
+    echo "** Scanning to find ourselves on the lan (${subnet}).."
 
     for i in {1..254}
     do
@@ -86,9 +87,9 @@ update_iplist() {
     echo "${lan_ip},Local Network IP" >> ${IPLIST}
 
     return 0
+  ) < /dev/null > /tmp/iplist.out 2>&1 &
 }
 
 if [ ! -f "${IPLIST}" ]; then
-    # Try and run in the background
-    update_iplist < /dev/null 2>&1 | logger -i -t "rc.fasttrack-iplist" -s > /tmp/iplist.out 2>&1 &
+    update_iplist 
 fi
