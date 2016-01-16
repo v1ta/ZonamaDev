@@ -13,10 +13,9 @@
 
 [ -n "$IPLIST" ] || error "Missing IPLIST configuration"
 
-server_ip=''
+SERVER_IP=''
 
-ask_ip() {
-    server_ip=''
+prompt_ip() {
     local selected_ip=$(
 	(
 	echo -e "TRUE\n127.0.0.1\nDefault - Local Client and Server on one computer"
@@ -56,34 +55,61 @@ ask_ip() {
 
     if [ -n "$(egrep "^${selected_ip}," ~/.iplist | grep -y public)" ]; then
 	if zenity --question --icon-name=dialog-warning --window-icon=warning --title="Are you sure?" --text="Using a public ip is complicated and dangerous, you need to configure your firewall properly.\n\nIt can be dangerous because it exposes your network through this server to malicous people from all over the world.\n\nAre you sure you want to continue?" < /dev/null > /dev/null 2>&1; then
-	    server_ip=$selected_ip
+	    SERVER_IP=$selected_ip
 	    return 0
 	else
 	    return 2
 	fi
     else
-	server_ip=$selected_ip
+	SERVER_IP=$selected_ip
 	return 0
     fi
 
     return 1
 }
 
-if [ ! -f ~/.force_ip ]; then
+setup_server_ip() {
+    # Check to make sure iplist is done
+    while [ -f "${IPLIST}.lock" ]
+    do
+	read pid tm_lock <<<$(cat "${IPLIST}.lock")
+	tm_now=$(date +%s)
+
+	let "tm_delta=${tm_now} - ${tm_lock}"
+
+	if kill -0 $pid; then
+	    msg "PID $pid HAS HAD LOCK FOR ${tm_delta} SECOND(S), WAITING"
+	    sleep 1
+	else
+	    msg "PID $pid has gone away, locked ${tm_delta} second(s) ago, moving ahead..."
+	    rm -fr "${IPLIST}.lock"
+	fi
+    done
+
+    echo "** Setup Server IP **"
+
+    # Prompt them until they get one set of default
     while :
     do
-	ask_ip
+	prompt_ip
 	# Retry?
 	if [ $? -ne 2 ]; then
 	    break
 	fi
     done
 
-    if [ -z "$server_ip" ]; then
-	server_ip='127.0.0.1'
+    if [ -z "$SERVER_IP" ]; then
+	SERVER_IP='127.0.0.1'
     fi
 
     # TODO should we check the zonama-instance-id service and see if this the right ip?
 
-    echo "$server_ip" > ~/.force_ip
+    echo "$SERVER_IP" > ~/.force_ip
+}
+
+# TODO move from a hard coded filename to cfg var and ~/.config
+if [ -f ~/.force_ip ]; then
+    SERVER_IP=$(<~/.force_ip)
+else
+    setup_server_ip
 fi
