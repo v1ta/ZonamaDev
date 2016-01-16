@@ -1,0 +1,89 @@
+#!/bin/bash
+#
+# 31server-ip - Ask user for the ip address they want to use for this server
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Sat Jan 16 11:54:00 EST 2016
+#
+# Depend: IPLIST
+#
+# NOTE: Depends on 01-iplist running to detect LAN and Public IP, if that fails they'll get localhost and MANUAL as an option
+#
+
+[ -n "$IPLIST" ] || error "Missing IPLIST configuration"
+
+server_ip=''
+
+ask_ip() {
+    server_ip=''
+    local selected_ip=$(
+	(
+	echo -e "TRUE\n127.0.0.1\nDefault - Local Client and Server on one computer"
+	sed -e 'iFALSE' -e 's/,/\n/' ~/.iplist
+	echo -e "FALSE\nMANUAL\nEnter a manuall address (Expert Mode)"
+	) | zenity --list --radiolist --text="Choose your Server IP:" --title="Discovered IP Addresses" --column="Select" --column="IP Address" --column="Description" --print-column=2 --width=650 --height=250 2> /dev/null
+    )
+
+    echo "Got [${selected_ip}]"
+
+    if [ "${selected_ip}" = "MANUAL" ]; then
+	selected_ip=''
+	while [ -z "$selected_ip" ]
+	do
+	    local r=$(zenity --entry --title="Server IP" --text="What IP would you like to use for this server?")
+
+	    if [ -z "$r" ]; then
+		return 2
+	    fi
+
+	    pingit=$(ping -W 3 -c 1 "${r}" 2>&1)
+
+	    if [ "$?" -ne 0 ]; then
+		zenity --error --title="Invalid IP Address" --text="${pingit}" < /dev/null > /dev/null 2>&1
+	    else
+		# Make sure they didn't use a hostname
+		local a=$(dig -t A +short ${r})
+
+		if [ -n "$a" ]; then
+		    selected_ip="${a}"
+		else
+		    selected_ip="$r"
+		fi
+	    fi
+	done
+    fi
+
+    if [ -n "$(egrep "^${selected_ip}," ~/.iplist | grep -y public)" ]; then
+	if zenity --question --icon-name=dialog-warning --window-icon=warning --title="Are you sure?" --text="Using a public ip is complicated and dangerous, you need to configure your firewall properly.\n\nIt can be dangerous because it exposes your network through this server to malicous people from all over the world.\n\nAre you sure you want to continue?" < /dev/null > /dev/null 2>&1; then
+	    server_ip=$selected_ip
+	    return 0
+	else
+	    return 2
+	fi
+    else
+	server_ip=$selected_ip
+	return 0
+    fi
+
+    return 1
+}
+
+if [ ! -f ~/.force_ip ]; then
+    while :
+    do
+	ask_ip
+	# Retry?
+	if [ $? -ne 2 ]; then
+	    break
+	fi
+    done
+
+    if [ -z "$server_ip" ]; then
+	server_ip='127.0.0.1'
+    fi
+
+    # TODO should we check the zonama-instance-id service and see if this the right ip?
+
+    echo "$server_ip" > ~/.force_ip
+fi
