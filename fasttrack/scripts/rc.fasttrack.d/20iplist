@@ -90,5 +90,5 @@ update_iplist() {
 
 if [ ! -f "${IPLIST}" ]; then
     # Try and run in the background
-    nohup update_iplist < /dev/null 2>&1 | logger -i -t "rc.fasttrack-"$(basename $ME) -s > /tmp/iplist.out 2>&1 &
+    update_iplist < /dev/null 2>&1 | logger -i -t "rc.fasttrack-"$(basename $ME) -s > /tmp/iplist.out 2>&1 &
 fi
