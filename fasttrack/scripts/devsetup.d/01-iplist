@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 20iplist - Discover IP's we could use for this server
+# 01-iplist - Discover IP's we could use for this server
 #
 # Author: Lord Kator <lordkator@swgemu.com>
 #
@@ -8,7 +8,7 @@
 #
 # Depends: IPLIST
 #
-# NOTE: It doesn't need root but it does take a while to run, it's started here to give it a head start
+# NOTE: We run this in the background to give it a head start before the devsetup needs the list
 #
 
 [ -n "$IPLIST" ] || error "Missing IPLIST configuration"
@@ -90,5 +90,5 @@ update_iplist() {
 
 if [ ! -f "${IPLIST}" ]; then
     # Try and run in the background
-    update_iplist < /dev/null 2>&1 | logger -i -t "rc.fasttrack-"$(basename $ME) -s > /tmp/iplist.out 2>&1 &
+    update_iplist < /dev/null 2>&1 | logger -i -t "rc.fasttrack-iplist" -s > /tmp/iplist.out 2>&1 &
 fi
