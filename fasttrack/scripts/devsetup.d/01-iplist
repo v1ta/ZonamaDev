@@ -22,7 +22,7 @@ update_iplist() {
 
     cp /dev/null ${IPLIST}
 
-    if [ -n "$pub_ip" ]; then
+    if [ -z "$pub_ip" ]; then
 	echo "** Failed to find public ip so we can't reverse engineer the LAN network address"
 	return 1
     fi
