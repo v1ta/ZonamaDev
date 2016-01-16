@@ -6,6 +6,7 @@ Zonama - The living planet, or in our world an easily deployed development envir
 
 #### Minimum requirements
 - Virtualization enabled cpu (Check your BIOS if virtualbox fails to boot box)
+- 64 Bit Host
 - 2 Cores
 - 2G Ram
 - Dynamically sized 40G HD (Approx 15G on first boot) (Usually $HOME/ZonamaDev)
