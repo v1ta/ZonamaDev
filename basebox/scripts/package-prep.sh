@@ -108,7 +108,7 @@ echo ">> Cleanup user files that shouldn't be in the base box image."
     cd ~vagrant
     mysql -e 'drop database swgemu' > /dev/null 2>&1 ;
     rm -rf .bash* .profile .inputrc .vim* .cache /var/mail/* .ssh/config .visual .gerrit_username .mysql_history .devsetup.ran .tzdata.ran
-    rm -rf .xsession* .gitconfig .lesshst .ssh/id_* .subversion .cache .force_ip
+    rm -rf .xsession* .gitconfig .lesshst .ssh/id_* .subversion .cache .force_ip .iplist*
     sed -e '/ vagrant$/p' -e 'd' -i .ssh/authorized_keys
 ) 2> /dev/null
 
