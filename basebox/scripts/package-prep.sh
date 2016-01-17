@@ -106,10 +106,10 @@ chown -R vagrant:vagrant ~vagrant
 echo ">> Cleanup user files that shouldn't be in the base box image."
 (
     cd ~vagrant
-    rm -rf .bash* .profile .inputrc .vim* .cache /var/mail/* .ssh/id_rsa* .ssh/config .visual .gerrit_username .mysql_history .devsetup.ran .tzdata.ran
+    mysql -e 'drop database swgemu' > /dev/null 2>&1 ;
+    rm -rf .bash* .profile .inputrc .vim* .cache /var/mail/* .ssh/config .visual .gerrit_username .mysql_history .devsetup.ran .tzdata.ran
     rm -rf .xsession* .gitconfig .lesshst .ssh/id_* .subversion .cache
     sed -e '/ vagrant$/p' -e 'd' -i .ssh/authorized_keys
-    mysql -e 'drop database swgemu' > /dev/null 2>&1 ;
 ) 2> /dev/null
 
 # Basic files
@@ -122,6 +122,7 @@ service lightdm stop
 service vboxadd stop
 service mysql stop
 service syslog stop
+~vagrant/service/openresty/nginx/sbin/nginx -s stop > /dev/null 2>&1
 
 # Make sure VBox service really stops
 vbpid=$(cat /var/run/vboxadd-service.pid 2> /dev/null)
@@ -140,15 +141,12 @@ find /var/log -name \*.gz -o -name \*.[0-9] | xargs --no-run-if-empty -t rm
 
 rm -fr /var/tmp/* /tmp/* /etc/ssh/ssh_host*_key* /root/.viminfo /root/.bash_history /root/.lesshst /root/.bash_history /root/.ssh/* /var/log/*.gz /var/log/*.[1-9]* /var/log/*.old /var/spool/anacron/*
 
-find /var/log /etc/machine-id /var/lib/dbus/machine-id -type f | while read fn
+find /var/log ~vagrant/server/openresty/nginx/logs /etc/machine-id /var/lib/dbus/machine-id -type f | while read fn
 do
     cp /dev/null "$fn"
 done
 
 mv /var/log/syslog /var/log/syslog.1 > /dev/null 2>&1
-
-# rc.fasttrack should run this on other box
-# /usr/sbin/dpkg-reconfigure openssh-server
 
 ###########################################################
 ## Fill disk free space with zeros to aid in compression ##
