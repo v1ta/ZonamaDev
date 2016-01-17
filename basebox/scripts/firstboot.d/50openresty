@@ -77,7 +77,7 @@ mkdir "${OPENRESTY_DIR}/nginx/lua" && echo "Created ${OPENRESTY_DIR}/nginx/lua"
 sed 's/listen \([ ]*\)80;/listen\1 8080;/' -i ${OPENRESTY_DIR}/nginx/conf/nginx.conf
 
 # Add /zonama-instance-id service
-perl -pe 'print("        location /zonama-instance-id { alias /var/lib/dbus/machine-id; }\n\n") if(m!location /\s+{!)' -i nginx.conf
+perl -pe 'print("        location /zonama-instance-id { alias /var/lib/dbus/machine-id; }\n\n") if(m!location /\s+{!)' -i ${OPENRESTY_DIR}/nginx/conf/nginx.conf
 
 # Number of workers, cpus/2 or at least 2
 let "n=$(nproc) / 2"
