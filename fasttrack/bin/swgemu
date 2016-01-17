@@ -50,13 +50,23 @@ main() {
 ICON=/home/vagrant/ZonamaDev/fasttrack/assets/swgemu_icon.png
 
 server_start() {
+    local autostart=false
+
+    if [ "X$1" = "X--auto" ]; then
+	autostart=true
+    fi
+
     if server_status; then
 	echo "** Already running **"
+	if $autostart; then
+	    return 0
+	fi
+
 	if yorn "Would you like to stop the sever?"; then
 	    server_stop
 	else
 	    release_lock
-	    screen -D -RR swgemu-server
+	    exec screen -D -RR swgemu-server
 	fi
 	retun 0
     fi
@@ -87,6 +97,11 @@ server_start() {
     if [ ! -x core3 ]; then
 	echo "** Server not built? **"
 
+	if $autostart; then
+	    echo "** Can't auto-start server unless it's built already"
+	    return 3
+	fi
+
 	if yorn "Would you like to build the server now?"; then
 	    if server_build; then
 		:
@@ -111,6 +126,11 @@ server_start() {
 
     # Start server detached
     screen -dmS swgemu-server -L gdb --command=$HOME/bin/gdb_settings  ./core3
+
+    if $autostart; then
+	echo "** server started **"
+	return 0
+    fi
 
     # Free lock
     release_lock
@@ -312,18 +332,48 @@ server_update_ip() {
 
     mysql swgemu -ve "UPDATE galaxy SET address = '${server_ip}' WHERE galaxy_id = ${ZoneGalaxyID}";
     mysql swgemu -ve "UPDATE galaxy SET name = 'swgemudev' WHERE galaxy_id = ${ZoneGalaxyID} AND name = 'Core3'";
-    sed -e "/server_ip/s/server_ip = '[^']*'/server_ip = '"${server_ip}"'/" -i /home/vagrant/server/emuyoda/yoda-config.lua
+    sed -e "/server_ip/s/server_ip = '[^']*'/server_ip = '"${server_ip}"'/" -i /home/vagrant/server/emuyoda/yoda-config.lua > /dev/null 2>&1
 }
 
 server_backup() {
+    local autobackup=false
+    local restartserver=false
+
+    if [ "X$1" = "X--auto" ]; then
+	autobackup=true
+    fi
+
     if server_status; then
 	echo "** Server is running **"
 
-	if yorn "Would you like to join the console so you can shut it down?"; then
-	    screen -D -RR swgemu-server
+	if $autobackup; then
+	    echo "** send info **"
+	    server_send "info"
+	    for i in 5 4 3 2
+	    do
+		server_send "broadcast Server going down for backups in $i minutes"
+		sleep 60
+	    done
+
+	    server_send "broadcast Server going down for backups in 1 minute, get somewhere safe!"
+	    sleep 60
+
+	    server_send "broadcast Server going down for backups, should be back up in 10 minutes, enjoy the ghost world..."
+
+	    echo "** send info **"
+	    server_send "info"
+
+	    echo "** stopping server **"
+	    server_stop
+	    restartserver=true
 	else
-	    echo "** USER ABORTED BACKUP **"
-	    return 12
+	    if yorn "Would you like to shutdown the server first?"; then
+		server_stop
+		restartserver=true
+	    else
+		echo "** USER ABORTED BACKUP **"
+		return 12
+	    fi
 	fi
     fi
 
@@ -335,14 +385,20 @@ server_backup() {
 
     TMPDIR=$(mktemp -d ${BUDIR}/swgemu-backup-temp.XXXXXX)
 
+    NOW=$(date +%s)
+
+    STAMP=$(date -d@${NOW} '+%Y%m%d%H%M%S%Z')
+
+    BUFILE=${BUDIR}/swgemu-backup-${STAMP}.tar.gz
+
+    BULOG=${BUDIR}/swgemu-backup-${STAMP}.log
+
     (
 	trap 'set +xe;st=$?;echo "** UNEXPECTED EXIT=$st, PARTIAL BACKUP LEFT IN ${TMPDIR} **";rm -f ${SWGEMU_LOCKFILE};exit $st' 0
 
-	NOW=$(date +%s)
+	date
 
-	STAMP=$(date -d@${NOW} '+%Y%m%d%H%M%S%Z')
-
-	BUFILE=${BUDIR}/swgemu-backup-${STAMP}.tar.gz
+	mkdir -p "${TMPDIR}/bin"
 
 	echo "** Backing up to ${BUFILE} **"
 
@@ -352,19 +408,30 @@ server_backup() {
 
 	cd "${RUN_DIR}"
 
-	cp -rv conf databases scripts/managers/resource_manager_spawns.lua ${TMPDIR}
+	# TODO do we need the __db files if the db is closed?
+	cp -rv databases log conf custom_scripts ${TMPDIR}/bin/
+
+	# Copy anything that has been modified in scripts/* dir
+	git ls-files -m scripts | while read fn
+	do
+	    dir="${TMPDIR}/bin/"$(dirname $fn)
+	    [ -d "${dir}" ] || mkdir -p "${dir}"
+	    cp -v $fn ${dir}
+	done
+
+	if $autobackup; then
+	    # Include bin in an autobackup
+	    cp -v core3 ${TMPDIR}/bin/
+	fi
 
 	cd ${TMPDIR}
-
-	files=$(echo *)
 
 	read sz dir <<< $(du -s --block-size=1 .)
 
 	# TODO - Other useful metadata here?
 	echo '{"backup_size_bytes":"'${sz}'","backup_date":"'$(date -d@${NOW})'","backup_isodate":"'$(date -d@${NOW} -Iseconds)'","backup_unixepoc":"'${NOW}'"}' > ${TMPDIR}/metadata.json
 
-	# TODO do we need the __db files if the db is closed?
-	tar cvzf ${BUFILE} metadata.json $(find $files -type f|sort)
+	tar cvzf ${BUFILE} metadata.json $(ls | grep -v metadata.json)
 
 	rm -fr ${TMPDIR}
 
@@ -373,7 +440,11 @@ server_backup() {
 	trap - 0
 
 	echo "** SUCCESS: Backup saved to ${BUFILE} **"
-    )
+    ) 2>&1 | tee "${BULOG}"
+
+    if $restartserver; then
+	server_start "--auto"
+    fi
 
     return 0
 }
