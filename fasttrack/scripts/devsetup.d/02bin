@@ -8,7 +8,14 @@
 #
 
 setup_bindir() {
-    cp -vpr $(dirname $ME)'/../bin' $HOME
+    [ -d ~/bin ] || mkdir -p ~/bin
+
+    pushd $(dirname $ME)'/../bin'
+	for fn in *
+	do
+	    ln -vfs "${PWD}/${fn}" ~/bin/"${fn}"
+	done
+    popd
 
     # Do they have $HOME/bin in their path already?
     case $PATH in
@@ -20,7 +27,7 @@ setup_bindir() {
 	sed '/^## START DEVSETUP ##/,/^## END DEVSETUP ##/d' -i ~/.bashrc
     fi
 
-    # Append our new path
+    # Append our new path and status check (including warning if they're too quick to draw)
     echo -e '## START DEVSETUP ##\nexport PATH=$HOME/bin:$PATH\n$HOME/bin/swgemu status\n## END DEVSETUP ##' >> ~/.bashrc
     chmod 600 ~/.bashrc
 }
