@@ -122,7 +122,7 @@ service lightdm stop
 service vboxadd stop
 service mysql stop
 service syslog stop
-~vagrant/service/openresty/nginx/sbin/nginx -s stop > /dev/null 2>&1
+/home/vagrant/server/openresty/nginx/sbin/nginx -s stop > /dev/null 2>&1
 
 # Make sure VBox service really stops
 vbpid=$(cat /var/run/vboxadd-service.pid 2> /dev/null)
