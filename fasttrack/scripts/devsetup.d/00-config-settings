@@ -17,7 +17,7 @@ GERRIT_UNKNOWN_USER='darthvaderdev'
 BROWSER=$( (for i in chromium google-chrome chromium-browser firefox; do type -P $i; done)|head -1)
 #
 ## Which editors should we "consider" offering? (will check each before we offer)
-EDITORS='vim nano gedit'
+EDITORS='nano gedit gvim vim'
 #
 ## Network settings
 PINGTEST_HOST=www.cisco.com # This has worked for eons, hope they keep it up
