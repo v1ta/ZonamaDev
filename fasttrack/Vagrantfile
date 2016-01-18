@@ -38,8 +38,7 @@ Vagrant.configure(2) do |config|
   config.vm.box_version = "1.1.0"
   config.vm.box_check_update = true
 
-  # Setup port forwarding
-  config.vm.network "forwarded_port", guest: 8080,  host: 8080
+  config.vm.network "forwarded_port", guest: 44480, host: 44480
   config.vm.network "forwarded_port", guest: 44453, host: 44453, protocol: 'udp'
   config.vm.network "forwarded_port", guest: 44462, host: 44462, protocol: 'udp'
   config.vm.network "forwarded_port", guest: 44463, host: 44463, protocol: 'udp'

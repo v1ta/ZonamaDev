@@ -6,11 +6,12 @@
 #
 # Created: Fri Jan  1 05:41:23 EST 2016
 #
-# Depends: OPENRESTY_REPO
+# Depends: OPENRESTY_REPO OPENRESTY_PORT
 # Optional: OPENRESTY_VERSION
 
 # Required
 [ -n "$OPENRESTY_REPO" ] || error "Missing OPENRESTY_REPO, please fix." 150
+[ -n "$OPENRESTY_PORT" ] || error "Missing OPENRESTY_PORT, please fix." 150
 
 if [ -z "$OPENRESTY_VERSION" ]; then
     echo "OPENRESTY_VERSION not set, assuming 'latest'"
@@ -72,11 +73,11 @@ mkdir "${OPENRESTY_DIR}/nginx/lua" && echo "Created ${OPENRESTY_DIR}/nginx/lua"
 # make clean
 # cd ..;rm -fr $OPENRESTY_TAR $dir
 
-# Configure to listen on 8080 fasttrack/scripts/rc.fasttrack.d/10openresty will forward 80 to 8080
-# We do this so the server runs as the swgemu server id doesn't have to run as root
-sed 's/listen \([ ]*\)80;/listen\1 8080;/' -i ${OPENRESTY_DIR}/nginx/conf/nginx.conf
+# Configure to listen on OPENRESTY_PORT fasttrack/scripts/rc.fasttrack.d/10openresty will forward 80 to OPENRESTY_PORT
+# We do this so the server runs as the swgemu server uid and doesn't have to run as root
+perl -pe 's/listen(\s+)\d+/listen${1}'${OPENRESTY_PORT}'/ if(m!^\s+listen\s+\d+;!)' -i ${OPENRESTY_DIR}/nginx/conf/nginx.conf
 
-# Add /zonama-instance-id service
+# Add /zonama-instance-id service to support auto-discovery
 perl -pe 'print("        location /zonama-instance-id { alias /var/lib/dbus/machine-id; }\n\n") if(m!^\s+location /\s+{!)' -i ${OPENRESTY_DIR}/nginx/conf/nginx.conf
 
 # Number of workers, cpus/2 or at least 2

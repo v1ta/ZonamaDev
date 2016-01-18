@@ -6,12 +6,13 @@
 #
 # Created: Sat Jan 16 10:37:28 EST 2016
 #
-# Depends: IPLIST
+# Depends: IPLIST OPENRESTY_PORT
 #
 # NOTE: We run this in the background to give it a head start before the devsetup needs the list
 #
 
-[ -n "$IPLIST" ] || error "Missing IPLIST configuration"
+[ -n "$IPLIST" ] || error "Missing IPLIST configuration" 101
+[ -n "$OPENRESTY_PORT" ] || error "Missing OPENRESTY_PORT configuration" 101
 
 update_iplist() {
   (
@@ -53,10 +54,10 @@ update_iplist() {
     # A unique id so we can see these across multiple logs etc.
     local scan_token=$(date|md5sum|cut -d' ' -f1)
 
-    read -a instance_query <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:8080/zonama-instance-id?scantoken='$scan_token 2> /dev/null)
+    read -a instance_query <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2> /dev/null)
 
     if [ "${instance_query[1]}" != "200" ]; then
-	echo "Local zonama-instance-id service is not running on port 8080 as expected, giving up."
+	echo "Local zonama-instance-id service is not running on port ${OPENRESTY_PORT} as expected, giving up."
 	return 1
     fi
 
@@ -73,7 +74,7 @@ update_iplist() {
     do
 	# echo -ne "\r$i\t"
 	local addr="${subnet}${i}"
-	local result=$(curl -s -A zonamaipscan --connect-timeout 0.02 -m 0.02 'http://'${addr}':8080/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
+	local result=$(curl -s -A zonamaipscan --connect-timeout 0.02 -m 0.02 'http://'${addr}':'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
 
 	if [ "X$result" = "X$our_instance" ]; then
 	    # TODO do we need to double check nginx log local just in case?
