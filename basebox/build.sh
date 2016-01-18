@@ -60,7 +60,12 @@ build_box() {
     echo
     echo "*** Manual Steps ***"
     echo "** 1) Resize the Virtualbox window to 1280x800"
+    echo "** 1a) Register new ssh with Gerrit and Clone"
+    echo "** 1b) Log out of github!"
     echo "** 2) Launch eclipse, set default workspace as ~/workspace and resize it"
+    echo "** 2a) Install LDT: http://download.eclipse.org/ldt/releases/milestones/ "
+    echo "** 2b) Import Projects in ~/workspace/"
+    echo "** 2c) Associate *.idl *.lua *.h *.cpp *.lst in Eclipse"
     echo "** 2) Close eclipse"
     echo "** 3) Launch chrome and resize it"
     echo "** 4) Close chrome"
