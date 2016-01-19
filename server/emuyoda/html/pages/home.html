@@ -1,0 +1,54 @@
+<div class="jumbotron">
+  <div style="margin-left: 72px">
+    <h4>Welcome to SWGEmu</h4>
+    <p>
+    <div ng-show='canCreateAdminAccount'>
+	<p>Do you want to create your first Administrator Account?</p>
+	<form name="accountForm">
+	    <label for="usernameEdit">Username:</label></br>
+	    <input id="usernameEdit" type="text" name="username" ng-model="account.username" required></br>
+	    <label for="passwordEdit">Password:</label></br>
+	    <input id="passwordEdit" type="password" name="password" ng-model="account.password" required></br>
+	    </br>
+	    <button ng-click="createAdminAccount()" style="color:#000">CREATE ADMIN ACCOUNT</button>
+	</form>
+	</br>
+    </div>
+    <div ng-show='shouldConfigureZones'>
+	<p>Would you like to change the zones/planets that are enabled?</p>
+	<form name="zoneForm">
+	    <table>
+	    <tr ng-repeat="zone in cfg.yoda.ZonesAvailable">
+		<td><input type="checkbox" value="{{ zone }}" id="{{ zone }}" name="zone" ng-model="zones[zone]"></td><td>&nbsp;{{ zone }}</td>
+	    </tr>
+	    </table>
+	    </br>
+	    <button ng-click="enableZones()" style="color:#000">ENABLE ZONES</button>
+	</form>
+    </div>
+    </p>
+    <p>
+    <span ng-hide='!server_status.server_pid'>Need to get connected?  Check <a href='#connect'>this page</a> out.</span>
+    <span ng-hide='server_status.server_pid'>You need to <b>START</b> the server before you can login with the client!</span>
+    </p>
+
+    <p>Server IP: {{ server_status.server_ip }}</p>
+    <p>Login Port: {{ server_status.login_port }}</p>
+
+    <table border=1 ng-hide='!server_status'>
+	<caption>Server&nbsp;Status:</caption>
+	<tr ng-repeat="(key, value) in server_status">
+	    <td> {{ key }}: </td> <td> {{ value }} </td>
+	</tr>
+    </table>
+    <table ng-hide='!cfg.emu.ZonesEnabled'>
+	<caption>Enabled&nbsp;Zones:</caption>
+	<tr ng-repeat="zone in cfg.emu.ZonesEnabled">
+	    <td>{{ zone }}</td>
+	</tr>
+    </table>
+    <hr>
+    <div class="messages">{{ messages }}</div>
+    <!--<pre>{{ server_status | json }}</pre> <pre>{{ cfg | json }}</pre> -->
+  </div>
+</div>

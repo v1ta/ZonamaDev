@@ -1,0 +1,38 @@
+<div class="jumbotron text-center">
+	<h2>Getting Connected</h2>
+
+	<h3>New Launcher</h3>
+
+	<p>If you have the new <a href="http://www.swgemu.com/forums/content.php?r=179-Install-SWGEmu" target="_blank">launcher</a>, go to settings -&gt; Login Servers -&gt; Add</p>
+
+	<p>Name: localserver</p>
+	<p>Host: {{ server_status.server_ip }}</p>
+	<p>Port: {{ server_status.login_port }}</p>
+
+	<p>Hit [OK] and [OK]</p>
+	<p>Choose "localserver" in the dropdown next to the [START] button.</p>
+	<span ng-show="server_status.autoreg">
+	    </br>
+	    <p> NOTE: Autoregistration is enabled, to create a new account enter any username
+	    you desire and the new password.  That account will be created on the fly as you login
+	    and this user/password combination will allow you to return to your characters.
+	    </p>
+	</span>
+	<p>Hit the [START] button and login.</p>
+
+	<hr>
+
+	<h3>SWGEmu Executable</h3>
+
+	<p>Copy and paste this info into swgemu_login.cfg:</p>
+	<textarea cols=40 rows=10>
+[ClientGame]
+        loginServerPort0={{ server_status.login_port }}
+        loginServerAddress0={{ server_status.server_ip }}
+[Station]
+        subscriptionFeatures=1
+        gameFeatures=65535   
+	</textarea>
+	</p>
+	<p>Launch SWG Emu and login!</p>
+</div>
