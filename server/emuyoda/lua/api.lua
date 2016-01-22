@@ -592,6 +592,91 @@ function service_account()
     return_response(r, "OK")
 end
 
+function service_control(path)
+    local cmd = ngx.var.arg_command or "status"
+
+    local cfg = load_config()
+
+    local u = auth_check('config')
+
+    local r = init_response()
+
+    if ngx.req.get_method() ~= "GET" then
+	return_error(r, "METHOD NOT SUPPORTED FOR THIS SERVICE", "INVALID_METHOD", "Method is not accepted for the this service", "SYSTEM", ngx.req.get_method(), "control")
+    end
+
+    local required_level = cfg.yoda.control_permission_level[cmd]
+
+    if required_level == nil then
+	return_error(r, "COMMAND NOT ENABLED", "INVALID_CONTROL_COMMAND", "This control command is not enabled on the server.", "SYSTEM", ngx.req.get_method(), "control")
+    end
+
+    if u.admin_level < required_level then
+	return_error(r, "PERMISSION DENIED", "PERMISSION_DENIED", "You are not allowed to control the server", "SYSTEM", ngx.req.get_method(), "control")
+    end
+
+    local parts = { }
+
+    r.response = { output = "", command = cmd }
+
+    local fh = io.popen(os.getenv("HOME") .. "/bin/swgemu --api " .. cmd)
+
+    while true do
+	local ln, err = fh:read("*l")
+
+	if err then
+	    r.response.error_message = err
+	    break
+	end
+
+	if ln then
+	    parts[#parts+1] = ln
+	else
+	    break
+	end
+    end
+
+    r.response.output = table.concat(parts, "\n")
+
+    --[[
+    local socket = ngx.socket.tcp()
+
+    socket:settimeout(100000)
+
+    local token = "3bac409a2b3c2e507506949cc956fd81"
+
+    local ok, err = socket:connect("unix:/tmp/test.sock")
+
+    if not ok then
+	r.response.error = err
+    else
+	socket:send(token .. "\n" .. cmd .. "\n")
+
+	local reader = socket:receiveuntil("\n" .. token .. "\n")
+
+	while true do
+	    local data, err, partial = reader()
+
+	    if not data then
+		r.response.output = table.concat(parts)
+
+		if err and err ~= 'closed' then
+		    r.response.error_message = err
+		end
+
+		break
+	    end
+
+	    parts[#parts+1] = data
+	end
+    end
+
+    socket:close()
+    ]]
+
+    return_response(r, "OK")
+end
+
 ------------------------------------------------------------------------------
 -- Intitialize API
 ------------------------------------------------------------------------------
