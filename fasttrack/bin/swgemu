@@ -11,6 +11,7 @@
 BUILD_DIR=~/workspace/Core3/MMOCoreORB
 RUN_DIR=~/workspace/Core3/MMOCoreORB/bin
 IS_PANEL=false
+IS_API_CALL=false
 
 main() {
     local ret=255
@@ -56,19 +57,20 @@ server_start() {
 	autostart=true
     fi
 
-    if server_status; then
+    if server_status -q; then
 	echo "** Already running **"
 	if $autostart; then
 	    return 0
 	fi
 
 	if yorn "Would you like to stop the sever?"; then
+	    echo "** stopped server first **"
 	    server_stop
 	else
 	    release_lock
 	    exec screen -D -RR swgemu-server
 	fi
-	retun 0
+	return 0
     fi
 
     if ~/bin/tre_check; then
@@ -125,7 +127,7 @@ server_start() {
     gzip -f o_screenlog.0 &
 
     # Start server detached
-    screen -dmS swgemu-server -L gdb --command=$HOME/bin/gdb_settings  ./core3
+    screen -dmS swgemu-server -L gdb --command=$HOME/bin/gdb_settings ./core3
 
     if $autostart; then
 	echo "** server started **"
@@ -262,6 +264,11 @@ server_stop() {
 	    if [[ "${state}" == "t" || "${state}" == "Z" ]]; then
 		echo -en "\n** killing gdb($ppid) **"
 		kill $ppid
+		sleep 2
+		if kill -0 $ppid 2> /dev/null; then
+		    echo "** killing gdb($ppid) with SIGKILL **"
+		    kill -KILL $ppid
+		fi
 		break
 	    fi
 	else
@@ -707,6 +714,11 @@ is_setup_pending() {
 }
 
 yorn() {
+  if $IS_API_CALL; then
+      echo -n -e "$@ N"
+      return 1
+  fi
+
   if tty -s; then
       echo -n -e "$@ Y\b" > /dev/tty
       read yorn < /dev/tty
@@ -767,10 +779,24 @@ get_lock() {
     trap 'release_lock;' 0
 }
 
+if [ "X$1" == "X--api" ]; then
+    IS_API_CALL=true
+    exec 2>&1
+    shift
+    set -- $1 --auto
+fi
+
 if [ "X$1" == "X--panel" ]; then
     IS_PANEL=true
     shift
 fi
+
+# Cron and API calls won't have TERM set
+if [ -z "$TERM" ]; then
+    TERM=dumb
+fi
+
+export TERM
 
 main "$@"
 
