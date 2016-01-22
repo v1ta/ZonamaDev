@@ -15,3 +15,13 @@ ZonesAvailable = {
 	"tutorial",
 	"yavin4"
 }
+-- Which ~/bin/swgemu commands are allowed through the API and what admin_level is required
+control_permission_level = {
+    ['start'] = 9,
+    ['stop'] = 9,
+    ['status'] = 1,
+    ['backup'] = 15,
+    ['build'] = 15,
+    ['send'] = 15,
+    ['version'] = 15,
+}
