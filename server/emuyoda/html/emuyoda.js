@@ -216,7 +216,11 @@
 	    $scope.message = "Sending cmd " + cmd;
 
 	    controlService.serverCommand(cmd).then(function(data) {
-		$scope.message = data.response.output;
+		if (data.response.output) {
+		    $scope.message = data.response.output;
+		} else {
+		    $scope.message = "Error:" + data.response.error_description
+		}
 		$scope.pendingCmd = "";
 	    }).catch(function() {
 		$scope.error = "/api/control call failed";

@@ -163,8 +163,7 @@ function get_auth_user()
     -- ngx.log(ngx.ERR, 'get_auth_user: token =[' .. token .. ']')
 
     -- Localhost or server_ip w/o token logs in as yoda
-    -- TODO KATOR remove that hardcoded 10.0.2.2
-    if token == nil and (ngx.var.remote_addr == '127.0.0.1' or ngx.var.remote_addr == '10.0.2.2') then
+    if token == nil and (ngx.var.remote_addr == '127.0.0.1' or (cfg.yoda.yodaHosts ~= nil and cfg.yoda.yodaHosts[ngx.var.remote_addr])) then
 	token = cfg.yoda.yodaSecret
     end
 
@@ -174,8 +173,7 @@ function get_auth_user()
 
     -- yodaSecret 
     if token == cfg.yoda.yodaSecret then
-	ngx.log(ngx.ERR, 'get_auth_user: found Yoda!')
-	return {
+	local u = {
 	    account_id = -1,
 	    username = 'yoda',
 	    password = 'unknowable',
@@ -183,7 +181,14 @@ function get_auth_user()
 	    created = '',
 	    admin_level = 16,
 	    salt = ''
-	}, token
+	}
+
+	if cfg.yoda.yodaHosts ~= nil and cfg.yoda.yodaHosts[ngx.var.remote_addr] then
+	    u.admin_level = cfg.yoda.yodaHosts[ngx.var.remote_addr];
+	end
+	
+	ngx.log(ngx.ERR, 'get_auth_user: found Yoda! admin_level=', u.admin_level)
+	return u, token
     end
 
     local account_id = session_dict:get(token)
@@ -609,17 +614,21 @@ function service_control(path)
     local required_level = cfg.yoda.control_permission_level[cmd]
 
     if required_level == nil then
-	return_error(r, "COMMAND NOT ENABLED", "INVALID_CONTROL_COMMAND", "This control command is not enabled on the server.", "SYSTEM", ngx.req.get_method(), "control")
+	return_error(r, "COMMAND NOT ENABLED", "INVALID_CONTROL_COMMAND", "The command '" .. cmd .. "' is not enabled on the server.", "SYSTEM", ngx.req.get_method(), "control")
     end
 
     if u.admin_level < required_level then
-	return_error(r, "PERMISSION DENIED", "PERMISSION_DENIED", "You are not allowed to control the server", "SYSTEM", ngx.req.get_method(), "control")
+	return_error(r, "PERMISSION DENIED", "PERMISSION_DENIED", "You do not have permission to use the '" .. cmd .. "' command on the server.", "SYSTEM", ngx.req.get_method(), "control")
     end
 
     local parts = { }
 
     if ngx.var.arg_arg1 then cmd = cmd .. " " .. ngx.var.arg_arg1 end
+
     if ngx.var.arg_arg2 then cmd = cmd .. " " .. ngx.var.arg_arg2 end
+
+    -- TODO is this enough to avoid injection attack?
+    cmd = cmd:gsub("[`$()%c]", "")
 
     ngx.log(ngx.ERR, "cmd=[" .. cmd .. "]")
 
