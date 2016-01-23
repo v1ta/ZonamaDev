@@ -279,6 +279,8 @@ server_stop() {
 
     echo -e $(tput setaf 2)"\n** server stopped **"$(tput sgr0)
 
+    echo -e "\n** "$(date)" SERVER SHUTDOWN BY swgemu COMMAND. **\n" >> screenlog.0
+
     return 0
 }
 
