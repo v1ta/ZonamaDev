@@ -3,6 +3,11 @@
 --
 -- Loosely based on https://launchpad.net/ubuntu/+source/procps
 --
+-- Author: Lord Kator <lordkator@swgemu.com>
+--
+-- Created: Sat Jan 23 05:01:30 EST 2016
+--
+
 local scandir = require "scandir"
 local pairs = pairs
 local tonumber = tonumber

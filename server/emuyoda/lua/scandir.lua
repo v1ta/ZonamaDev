@@ -1,3 +1,11 @@
+--
+-- scandir - Provide scandir function for Lua
+--
+-- Author: Lord Kator <lordkator@swgemu.com>
+--
+-- Created: Sat Jan 23 10:02:46 EST 2016
+--
+
 local ffi = require "ffi"
 
 module(...)

@@ -1,7 +1,7 @@
 --
 -- router - Route calls to api functions
 --
--- Author: Karl Bunch <karlbunch@karlbunch.com>
+-- Author: Lord Kator <lordkator@swgemu.com>
 --
 -- Created: Sat Dec 12 18:50:24 EST 2015
 --
