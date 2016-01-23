@@ -13,6 +13,8 @@ local io = require "io"
 local mysql = require "resty.mysql"
 local resty_sha1 = require "resty.sha1"
 local resty_string = require "resty.string"
+local websocket_console = require "websocket_console"
+local procps = require "procps"
 local os = os
 local string = string
 local table = table
@@ -471,25 +473,24 @@ function service_status(path)
     if ngx.req.get_method() == "GET" then
 	local cfg = load_config()
 
-	local fh, err = io.popen("pgrep core3")
-
-	local pid = fh:read("*l") or ""
-
-	fh:close()
+	local pids = procps.pgrep_pidlist("core3")
 
 	r.response['server_status'] = {
-	    ["server_pid"] = pid,
+	    ["server_pid"] = pids[1] or "",
 	    ["server_ip"] = cfg.yoda.server_ip,
 	    ["login_port"] = cfg.emu.LoginPort,
 	    ["autoreg"] = cfg.emu.AutoReg
 	}
 
-	if string.len(pid) > 1 then
-	    fh, err = io.popen("ps -p " .. pid .. " -ho etime")
+	if pids[1] then
+	    local etime, err = procps.etime_string(pids[1])
 
-	    local etime = fh:read("*l")
-
-	    r.response.server_status.server_uptime = etime
+	    if err then
+		r.response.server_status.server_uptime = ""
+		r.response.server_status.server_uptime_error = err
+	    else
+		r.response.server_status.server_uptime = etime
+	    end
 	end
 
 	-- How many accounts do we have?
@@ -509,7 +510,7 @@ function service_status(path)
 	return_response(r, "OK")
     end
 
-    return_error(r, "METHOD NOT SUPPORTED FOR THIS SERVICE", "INVALID_METHOD", "Method is not accepted for the this service", "SYSTEM", ngx.req.get_method(), "config")
+    return_error(r, "METHOD NOT SUPPORTED FOR THIS SERVICE", "INVALID_METHOD", "Method is not accepted for the this service", "SYSTEM", ngx.req.get_method(), "status")
 end
 
 function service_account()
@@ -638,43 +639,38 @@ function service_control(path)
 
     r.response.output = table.concat(parts, "\n")
 
-    --[[
-    local socket = ngx.socket.tcp()
+    return_response(r, "OK")
+end
 
-    socket:settimeout(100000)
+function service_console(path)
+    local u = auth_check('console')
+    local r = init_response()
+    local cfg = load_config()
 
-    local token = "3bac409a2b3c2e507506949cc956fd81"
-
-    local ok, err = socket:connect("unix:/tmp/test.sock")
-
-    if not ok then
-	r.response.error = err
-    else
-	socket:send(token .. "\n" .. cmd .. "\n")
-
-	local reader = socket:receiveuntil("\n" .. token .. "\n")
-
-	while true do
-	    local data, err, partial = reader()
-
-	    if not data then
-		r.response.output = table.concat(parts)
-
-		if err and err ~= 'closed' then
-		    r.response.error_message = err
-		end
-
-		break
-	    end
-
-	    parts[#parts+1] = data
-	end
+    if cfg.yoda.consoleLevelRead == nil or cfg.yoda.consoleLevelWrite == nil then
+	local msg = "Missing consoleLevelRead and/or consoleLevelWrite in configuration."
+	ngx.log(ngx.ERR, msg)
+	return_error(r, "INVALID CONFIGURATION", "INVALID_CONFIG", msg, "SYSTEM", ngx.req.get_method(), "console")
     end
 
-    socket:close()
-    ]]
+    if ngx.req.get_method() == "GET" then
+	if u.admin_level < cfg.yoda.consoleLevelRead then
+	    return_error(r, "PERMISSION DENIED", "PERMISSION_DENIED", "You are not allowed to view the console", "SYSTEM", ngx.req.get_method(), "console")
+	end
 
-    return_response(r, "OK")
+	local readonly = true
+
+	if u.admin_level >= cfg.yoda.consoleLevelWrite then
+	    readonly = false
+	end
+
+	-- Handle websocket protocol
+	websocket_console.run(readonly, 4096)
+
+	ngx.exit(ngx.HTTP_OK)
+    end
+
+    return_error(r, "METHOD NOT SUPPORTED FOR THIS SERVICE", "INVALID_METHOD", "Method is not accepted for the this service", "SYSTEM", ngx.req.get_method(), "console")
 end
 
 ------------------------------------------------------------------------------

@@ -21,6 +21,7 @@ local routes = {
     ['config']		= api.service_config,
     ['account']		= api.service_account,
     ['control']		= api.service_control,
+    ['console']		= api.service_console,
 }
 
 function init()

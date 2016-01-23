@@ -175,11 +175,21 @@
 	});
     });
 
-    emuYodaApp.controller('controlController', function($scope, statusService) {
+    emuYodaApp.controller('controlController', function($scope, $timeout, $location, statusService) {
+	$scope.console_log = "";
 	statusService.getStatus().then(function(data) {
 	    console.log("control::gotStatus");
 	    $scope.server_status = data.response.server_status;
 	}).catch(function() {
 	    $scope.error = "/api/status call failed";
 	});
+
+	ws = new WebSocket('ws://' + $location.host() + ':' + $location.port() + '/api/console')
+
+	ws.onmessage = function (e) {
+	    // TODO has to be a more AngularJS way to do this...
+	    var logPre = document.getElementById('logPre')
+	    logPre.appendChild(document.createTextNode(e.data + "\n"));
+	    logPre.scrollTop = logPre.scrollHeight;
+	}
     });
