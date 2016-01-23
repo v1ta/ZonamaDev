@@ -618,6 +618,11 @@ function service_control(path)
 
     local parts = { }
 
+    if ngx.var.arg_arg1 then cmd = cmd .. " " .. ngx.var.arg_arg1 end
+    if ngx.var.arg_arg2 then cmd = cmd .. " " .. ngx.var.arg_arg2 end
+
+    ngx.log(ngx.ERR, "cmd=[" .. cmd .. "]")
+
     r.response = { output = "", command = cmd }
 
     local fh = io.popen(os.getenv("HOME") .. "/bin/swgemu --api " .. cmd)

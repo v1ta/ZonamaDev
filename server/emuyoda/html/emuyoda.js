@@ -1,5 +1,5 @@
     // create the module and name it
-    var emuYodaApp = angular.module('emuYoda', ['ngRoute']);
+    var emuYodaApp = angular.module('emuYoda', ['ngRoute', 'ngSanitize']);
 
     emuYodaApp.factory('configService', function($http) {
 	var getConfig = function() {
@@ -29,6 +29,18 @@
 
 	return {
 	    getStatus: getStatus
+	};
+    })
+
+    emuYodaApp.factory('controlService', function($http) {
+	var serverCommand = function(cmd) {
+	    return $http.get("/api/control?command=" + cmd).then(function(response) {
+		return response.data;
+	    });
+	};
+
+	return {
+	    serverCommand: serverCommand
 	};
     })
 
@@ -175,8 +187,43 @@
 	});
     });
 
-    emuYodaApp.controller('controlController', function($scope, $timeout, $location, statusService) {
-	$scope.console_log = "";
+    emuYodaApp.controller('controlController', function($scope, $timeout, $location, statusService, controlService) {
+	$scope.message = "";
+	$scope.pendingCmd = "";
+	$scope.pendingSend = false;
+	$scope.sendText = "";
+	$scope.serverCommand = function(cmd) {
+	    if(cmd == "send") {
+		if($scope.pendingSend) {
+		    $scope.pendingSend = false;
+		    if($scope.sendText == "") {
+			$scope.message = "<b>Missing text to send</b>";
+			return;
+		    }
+		    cmd = cmd + "&arg1=" + $scope.sendText;
+		} else {
+		    $scope.pendingSend = true;
+		    return;
+		}
+	    }
+
+	    if($scope.pendingCmd != "") {
+		$scope.message = $scope.message + "<br><b>Waiting for <i>" + $scope.pendingCmd + "</i> command to complete</b>";
+		return;
+	    }
+
+	    $scope.pendingCmd = cmd;
+	    $scope.message = "Sending cmd " + cmd;
+
+	    controlService.serverCommand(cmd).then(function(data) {
+		$scope.message = data.response.output;
+		$scope.pendingCmd = "";
+	    }).catch(function() {
+		$scope.error = "/api/control call failed";
+		$scope.pendingCmd = "";
+	    });
+	}
+
 	statusService.getStatus().then(function(data) {
 	    console.log("control::gotStatus");
 	    $scope.server_status = data.response.server_status;
@@ -184,12 +231,25 @@
 	    $scope.error = "/api/status call failed";
 	});
 
-	ws = new WebSocket('ws://' + $location.host() + ':' + $location.port() + '/api/console')
+	if(!$scope.ws) {
+	    console.log("Connecting to console websocket..");
+	    $scope.ws = new WebSocket('ws://' + $location.host() + ':' + $location.port() + '/api/console')
 
-	ws.onmessage = function (e) {
-	    // TODO has to be a more AngularJS way to do this...
-	    var logPre = document.getElementById('logPre')
-	    logPre.appendChild(document.createTextNode(e.data + "\n"));
-	    logPre.scrollTop = logPre.scrollHeight;
+	    $scope.ws.onmessage = function (e) {
+		// TODO has to be a more AngularJS way to do this...
+		var logPre = document.getElementById('logPre')
+		if(logPre) {
+		    logPre.appendChild(document.createTextNode(e.data + "\n"));
+		    logPre.scrollTop = logPre.scrollHeight;
+		}
+	    }
+	    $scope.ws.onopen = function () {
+		$scope.message = "Console Connected";
+		console.log($scope.message);
+	    }
+	    $scope.ws.onclose = function () {
+		$scope.message = "Console Closed";
+		console.log($scope.message);
+	    }
 	}
     });

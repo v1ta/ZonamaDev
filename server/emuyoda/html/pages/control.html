@@ -1,12 +1,18 @@
 <div class="jumbotron text-center">
-	<h3>Server Control</h3>
-	<button id='control-start' style="width: 80px"><i class="fa fa-play"></i><br>START</button>
-	<button id='control-stop' style="width: 80px"><i class="fa fa-power-off"></i></br>STOP</button>
-	<button id='control-status' style="width: 80px"><i class="fa fa-question-circle"></i></br>STATUS</button>
-	<button id='control-backup' style="width: 80px"><i class="fa fa-floppy-o"></i></br>BACKUP</button>
-	<button id='control-build' style="width: 80px"><i class="fa fa-tachometer"></i></br>BUILD</button>
-	<button id='control-send' style="width: 80px"><i class="fa fa-comment"></i></br>SEND</button>
-	<br>
-	<hr>
-	<div id="logDiv" style="margin: 10px 80px 10px 80px"><pre id="logPre" style="text-align: left; height: 300px;"></pre></div>
+	<div class="logDiv">Server Console:<br><pre id="logPre" class="logPre consoleLog"></pre></div>
+	<div class="control-buttonbar">
+	<button id='control-start' ng-click='serverCommand("start")' class="control-button"><i class="fa fa-play"></i><br>START</button>
+	<button id='control-stop' ng-click='serverCommand("stop")' class="control-button"><i class="fa fa-power-off"></i></br>STOP</button>
+	<button id='control-status' ng-click='serverCommand("status")' class="control-button"><i class="fa fa-question-circle"></i></br>STATUS</button>
+	<button id='control-backup' ng-click='serverCommand("backup")' class="control-button"><i class="fa fa-floppy-o"></i></br>BACKUP</button>
+	<button id='control-build' ng-click='serverCommand("build")' class="control-button"><i class="fa fa-gavel"></i></br>BUILD</button>
+	    <form ng-submit='sendCommand("send")'>
+		<button id='control-send' type="submit" ng-click='serverCommand("send")' class="control-button"><i class="fa fa-comment"></i></br>SEND</button>
+		<div class="control-send-text" ng-show="pendingSend">
+		    Command to send:&#8203;
+		    <input type="text" ng-model="sendText"/>
+		</div>
+	    </form>
+	</div>
+	<div class="logDiv" ng-show="message">Command Output:<br><pre class="logPre" ng-bind-html="message"></pre></div>
 </div>

@@ -163,7 +163,7 @@ server_status() {
 
     shopt -s nocasematch
 
-    if [[ "${state}" != "S" && "${state}" != "R" ]]; then
+    if [[ "${state}" != "S" && "${state}" != "R" && "${state}" != "D" ]]; then
 	echo -e $(tput setab 3;tput setaf 0)"WARNING: Server state is ${state}, it is not running or sleeping, something is wrong!"$(tput sgr0)
 
 	if $verbose; then
@@ -189,6 +189,10 @@ server_send() {
     fi
 
     cd ${RUN_DIR}
+
+    if [ "X$1" = "X--auto" ]; then
+	shift
+    fi
 
     local string="$*^M"
 
@@ -233,7 +237,7 @@ server_stop() {
     # Just in case don't compare case
     shopt -s nocasematch
 
-    if [[ "${state}" == "S" || "${state}" == "R" ]]; then
+    if [[ "${state}" == "S" || "${state}" == "R" || "${state}" == "D" ]]; then
 	screen -S swgemu-server -X stuff "save^M"
 
 	# TODO add timeout?
@@ -350,6 +354,7 @@ server_backup() {
 
     if [ "X$1" = "X--auto" ]; then
 	autobackup=true
+	shift
     fi
 
     if server_status; then
@@ -785,7 +790,10 @@ if [ "X$1" == "X--api" ]; then
     IS_API_CALL=true
     exec 2>&1
     shift
-    set -- $1 --auto
+    tmp=$1
+    shift
+    set -- $tmp --auto $*
+    export PATH=/home/vagrant/bin:/usr/local/bin:/usr/bin:/bin
 fi
 
 if [ "X$1" == "X--panel" ]; then
