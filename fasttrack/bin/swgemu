@@ -258,32 +258,50 @@ server_stop() {
 
     kill -INT $pid
 
-    while pgrep core3 > /dev/null 2>&1
+    for i in 10 9 8 7 6 5 4 3 2 1
     do
-	if $gdb; then
-	    # Look for state 't'
-	    local state=$(ps -p $pid -ho state)
-	    echo -n $state
+	if pgrep core3 > /dev/null 2>&1; then
+	    if $gdb; then
+		# Look for state 't'
+		local state=$(ps -p $pid -ho state)
+		echo -n $state
 
-	    if [[ "${state}" == "t" || "${state}" == "Z" ]]; then
-		echo -en "\n** killing gdb($ppid) **"
-		kill $ppid
-		sleep 2
-		if kill -0 $ppid 2> /dev/null; then
-		    echo "** killing gdb($ppid) with SIGKILL **"
-		    kill -KILL $ppid
+		if [[ "${state}" == "t" || "${state}" == "T" || "${state}" == "Z" ]]; then
+		    echo -en "\n** killing gdb($ppid) **"
+		    kill $ppid
+		    sleep 2
+		    if kill -0 $ppid 2> /dev/null; then
+			echo "** killing gdb($ppid) with SIGKILL **"
+			kill -KILL $ppid
+		    fi
+		    break
 		fi
-		break
+	    else
+		echo -n "."
 	    fi
-	else
-	    echo -n "."
-	fi
-	sleep 1
+	    sleep 1
+        fi
     done
 
-    echo -e $(tput setaf 2)"\n** server stopped **"$(tput sgr0)
+    if pgrep core3 > /dev/null 2>&1; then
+	echo "** WARNING: Server is still up, sending KILL **"
+	kill -KILL $pid
+	if $gdb; then
+	    if kill -0 $ppid 2> /dev/null; then
+		echo "** WARNING: killing gdb($ppid) with SIGKILL **"
+		kill -KILL $ppid
+	    fi
+	fi
+    fi
 
-    echo -e "\n** "$(date)" SERVER SHUTDOWN BY swgemu COMMAND. **\n" >> screenlog.0
+    if pgrep core3 > /dev/null 2>&1; then
+	echo "** WARNING: Unable to stop server! pid=$pid **"
+	return 1
+    else
+	echo -e $(tput setaf 2)"\n** server stopped **"$(tput sgr0)
+
+	echo -e "\n** "$(date)" SERVER SHUTDOWN BY swgemu COMMAND. **\n" >> screenlog.0
+    fi
 
     return 0
 }
