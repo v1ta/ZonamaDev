@@ -258,6 +258,7 @@ function get_auth_user()
 	end
 	
 	ngx.log(ngx.ERR, 'get_auth_user: found Yoda! admin_level=', u.admin_level)
+
 	return u, token
     end
 
@@ -272,6 +273,11 @@ function get_auth_user()
 	    ngx.log(ngx.ERR, 'Failed to find user for account_id=[' .. account_id .. ']: ' .. errno .. ': ' .. err .. ' (' .. sqlstate .. ')')
 	    session_dict:delete(token)
 	end
+    end
+
+    -- Kill old cookie if it's invalid
+    if ngx.var.cookie_ZDAPI_SESSID then
+	ngx.header['Set-Cookie'] = 'ZDAPI_SESSID=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
     end
 
     return nil, token
