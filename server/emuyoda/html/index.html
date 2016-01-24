@@ -24,10 +24,10 @@
       </div>
 
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><i class="fa fa-clock-o"></i> Home</a></li>
-        <li><a href="#control"><i class="fa fa-power-off"></i>Server Control</a></li>
-        <li><a href="#connect"><i class="fa fa-bolt"></i>Get Connected</a></li>
-        <li><a href="#about"><i class="fa fa-info-circle"></i> About</a></li>
+	<li ng-class="{ active: isActive('/') }"><a href="#"><i class="fa fa-clock-o"></i> Home</a></li>
+	<li ng-class="{ active: isActive('/control') }"><a href="#control"><i class="fa fa-power-off"></i>Server Control</a></li>
+	<li ng-class="{ active: isActive('/connect') }"><a href="#connect"><i class="fa fa-bolt"></i>Get Connected</a></li>
+	<li ng-class="{ active: isActive('/about') }"><a href="#about"><i class="fa fa-info-circle"></i> About</a></li>
       </ul>
     </div>
   </nav>

@@ -6,7 +6,6 @@ form {
     display: table;
     text-align: center;
     height: 40px;
-    margin: 10px 80px 10px 80px;
 }
 
 .control-button {
@@ -23,6 +22,15 @@ form {
     background: #fff;
 }
 
+.control-button:focus {
+    outline: 0;
+}
+
+.control-button:active {
+    background: yellow;
+}
+
+
 .control-send-text {
     height: 40px;
     width: 120px;
@@ -31,11 +39,6 @@ form {
     text-align: left;
     font-size: 8pt;
     vertical-align: bottom;
-}
-
-.logDiv {
-    margin: 10px 80px 10px 80px;
-    text-align: left;
 }
 
 .logPre {
