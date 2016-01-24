@@ -5,7 +5,7 @@
  *
  * Created: Sat Jan 16 07:28:29 EST 2016
  */
-var emuYodaApp = angular.module('emuYoda', ['ngRoute', 'ngSanitize']);
+var emuYodaApp = angular.module('emuYoda', ['ui.router', 'ngSanitize', 'ui.bootstrap']);
 
 emuYodaApp.factory('configService', function($http) {
     var getConfig = function() {
@@ -69,23 +69,31 @@ emuYodaApp.factory('accountService', function($http) {
     };
 })
 
-emuYodaApp.config(function($routeProvider) {
-    $routeProvider
-    .when('/', {
+emuYodaApp.config(function($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise("/home");
+
+    $stateProvider
+
+    .state('home', {
+	url         : '/home',
 	templateUrl : 'pages/home.html',
 	controller  : 'mainController'
     })
-    .when('/connect', {
+    .state('connect', {
+	url         : '/connect',
 	templateUrl : 'pages/connect.html',
 	controller  : 'connectController'
     })
-    .when('/control', {
+    .state('control', {
+	url         : '/control',
 	templateUrl : 'pages/control.html',
 	controller  : 'controlController'
     })
-    .when('/about', {
+    .state('about', {
+	url         : '/about',
 	templateUrl : 'pages/about.html'
     });
+
 });
 
 emuYodaApp.controller('mainController', function($scope, $location, configService, statusService, accountService) {
