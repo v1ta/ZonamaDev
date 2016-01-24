@@ -310,10 +310,10 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
 	    if(logPre) {
 		logPre.appendChild(document.createTextNode(e.data + "\n"));
 		logPre.scrollTop = logPre.scrollHeight;
+	    }
 
-		if ($scope.server_status && !$scope.server_status.server_pid) {
-		    $scope.updateStatus();
-		}
+	    if ($scope.server_status && !$scope.server_status.server_pid) {
+		$scope.updateStatus();
 	    }
 	}
 	$rootScope.ws.onopen = function () {
