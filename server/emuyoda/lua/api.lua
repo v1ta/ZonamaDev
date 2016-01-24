@@ -6,27 +6,41 @@
 -- Created: Mon Jan 18 07:25:04 EST 2016
 --
 
+-- NOTES:
+-- 
+-- TODO: Auth lasts 2 hours and not attempt is made to check if pw was changed or acct banned in that time
+-- TODO: Could use /api/auth to guess pw's should implement a tar pit
+-- TODO: Config is loaded on each call to load_config() should consider caching
+-- TODO: Currently 200 returned on all calls, maybe auth should return 4xx etc?
+-- TODO: Long running commands via popen are bad idea, should stream, maybe to console websock or other channel
+-- TODO: Yoda should go away after count(admin_level >= 15) is > 1 (basically it's only for that first launch and setup)
+-- TODO: unit tests
+-- TODO: Too big, need to break into smaller testable parts, maybe each service in a module and a common?
+
 -- Globals we will want to reference in our module
 local ngx = ngx or require "ngx"
 local cjson = require "cjson"
 local io = require "io"
 local mysql = require "resty.mysql"
+local procps = require "procps"
 local resty_sha1 = require "resty.sha1"
+local resty_sha256 = require "resty.sha256"
 local resty_string = require "resty.string"
 local websocket_console = require "websocket_console"
-local procps = require "procps"
+local assert = assert
+local loadfile = loadfile
+local math = math
 local os = os
+local package = package
+local pairs = pairs
+local pcall = pcall
+local require = require
+local setfenv = setfenv
+local setmetatable = setmetatable
 local string = string
 local table = table
-local pairs = pairs
-local require = require
-local setmetatable = setmetatable
-local assert = assert
-local pcall = pcall
-local loadfile = loadfile
 local tonumber = tonumber
-local setfenv = setfenv
-local package = package
+local tostring = tostring
 local session_dict = ngx.shared.session_dict
 local status_dict = ngx.shared.status_dict
 
@@ -35,8 +49,6 @@ local api_version = "0.0.1"
 module(...)
 
 local yoda_config_path = os.getenv("HOME") .. '/server/emuyoda/yoda-config.lua'
-
--- local mt = { __index = _M }
 
 ------------------------------------------------------------------------------
 -- Generic API helper functions
@@ -86,6 +98,14 @@ function SHA1Hash(password)
     sha1:update(password)
 
     return resty_string.to_hex(sha1:final())
+end
+
+function SHA256Hash(password)
+    local sha256 = resty_sha256:new()
+
+    sha256:update(password)
+
+    return resty_string.to_hex(sha256:final())
 end
 
 ------------------------------------------------------------------------------
@@ -160,159 +180,8 @@ local function save_config(conf)
 end
 
 ------------------------------------------------------------------------------
--- Authorization related functions
-------------------------------------------------------------------------------
-function get_auth_user()
-    local cfg = load_config()
-
-    local token = ngx.var.cookie_ZDAPI_SESSID or ngx.req.get_headers()['authorization']
-
-    -- ngx.log(ngx.ERR, 'get_auth_user: token =[' .. token .. ']')
-
-    -- Localhost or server_ip w/o token logs in as yoda
-    if token == nil and (ngx.var.remote_addr == '127.0.0.1' or (cfg.yoda.yodaHosts ~= nil and cfg.yoda.yodaHosts[ngx.var.remote_addr])) then
-	token = cfg.yoda.yodaSecret
-    end
-
-    if token == nil then
-	return nil, token
-    end
-
-    -- yodaSecret 
-    if token == cfg.yoda.yodaSecret then
-	local u = {
-	    account_id = -1,
-	    username = 'yoda',
-	    password = 'unknowable',
-	    station_id = -1,
-	    created = '',
-	    admin_level = 16,
-	    salt = ''
-	}
-
-	if cfg.yoda.yodaHosts ~= nil and cfg.yoda.yodaHosts[ngx.var.remote_addr] then
-	    u.admin_level = cfg.yoda.yodaHosts[ngx.var.remote_addr];
-	end
-	
-	ngx.log(ngx.ERR, 'get_auth_user: found Yoda! admin_level=', u.admin_level)
-	return u, token
-    end
-
-    local account_id = session_dict:get(token)
-
-    if account_id then
-	local resp, err, errno, sqlstate = db_query("SELECT * FROM `accounts` WHERE `account_id` = " .. account_id)
-
-	if resp then
-	    return resp[1], token
-	else
-	    ngx.log(ngx.ERR, 'Failed to find user for account_id=[' .. account_id .. ']: ' .. errno .. ': ' .. err .. ' (' .. sqlstate .. ')')
-	    session_dict:delete(token)
-	end
-    end
-
-    return nil, token
-end
-
-function auth_user(username, password)
-    local user = users[username]
-
-    if user == nil then
-	return false
-    end
-
-    if user.password == password then
-	return true
-    end
-
-    return false
-end
-
-function new_session_token(username)
-    return ngx.encode_base64(ngx.hmac_sha1(tostring(math.random()) .. "random" .. tostring(os.time()), "apikey" .. username))
-end
-
--- Implement /auth service
-function service_auth()
-    local r = init_response()
-
-    -- GET - Verify token is valid
-    if ngx.req.get_method() == "GET" then
-	local user, token = get_auth_user()
-
-	if token == nil then
-	    return_error(r, "missing auth token", "MISSING_AUTH", "missing auth token", "SYSTEM", ngx.req.get_method(), "auth")
-	elseif user == nil then
-	    return_error(r, "auth token invalid", "NOAUTH", "Not authorized", "SYSTEM", ngx.req.get_method(), "auth")
-	else
-	    r.response.token = token
-	    return_response(r, 'OK')
-	end
-    end
-
-    -- Only support POST to auth
-    if ngx.req.get_method() ~= "POST" then
-	return_error(r, "METHOD NOT SUPPORTED FOR THIS SERVICE", "INVALID_METHOD", "Post is not accepted for the auth service", "SYSTEM", ngx.req.get_method(), "auth")
-    end
-
-    -- Make sure body is read in
-    ngx.req.read_body()
-
-    -- Get post_data
-    local post_data = ngx.req.get_body_data()
-
-    if post_data == nil then
-	return_error(r, "SYNTAX ERROR", "SYNTAX_ERROR", "Syntax error in request, missing body", "SYSTEM", ngx.req.get_method(), "auth")
-    end
-
-    -- Parse as needed (call in pcall for safety)
-    local status, call = pcall(cjson.decode, post_data)
-
-    -- Did we fail parse?
-    if call == nil then
-	return_error(r, "SYNTAX ERROR", "SYNTAX_ERROR", "Syntax error in request, unable to parse JSON object", "SYSTEM", ngx.req.get_method(), "auth")
-    end
-
-    if call.auth == nil then
-	return_error(r, "SYNTAX ERROR", "SYNTAX_ERROR", "Syntax error in request, missing auth object", "SYSTEM", ngx.req.get_method(), "auth")
-    elseif call.auth.username == nil or call.auth.password == nil then
-	return_error(r, "Username or password not set on request", "INVALID_LOGIN", "the username/password value is not valid", "SYSTEM", ngx.req.get_method(), "auth")
-    elseif auth_user(call.auth.username, call.auth.password) then
-	local new_token = new_session_token(call.auth.username)
-
-	-- Setup session for this user
-	ngx.header['Set-Cookie'] = 'ZDAPI_SESSID=' .. new_token .. '; path=/'
-	session_dict:delete(call.auth.username)
-	session_dict:add(new_token, call.auth.username, 3600 * 2)
-
-	r.response.dbg_info.username = call.auth.username
-	r.response.token = new_token
-	return_response(r, "OK")
-    else
-	return_error(r, "No match found for user/pass", "INVALID_LOGIN", "the username/password value is not valid", "UNAUTH", ngx.req.get_method(), "auth")
-    end
-
-    return_error(r, "Unknown error", "INTERNAL_ERROR", "Unexpected error", "SYSTEM", ngx.req.get_method(), "auth")
-end
-
-function auth_check(service)
-    local r = init_response()
-
-    local user, token = get_auth_user()
-
-    if token == nil then
-	return_error(r, "missing auth token", "MISSING_AUTH", "missing auth token", "SYSTEM", ngx.req.get_method(), service)
-    elseif user == nil then
-	return_error(r, "auth token invalid", "NOAUTH", "Not authorized", "SYSTEM", ngx.req.get_method(), service)
-    end
-
-    return user
-end
-
-------------------------------------------------------------------------------
 -- Database Functions
 ------------------------------------------------------------------------------
-
 local function db_query(sql)
     local cfg = load_config()
 
@@ -353,6 +222,217 @@ local function db_query(sql)
     db:set_keepalive(10000, 10)
 
     return res, err, errno, sqlstate
+end
+
+------------------------------------------------------------------------------
+-- Authorization related functions
+------------------------------------------------------------------------------
+function get_auth_user()
+    local cfg = load_config()
+
+    local token = ngx.var.cookie_ZDAPI_SESSID or ngx.req.get_headers()['authorization']
+
+    -- Localhost or server_ip w/o token logs in as yoda
+    if token == nil and (ngx.var.remote_addr == '127.0.0.1' or (cfg.yoda.yodaHosts ~= nil and cfg.yoda.yodaHosts[ngx.var.remote_addr])) then
+	token = cfg.yoda.yodaSecret
+    end
+
+    if token == nil then
+	return nil, token
+    end
+
+    -- yodaSecret 
+    if token == cfg.yoda.yodaSecret then
+	local u = {
+	    account_id = -1,
+	    username = 'yoda',
+	    password = 'unknowable',
+	    station_id = -1,
+	    created = '',
+	    admin_level = 16,
+	    salt = ''
+	}
+
+	if cfg.yoda.yodaHosts ~= nil and cfg.yoda.yodaHosts[ngx.var.remote_addr] then
+	    u.admin_level = cfg.yoda.yodaHosts[ngx.var.remote_addr];
+	end
+	
+	ngx.log(ngx.ERR, 'get_auth_user: found Yoda! admin_level=', u.admin_level)
+	return u, token
+    end
+
+    local account_id = session_dict:get(token)
+
+    if account_id then
+	local resp, err, errno, sqlstate = db_query("SELECT * FROM `accounts` WHERE `account_id` = " .. ngx.quote_sql_str(account_id))
+
+	if resp then
+	    return resp[1], token
+	else
+	    ngx.log(ngx.ERR, 'Failed to find user for account_id=[' .. account_id .. ']: ' .. errno .. ': ' .. err .. ' (' .. sqlstate .. ')')
+	    session_dict:delete(token)
+	end
+    end
+
+    return nil, token
+end
+
+function updateAccount(accountID)
+    -- See: https://github.com/TheAnswer/Core3/blob/unstable/MMOCoreORB/src/server/login/account/AccountImplementation.cpp#L29
+    local result, err, errno, sqlstate = db_query(
+    	"SELECT a.active, a.admin_level, "
+	.. "IFNULL((SELECT b.reason FROM account_bans b WHERE b.account_id = a.account_id AND b.expires > UNIX_TIMESTAMP() ORDER BY b.expires DESC LIMIT 1), ''), "
+	.. "IFNULL((SELECT b.expires FROM account_bans b WHERE b.account_id = a.account_id AND b.expires > UNIX_TIMESTAMP() ORDER BY b.expires DESC LIMIT 1), 0), "
+	.. "IFNULL((SELECT b.issuer_id FROM account_bans b WHERE b.account_id = a.account_id AND b.expires > UNIX_TIMESTAMP() ORDER BY b.expires DESC LIMIT 1), 0) "
+	.. "FROM accounts a WHERE a.account_id = " .. ngx.quote_sql_str(accountID) .. " LIMIT 1;")
+
+    if err then
+	ngx.log(ngx.ERR, 'account_isActive db_query failed: account_id=[' .. accountID .. ']: ' .. errno .. ': ' .. err .. ' (' .. sqlstate .. ')')
+	return nil, "Query failed: " .. err
+    end
+
+    if result == nil or #result ~= 1 then
+	return nil, "No results in database for this account?"
+    end
+
+    return {
+	isActive = result[1],
+	admin_level = result[2],
+	ban_reason = result[3],
+	ban_expires = result[4],
+	ban_admin = result[5],
+    }, nil
+end
+
+function auth_user(username, password)
+    local cfg = load_config()
+
+    local users = db_query("SELECT * FROM `accounts` WHERE `username` = " .. ngx.quote_sql_str(username))
+
+    if users == nil or #users == 0 then
+	return false, nil
+    end
+
+    if #users > 1 then
+	ngx.log(ngx.ERR, "auth_user found multiple user objects!!!: " .. cjson.encode(users));
+	return false, nil
+    end
+
+    local user = users[1]
+
+    ngx.log(ngx.ERR, "user object: " .. cjson.encode(user));
+
+    local accountStatus, err = updateAccount(user.account_id)
+
+    if not accountStatus.isActive then
+	ngx.log(ngx.ERR, "WARNING: Banned user attempted to login: " .. cjson.encode(user))
+	return false, nil
+    end
+
+    local passwordHashed 
+
+    if user.salt == "" then
+	passwordHashed = SHA1Hash(password)
+    else
+	passwordHashed = SHA256Hash(cfg.emu.DBSecret .. password .. user.salt)
+    end
+
+    ngx.log(ngx.ERR, "user.password=[" .. user.password .. "] supplied=[" .. passwordHashed .. "]")
+
+    if user.password == passwordHashed then
+	return true, user
+    end
+
+    return false, nil
+end
+
+function new_session_token(username)
+    return string.sub(ngx.encode_base64(ngx.hmac_sha1(tostring(math.random()) .. "random" .. tostring(os.time()), "apikey" .. username)), 1, -2)
+end
+
+-- Implement /auth service
+function service_auth()
+    local r = init_response()
+
+    -- GET - Verify token is valid
+    if ngx.req.get_method() == "GET" then
+	local user, token = get_auth_user()
+
+	if token == nil then
+	    return_error(r, "missing auth token", "MISSING_AUTH", "missing auth token", "SYSTEM", ngx.req.get_method(), "auth")
+	elseif user == nil then
+	    return_error(r, "auth token invalid", "NOAUTH", "Not authorized", "SYSTEM", ngx.req.get_method(), "auth")
+	else
+	    user.salt = nil
+	    user.password = nil
+	    user.station_id = nil
+	    r.response.user = user
+	    r.response.token = token
+	    return_response(r, 'OK')
+	end
+    end
+
+    -- Only support POST to auth
+    if ngx.req.get_method() ~= "POST" then
+	return_error(r, "METHOD NOT SUPPORTED FOR THIS SERVICE", "INVALID_METHOD", "Post is not accepted for the auth service", "SYSTEM", ngx.req.get_method(), "auth")
+    end
+
+    -- Make sure body is read in
+    ngx.req.read_body()
+
+    -- Get post_data
+    local post_data = ngx.req.get_body_data()
+
+    if post_data == nil then
+	return_error(r, "SYNTAX ERROR", "SYNTAX_ERROR", "Syntax error in request, missing body", "SYSTEM", ngx.req.get_method(), "auth")
+    end
+
+    -- Parse as needed (call in pcall for safety)
+    local status, call = pcall(cjson.decode, post_data)
+
+    -- Did we fail parse?
+    if call == nil then
+	return_error(r, "SYNTAX ERROR", "SYNTAX_ERROR", "Syntax error in request, unable to parse JSON object", "SYSTEM", ngx.req.get_method(), "auth")
+    end
+
+    if call.auth == nil then
+	return_error(r, "SYNTAX ERROR", "SYNTAX_ERROR", "Syntax error in request, missing auth object", "SYSTEM", ngx.req.get_method(), "auth")
+    elseif call.auth.username == nil or call.auth.password == nil then
+	return_error(r, "Username or password not set on request", "INVALID_LOGIN", "the username/password value is not valid", "SYSTEM", ngx.req.get_method(), "auth")
+    end
+
+    local success, user = auth_user(call.auth.username, call.auth.password)
+
+    if success then
+	local new_token = new_session_token(call.auth.username)
+
+	-- Setup session for this user
+	ngx.header['Set-Cookie'] = 'ZDAPI_SESSID=' .. new_token .. '; path=/'
+	session_dict:delete(user.account_id)
+	session_dict:add(new_token, user.account_id, 3600 * 2)
+
+	r.response.dbg_info.username = call.auth.username
+	r.response.token = new_token
+	return_response(r, "OK")
+    else
+	return_error(r, "No match found for user/pass", "INVALID_LOGIN", "the username/password value is not valid", "UNAUTH", ngx.req.get_method(), "auth")
+    end
+
+    return_error(r, "Unknown error", "INTERNAL_ERROR", "Unexpected error", "SYSTEM", ngx.req.get_method(), "auth")
+end
+
+function auth_check(service)
+    local r = init_response()
+
+    local user, token = get_auth_user()
+
+    if token == nil then
+	return_error(r, "missing auth token", "MISSING_AUTH", "missing auth token", "SYSTEM", ngx.req.get_method(), service)
+    elseif user == nil then
+	return_error(r, "auth token invalid", "NOAUTH", "Not authorized", "SYSTEM", ngx.req.get_method(), service)
+    end
+
+    return user
 end
 
 ------------------------------------------------------------------------------

@@ -16,12 +16,13 @@ local pairs = pairs
 module(...)
 
 local routes = {
-    ['version']		= api.service_version,
-    ['status']		= api.service_status,
-    ['config']		= api.service_config,
     ['account']		= api.service_account,
-    ['control']		= api.service_control,
+    ['auth']		= api.service_auth,
+    ['config']		= api.service_config,
     ['console']		= api.service_console,
+    ['control']		= api.service_control,
+    ['status']		= api.service_status,
+    ['version']		= api.service_version,
 }
 
 function init()
