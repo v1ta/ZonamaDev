@@ -106,6 +106,13 @@ local function load_config()
 
     local emu_config_path = yoda_cfg['emuConfigPath']
 
+    local fh = io.open(os.getenv("HOME") .. "/.force_ip")
+
+    if fh then
+	yoda_cfg.server_ip = fh:read("*l");
+	fh:close();
+    end
+
     if emu_config_path == nil then
 	ngx.log(ngx.ERR, 'load_config failed, could not find yoda-cfg.emuConfifPath!')
 	return { }
