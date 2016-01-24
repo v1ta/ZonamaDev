@@ -5,7 +5,7 @@
  *
  * Created: Sat Jan 16 07:28:29 EST 2016
  */
-var emuYodaApp = angular.module('emuYoda', ['ui.router', 'ngSanitize', 'ui.bootstrap']);
+var emuYodaApp = angular.module('emuYoda', ['ui.router', 'ngSanitize', 'ngAnimate', 'ui.bootstrap']);
 
 emuYodaApp.factory('configService', function($http) {
     var getConfig = function() {
@@ -77,22 +77,37 @@ emuYodaApp.config(function($stateProvider, $urlRouterProvider) {
     .state('home', {
 	url         : '/home',
 	templateUrl : 'pages/home.html',
-	controller  : 'mainController'
+	controller  : 'mainController',
+	data        : { requireLogin: false },
     })
     .state('connect', {
 	url         : '/connect',
 	templateUrl : 'pages/connect.html',
-	controller  : 'connectController'
+	controller  : 'connectController',
+	data        : { requireLogin: false },
     })
     .state('control', {
 	url         : '/control',
 	templateUrl : 'pages/control.html',
-	controller  : 'controlController'
+	controller  : 'controlController',
+	data        : { requireLogin: true },
     })
     .state('about', {
 	url         : '/about',
-	templateUrl : 'pages/about.html'
-    });
+	templateUrl : 'pages/about.html',
+	data        : { requireLogin: false },
+    })
+    .state('login', {
+	url         : '/login',
+	data        : { requireLogin: true },
+	controller  : function($state) { $state.go("home"); }
+    })
+    .state('logout', {
+	url         : '/logout',
+	data        : { requireLogin: true },
+	controller  : function($state, $rootScope) { delete $rootScope.currentUsername; $state.go("home"); }
+    })
+    ;
 
 });
 
@@ -272,4 +287,53 @@ emuYodaApp.controller('controlController', function($scope, $timeout, $location,
     }
 
     $scope.updateStatus();
+});
+
+// Login Handling
+emuYodaApp.service('loginModalService', function($rootScope, $uibModal) {
+    var openModal = function() {
+	return $uibModal.open({
+	    animation: true,
+	    templateUrl: 'views/loginModalTemplate.html',
+	    controller: 'loginModalController',
+	    size: "sm"
+	}).result.then(function(user) {
+	    console.log("user=" + user);
+	    $rootScope.currentUsername = user;
+	    return user;
+	});
+    };
+
+    return {
+	openModal: openModal
+    };
+})
+
+emuYodaApp.controller('loginModalController', function ($scope, $uibModalInstance) {
+    $scope.username = '';
+    $scope.password = '';
+
+    $scope.ok = function() {
+	$uibModalInstance.close($scope.username);
+    };
+
+    $scope.cancel = function() {
+	$uibModalInstance.dismiss('cancel');
+    }
+});
+
+emuYodaApp.run(function ($rootScope, $state, loginModalService) {
+  $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+    var requireLogin = toState.data.requireLogin;
+
+    if (requireLogin && typeof $rootScope.currentUsername === 'undefined') {
+      event.preventDefault();
+
+      loginModalService.openModal().then(function () {
+	  return $state.go(toState.name, toParams);
+      }).catch(function () {
+          return $state.go('home');
+      });
+    }
+  });
 });

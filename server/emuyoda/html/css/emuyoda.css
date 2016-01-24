@@ -26,6 +26,10 @@ form {
     outline: 0;
 }
 
+a:focus {
+    outline: 0;
+}
+
 .control-button:active {
     background: yellow;
 }
