@@ -291,7 +291,7 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
 	});
     }
 
-    if(!$rootScope.ws) {
+    if(!$scope.ws) {
 	console.log("Connecting to console websocket..");
         var auth = "none";
 
@@ -299,11 +299,11 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
 	    auth = $rootScope.authToken;
 	}
 
-	$rootScope.ws = new WebSocket('ws://' + $location.host() + ':' + $location.port() + '/api/console', null, {
+	$scope.ws = new WebSocket('ws://' + $location.host() + ':' + $location.port() + '/api/console', null, {
 		headers: { 'Authorization': auth }
 	});
 
-	$rootScope.ws.onmessage = function (e) {
+	$scope.ws.onmessage = function (e) {
 	    // TODO has to be a more AngularJS way to do this...
 	    var logPre = document.getElementById('logPre')
 
@@ -316,11 +316,11 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
 		$scope.updateStatus();
 	    }
 	}
-	$rootScope.ws.onopen = function () {
+	$scope.ws.onopen = function () {
 	    $scope.message = "Console Connected";
 	    console.log($scope.message);
 	}
-	$rootScope.ws.onclose = function () {
+	$scope.ws.onclose = function () {
 	    $scope.message = "Console Closed";
 	    console.log($scope.message);
 	}
