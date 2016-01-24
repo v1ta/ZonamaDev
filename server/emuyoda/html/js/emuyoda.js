@@ -7,7 +7,24 @@
  */
 var emuYodaApp = angular.module('emuYoda', ['ui.router', 'ngSanitize', 'ngAnimate', 'ui.bootstrap']);
 
-emuYodaApp.factory('yodaApiService', function($http) {
+emuYodaApp.factory('yodaApiService', function($rootScope, $http) {
+    var authenticateUser = function(username, password) {
+	return $http.post("/api/auth", { auth: { username: username, password: password } }).then(function(r) {
+	    if(r.data.response.token) {
+		$rootScope.currentUsername = username;
+		$rootScope.authToken = r.data.response.token;
+	    } else {
+		delete $rootScope.currentUsername;
+		delete $rootScope.authToken;
+	    }
+
+	    return r.data;
+	}).catch(function() {
+	    delete $rootScope.currentUsername;
+	    delete $rootScope.authToken;
+	});
+    };
+
     var getConfig = function() {
 	return $http.get("/api/config").then(function(response) {
 	    return response.data;
@@ -45,6 +62,7 @@ emuYodaApp.factory('yodaApiService', function($http) {
     };
 
     return {
+	authenticateUser: authenticateUser,
 	addAccount: addAccount,
 	getAccount: getAccount,
 	getConfig: getConfig,
@@ -52,9 +70,30 @@ emuYodaApp.factory('yodaApiService', function($http) {
 	serverCommand: serverCommand,
 	updateConfig: updateConfig,
     };
-})
+});
 
-emuYodaApp.config(function($stateProvider, $urlRouterProvider) {
+emuYodaApp.factory('authInterceptor', function ($rootScope, $q, $window) {
+  return {
+    request: function (config) {
+      config.headers = config.headers || {};
+      if ($rootScope.authToken) {
+        config.headers.Authorization = $rootScope.authToken;
+      }
+      return config;
+    },
+    response: function (response) {
+      if (response.status === 401) {
+	delete $rootScope.currentUsername;
+	delete $rootScope.authToken;
+      }
+      return response || $q.when(response);
+    }
+  };
+});
+
+emuYodaApp.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
+    $httpProvider.interceptors.push('authInterceptor');
+
     $urlRouterProvider.otherwise("/home");
 
     $stateProvider
@@ -85,48 +124,59 @@ emuYodaApp.config(function($stateProvider, $urlRouterProvider) {
     .state('login', {
 	url         : '/login',
 	data        : { requireLogin: true },
-	controller  : function($state) { $state.go("home"); }
+	controller  : function($state) {
+	    $state.go("home");
+        }
     })
     .state('logout', {
 	url         : '/logout',
 	data        : { requireLogin: true },
-	controller  : function($state, $rootScope) { delete $rootScope.currentUsername; $state.go("home"); }
+	controller  : function($state, $rootScope) {
+	    delete $rootScope.currentUsername;
+	    delete $rootScope.authToken;
+	    $state.go("home");
+        }
     })
     ;
 
 });
 
-emuYodaApp.controller('mainController', function($scope, $location, yodaApiService) {
+emuYodaApp.controller('mainController', function($scope, $q, $location, yodaApiService) {
+    $scope.cfg = {};
+    $scope.server_status = {};
     $scope.account = {};
     $scope.zones = {};
     $scope.canCreateAdminAccount = false;
     $scope.shouldConfigureZones = false;
+
     $scope.isActive = function(viewLocation) { return viewLocation === $location.path(); }
+
     $scope.loadData = function() {
-	console.log("loadData");
-	yodaApiService.getConfig().then(function(data) {
-	    console.log("gotConfig");
-	    $scope.cfg = data.response.config;
-	    $scope.messages = "";
-	    if (data.response.error) {
-		$scope.messages = "API CALL TO " + data.response.service + " FAILED WITH ERROR: " + data.response.error;
-	    }
+	$scope.canCreateAdminAccount = false;
+	$scope.shouldConfigureZones = false;
 
-	    $scope.cfg.emu.ZonesEnabled.forEach( function(zone) {
-		$scope.zones[zone] = true;
-	    });
+	$q.all([
+	    yodaApiService.getConfig().then(function(data) {
+		$scope.cfg = data.response.config;
+		$scope.messages = "";
 
-	    if($scope.cfg.emu.ZonesEnabled.length > 2) {
-		$scope.shouldConfigureZones = false;
-	    }
-	}).catch(function() {
-	    $scope.error = "/api/config call failed";
-	});
+		if (data.response.error) {
+		    $scope.messages = "API CALL TO " + data.response.service + " FAILED WITH ERROR: " + data.response.error;
+		}
 
-	yodaApiService.getStatus().then(function(data) {
-	    console.log("gotStatus");
-	    $scope.server_status = data.response.server_status;
-
+		$scope.cfg.emu.ZonesEnabled.forEach( function(zone) {
+		    $scope.zones[zone] = true;
+		});
+	    }).catch(function() {
+		$scope.error = "/api/config call failed";
+	    })
+	,
+	    yodaApiService.getStatus().then(function(data) {
+		$scope.server_status = data.response.server_status;
+	    }).catch(function() {
+		$scope.error = "/api/status call failed";
+	    })
+    	]).then(function() {
 	    if($scope.server_status.num_accounts == 0 && $scope.server_status.account && $scope.server_status.account.admin_level >= 15) {
 		$scope.canCreateAdminAccount = true;
 		$scope.shouldConfigureZones = false;
@@ -137,8 +187,6 @@ emuYodaApp.controller('mainController', function($scope, $location, yodaApiServi
 		    $scope.shouldConfigureZones = true;
 		}
 	    }
-	}).catch(function() {
-	    $scope.error = "/api/status call failed";
 	});
     }
 
@@ -185,14 +233,13 @@ emuYodaApp.controller('mainController', function($scope, $location, yodaApiServi
 
 emuYodaApp.controller('connectController', function($scope, yodaApiService) {
     yodaApiService.getStatus().then(function(data) {
-	console.log("control::gotStatus");
 	$scope.server_status = data.response.server_status;
     }).catch(function() {
 	$scope.error = "/api/status call failed";
     });
 });
 
-emuYodaApp.controller('controlController', function($scope, $timeout, $location, yodaApiService) {
+emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout, $location, yodaApiService) {
     $scope.message = "";
     $scope.pendingCmd = "";
     $scope.pendingSend = false;
@@ -200,7 +247,6 @@ emuYodaApp.controller('controlController', function($scope, $timeout, $location,
 
     $scope.updateStatus = function() {
 	yodaApiService.getStatus().then(function(data) {
-	    console.log("control::gotStatus");
 	    $scope.server_status = data.response.server_status;
 	}).catch(function() {
 	    $scope.error = "/api/status call failed";
@@ -245,27 +291,36 @@ emuYodaApp.controller('controlController', function($scope, $timeout, $location,
 	});
     }
 
-    if(!$scope.ws) {
+    if(!$rootScope.ws) {
 	console.log("Connecting to console websocket..");
-	$scope.ws = new WebSocket('ws://' + $location.host() + ':' + $location.port() + '/api/console')
+        var auth = "none";
 
-	    $scope.ws.onmessage = function (e) {
-		// TODO has to be a more AngularJS way to do this...
-		var logPre = document.getElementById('logPre')
-		    if(logPre) {
-			logPre.appendChild(document.createTextNode(e.data + "\n"));
-			logPre.scrollTop = logPre.scrollHeight;
-		    }
+	if ($rootScope.authToken) {
+	    auth = $rootScope.authToken;
+	}
+
+	$rootScope.ws = new WebSocket('ws://' + $location.host() + ':' + $location.port() + '/api/console', null, {
+		headers: { 'Authorization': auth }
+	});
+
+	$rootScope.ws.onmessage = function (e) {
+	    // TODO has to be a more AngularJS way to do this...
+	    var logPre = document.getElementById('logPre')
+
+	    if(logPre) {
+		logPre.appendChild(document.createTextNode(e.data + "\n"));
+		logPre.scrollTop = logPre.scrollHeight;
 
 		if ($scope.server_status && !$scope.server_status.server_pid) {
 		    $scope.updateStatus();
 		}
 	    }
-	$scope.ws.onopen = function () {
+	}
+	$rootScope.ws.onopen = function () {
 	    $scope.message = "Console Connected";
 	    console.log($scope.message);
 	}
-	$scope.ws.onclose = function () {
+	$rootScope.ws.onclose = function () {
 	    $scope.message = "Console Closed";
 	    console.log($scope.message);
 	}
@@ -275,17 +330,17 @@ emuYodaApp.controller('controlController', function($scope, $timeout, $location,
 });
 
 // Login Handling
-emuYodaApp.service('loginModalService', function($rootScope, $uibModal) {
+emuYodaApp.service('loginModalService', function($rootScope, $uibModal, yodaApiService) {
     var openModal = function() {
 	return $uibModal.open({
 	    animation: true,
 	    templateUrl: 'views/loginModalTemplate.html',
 	    controller: 'loginModalController',
 	    size: "sm"
-	}).result.then(function(user) {
-	    console.log("user=" + user);
-	    $rootScope.currentUsername = user;
-	    return user;
+	}).result.then(function(auth) {
+	    $rootScope.currentUsername = auth.username;
+	    yodaApiService.authenticateUser(auth.username, auth.password);
+	    return auth.username;
 	});
     };
 
@@ -299,7 +354,7 @@ emuYodaApp.controller('loginModalController', function ($scope, $uibModalInstanc
     $scope.password = '';
 
     $scope.ok = function() {
-	$uibModalInstance.close($scope.username);
+	$uibModalInstance.close({ username: $scope.username, password: $scope.password });
     };
 
     $scope.cancel = function() {
