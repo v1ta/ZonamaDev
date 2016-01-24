@@ -7,7 +7,7 @@
  */
 var emuYodaApp = angular.module('emuYoda', ['ui.router', 'ngSanitize', 'ngAnimate', 'ui.bootstrap']);
 
-emuYodaApp.factory('configService', function($http) {
+emuYodaApp.factory('yodaApiService', function($http) {
     var getConfig = function() {
 	return $http.get("/api/config").then(function(response) {
 	    return response.data;
@@ -20,37 +20,18 @@ emuYodaApp.factory('configService', function($http) {
 	});
     };
 
-    return {
-	getConfig: getConfig,
-	updateConfig: updateConfig
-    };
-})
-
-emuYodaApp.factory('statusService', function($http) {
     var getStatus = function() {
 	return $http.get("/api/status").then(function(response) {
 	    return response.data;
 	});
     };
 
-    return {
-	getStatus: getStatus
-    };
-})
-
-emuYodaApp.factory('controlService', function($http) {
     var serverCommand = function(cmd) {
 	return $http.get("/api/control?command=" + cmd).then(function(response) {
 	    return response.data;
 	});
     };
 
-    return {
-	serverCommand: serverCommand
-    };
-})
-
-emuYodaApp.factory('accountService', function($http) {
     var getAccount = function() {
 	return $http.get("/api/account").then(function(response) {
 	    return response.data;
@@ -64,8 +45,12 @@ emuYodaApp.factory('accountService', function($http) {
     };
 
     return {
+	addAccount: addAccount,
 	getAccount: getAccount,
-	addAccount: addAccount
+	getConfig: getConfig,
+	getStatus: getStatus,
+	serverCommand: serverCommand,
+	updateConfig: updateConfig,
     };
 })
 
@@ -111,7 +96,7 @@ emuYodaApp.config(function($stateProvider, $urlRouterProvider) {
 
 });
 
-emuYodaApp.controller('mainController', function($scope, $location, configService, statusService, accountService) {
+emuYodaApp.controller('mainController', function($scope, $location, yodaApiService) {
     $scope.account = {};
     $scope.zones = {};
     $scope.canCreateAdminAccount = false;
@@ -119,7 +104,7 @@ emuYodaApp.controller('mainController', function($scope, $location, configServic
     $scope.isActive = function(viewLocation) { return viewLocation === $location.path(); }
     $scope.loadData = function() {
 	console.log("loadData");
-	configService.getConfig().then(function(data) {
+	yodaApiService.getConfig().then(function(data) {
 	    console.log("gotConfig");
 	    $scope.cfg = data.response.config;
 	    $scope.messages = "";
@@ -138,7 +123,7 @@ emuYodaApp.controller('mainController', function($scope, $location, configServic
 	    $scope.error = "/api/config call failed";
 	});
 
-	statusService.getStatus().then(function(data) {
+	yodaApiService.getStatus().then(function(data) {
 	    console.log("gotStatus");
 	    $scope.server_status = data.response.server_status;
 
@@ -160,7 +145,7 @@ emuYodaApp.controller('mainController', function($scope, $location, configServic
     $scope.createAdminAccount = function() {
 	$scope.canCreateAdminAccount = false;
 	$scope.account.admin_level = 15;
-	accountService.addAccount({ account: $scope.account }).then(function(data) {
+	yodaApiService.addAccount({ account: $scope.account }).then(function(data) {
 	    if(data.response.status == "OK") {
 		alert("Account " + $scope.account.username + " Created!");
 	    }
@@ -184,7 +169,7 @@ emuYodaApp.controller('mainController', function($scope, $location, configServic
 	    }
 	}
 
-	configService.updateConfig({ config: { emu: { ZonesEnabled: z } } }).then(function(data) {
+	yodaApiService.updateConfig({ config: { emu: { ZonesEnabled: z } } }).then(function(data) {
 	    if(data.response.status == "OK") {
 		alert("Zones Updated");
 	    }
@@ -198,8 +183,8 @@ emuYodaApp.controller('mainController', function($scope, $location, configServic
     $scope.loadData();
 });
 
-emuYodaApp.controller('connectController', function($scope, statusService) {
-    statusService.getStatus().then(function(data) {
+emuYodaApp.controller('connectController', function($scope, yodaApiService) {
+    yodaApiService.getStatus().then(function(data) {
 	console.log("control::gotStatus");
 	$scope.server_status = data.response.server_status;
     }).catch(function() {
@@ -207,14 +192,14 @@ emuYodaApp.controller('connectController', function($scope, statusService) {
     });
 });
 
-emuYodaApp.controller('controlController', function($scope, $timeout, $location, statusService, controlService) {
+emuYodaApp.controller('controlController', function($scope, $timeout, $location, yodaApiService) {
     $scope.message = "";
     $scope.pendingCmd = "";
     $scope.pendingSend = false;
     $scope.sendText = "";
 
     $scope.updateStatus = function() {
-	statusService.getStatus().then(function(data) {
+	yodaApiService.getStatus().then(function(data) {
 	    console.log("control::gotStatus");
 	    $scope.server_status = data.response.server_status;
 	}).catch(function() {
@@ -245,7 +230,7 @@ emuYodaApp.controller('controlController', function($scope, $timeout, $location,
 	$scope.pendingCmd = cmd;
 	$scope.message = "Sending cmd " + cmd;
 
-	controlService.serverCommand(cmd).then(function(data) {
+	yodaApiService.serverCommand(cmd).then(function(data) {
 	    if (data.response.output) {
 		$scope.message = data.response.output;
 	    } else {
