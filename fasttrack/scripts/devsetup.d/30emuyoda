@@ -31,7 +31,7 @@ setup_yoda() {
 
 	echo "** Check ${url} ***"
 
-	if curl -k "${url}/api/status/"; then
+	if curl -s -k "${url}/api/status/" | python -m json.tool; then
 	    echo "** Launch $BROWSER '${url}' **"
 	    $BROWSER "${url}" > /dev/null 2>&1 < /dev/null &
 	fi
