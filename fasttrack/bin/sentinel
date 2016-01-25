@@ -9,8 +9,7 @@
 --
 ]]
 
-require 'socket'
-
+local socket = require 'socket'
 local havex = false
 local options = {
     ['debug'] = false,
@@ -106,7 +105,12 @@ function read_loop()
     local server_time = 0
     local server_boot = 0
     local stamp, offset
-    local fh = io.open("screenlog.0", 'r')
+    local fh, err = io.open("screenlog.0", 'r')
+
+    if fh == nil then
+	print("\n" .. termcap['smso'] .. "ERROR: open failed: " .. err .. termcap['rmso'] .. "\n")
+	os.exit(1)
+    end
 
     if options['stop-next-prompt'] or options['stop-next-backup'] then
 	pos_start = fh:seek("end")
