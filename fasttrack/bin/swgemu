@@ -126,6 +126,10 @@ server_start() {
 
     gzip -f o_screenlog.0 &
 
+    if [ ! -f ~/.screenrc ]; then
+	echo 'logfile flush 2' > ~/.screenrc
+    fi
+
     # Start server detached
     screen -dmS swgemu-server -L gdb --command=$HOME/bin/gdb_settings ./core3
 
