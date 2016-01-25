@@ -11,13 +11,17 @@ setup_yoda() {
     if [ ! -d "${EMUYODA_DIR}/." ]; then
 	echo "** setting up emuyoda **"
 	(
-	    ln -s ~/ZonamaDev/server/emuyoda ${EMUYODA_DIR}
+	    ln -vs ~/ZonamaDev/server/emuyoda ${EMUYODA_DIR}
 
-	    cp ~/ZonamaDev/server/openresty/nginx/conf/nginx.conf ${OPENRESTY_DIR}/nginx/conf
+	    cp -v ~/ZonamaDev/server/openresty/nginx/conf/* ${OPENRESTY_DIR}/nginx/conf
+
+	    sed -e "/^yodaSecret.*/s//yodaSecret = '$(dd if=/dev/urandom bs=1024 count=1 2> /dev/null|md5sum|cut -d' ' -f1)'/" -e "/^server_ip/d" ${EMUYODA_DIR}/yoda-config.lua.in > ${EMUYODA_DIR}/yoda-config.lua
 
 	    ${OPENRESTY_DIR}/nginx/sbin/nginx -s stop
+	    sleep 3
+	    killall -vw nginx
 	    rm -f ${OPENRESTY_DIR}/nginx/logs/* > /dev/null 2>&1
-	    sleep 5
+	    sleep 3
 	    ${OPENRESTY_DIR}/nginx/sbin/nginx
 
 	    notice "EmuYoda Installed" "The EmuYoda API and Web Interface has been installed."
@@ -26,3 +30,5 @@ setup_yoda() {
 	$BROWSER 'http://127.0.0.1:'${OPENRESTY_PORT}'/' > /dev/null 2>&1 < /dev/null &
     fi
 }
+
+setup_yoda
