@@ -105,11 +105,13 @@ ask_emudir() {
 }
 
 hunt_emudir() {
-    for i in '/c/SWGEmu' '/Volumes/BOOTCAMP/SWGEmu'
+    for i in '/c/SWGEmu' '/d/SWGEmu' '/Volumes/BOOTCAMP/SWGEmu'
     do
-	if check_emudir "$i"; then
-	    echo $i
-	    return 0
+	if [ -d $i ]; then
+	    if check_emudir "$i"; then
+		echo $i
+		return 0
+	    fi
 	fi
     done
 
