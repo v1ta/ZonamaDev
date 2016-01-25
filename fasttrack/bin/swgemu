@@ -9,6 +9,7 @@
 
 # TODO make these use global config
 BUILD_DIR=~/workspace/Core3/MMOCoreORB
+BUILD_LOG=${BUILD_DIR}/build.out
 RUN_DIR=~/workspace/Core3/MMOCoreORB/bin
 IS_PANEL=false
 IS_API_CALL=false
@@ -19,26 +20,26 @@ main() {
     shift
 
     if is_setup_pending "$cmd"; then
-	return 251
+        return 251
     fi
 
     if get_lock; then
-	:
+        :
     else
-	return 252
+        return 252
     fi
 
     case $cmd in
-	'backup' )	server_backup	"$@";;
-	'build' )	server_build	"$@";;
-	'latest' )	server_latest	"$@";;
-	'postdebug' )	post_debug	"$@";;
-	'send' )	server_send	"$@";;
-	'start' )	server_start	"$@";;
-	'status' )	server_status	"$@";;
-	'stop' )	server_stop	"$@";;
-	'version' )	show_version	"$@";;
-	'help' | * ) echo "Usage: $0 [backup|build|postdebug|latest|send|start|status|stop|version]"; return 1 ;;
+        'backup' )      server_backup   "$@";;
+        'build' )       server_build    "$@";;
+        'latest' )      server_latest   "$@";;
+        'postdebug' )   post_debug      "$@";;
+        'send' )        server_send     "$@";;
+        'start' )       server_start    "$@";;
+        'status' )      server_status   "$@";;
+        'stop' )        server_stop     "$@";;
+        'version' )     show_version    "$@";;
+        'help' | * ) echo "Usage: $0 [backup|build|postdebug|latest|send|start|status|stop|version]"; return 1 ;;
     esac
 
     ret=$?
@@ -54,42 +55,42 @@ server_start() {
     local autostart=false
 
     if [ "X$1" = "X--auto" ]; then
-	autostart=true
+        autostart=true
     fi
 
     if server_status -q; then
-	echo "** Already running **"
-	if $autostart; then
-	    return 0
-	fi
+        echo "** Already running **"
+        if $autostart; then
+            return 0
+        fi
 
-	if yorn "Would you like to stop the sever?"; then
-	    echo "** stopped server first **"
-	    server_stop
-	else
-	    release_lock
-	    exec screen -D -RR swgemu-server
-	fi
-	return 0
+        if yorn "Would you like to stop the sever?"; then
+            echo "** stopped server first **"
+            server_stop
+        else
+            release_lock
+            exec screen -D -RR swgemu-server
+        fi
+        return 0
     fi
 
     if ~/bin/tre_check; then
-	:
+        :
     else
-	echo
-	echo "************************************************************************"
-	echo "**                                                                    **"
-	echo "** You need to copy the original game .tre files in to the guest.     **"
-	echo "**                                                                    **"
-	echo "** On the host from your ZonamaDev/fasttrack server try this command: **"
-	echo "**                                                                    **"
-	echo "**    ./tre.sh                                                        **"
-	echo "**                                                                    **"
-	echo "** From inside of a Git Bash window.                                  **"
-	echo "**                                                                    **"
-	echo "************************************************************************"
-	echo
-	return 13
+        echo
+        echo "************************************************************************"
+        echo "**                                                                    **"
+        echo "** You need to copy the original game .tre files in to the guest.     **"
+        echo "**                                                                    **"
+        echo "** On the host from your ZonamaDev/fasttrack server try this command: **"
+        echo "**                                                                    **"
+        echo "**    ./tre.sh                                                        **"
+        echo "**                                                                    **"
+        echo "** From inside of a Git Bash window.                                  **"
+        echo "**                                                                    **"
+        echo "************************************************************************"
+        echo
+        return 13
     fi
 
     server_update_ip
@@ -97,29 +98,29 @@ server_start() {
     cd "${RUN_DIR}"
 
     if [ ! -x core3 ]; then
-	echo "** Server not built? **"
+        echo "** Server not built? **"
 
-	if $autostart; then
-	    echo "** Can't auto-start server unless it's built already"
-	    return 3
-	fi
+        if $autostart; then
+            echo "** Can't auto-start server unless it's built already"
+            return 3
+        fi
 
-	if yorn "Would you like to build the server now?"; then
-	    if server_build; then
-		:
-	    else
-		return $?
-	    fi
-	else
-	    echo "** USER ABORTED **"
-	    return 2
-	fi
+        if yorn "Would you like to build the server now?"; then
+            if server_build; then
+                :
+            else
+                return $?
+            fi
+        else
+            echo "** USER ABORTED **"
+            return 2
+        fi
     fi
 
     for i in 5 4 3 2 1
     do
-	let "j=$i-1"
-	mv o_screenlog.${j}.gz o_screenlog.${i}.gz 2> /dev/null
+        let "j=$i-1"
+        mv o_screenlog.${j}.gz o_screenlog.${i}.gz 2> /dev/null
     done
 
     mv screenlog.0 o_screenlog.0
@@ -127,15 +128,15 @@ server_start() {
     gzip -f o_screenlog.0 &
 
     if [ ! -f ~/.screenrc ]; then
-	echo 'logfile flush 2' > ~/.screenrc
+        echo 'logfile flush 2' > ~/.screenrc
     fi
 
     # Start server detached
     screen -dmS swgemu-server -L gdb --command=$HOME/bin/gdb_settings ./core3
 
     if $autostart; then
-	echo "** server started **"
-	return 0
+        echo "** server started **"
+        return 0
     fi
 
     # Free lock
@@ -157,10 +158,10 @@ server_status() {
     fi
 
     if [ -z "$pid" ]; then
-	if $verbose; then
-	    echo "Server is not running"
-	fi
-	return 1
+        if $verbose; then
+            echo "Server is not running"
+        fi
+        return 1
     fi
 
     local state=$(ps -p $pid -ho state)
@@ -168,17 +169,17 @@ server_status() {
     shopt -s nocasematch
 
     if [[ "${state}" != "S" && "${state}" != "R" && "${state}" != "D" ]]; then
-	echo -e $(tput setab 3;tput setaf 0)"WARNING: Server state is ${state}, it is not running or sleeping, something is wrong!"$(tput sgr0)
+        echo -e $(tput setab 3;tput setaf 0)"WARNING: Server state is ${state}, it is not running or sleeping, something is wrong!"$(tput sgr0)
 
-	if $verbose; then
-	    return 2
-	fi
+        if $verbose; then
+            return 2
+        fi
     fi
 
     if $verbose; then
-	read uptime <<< $(ps -p $pid -ho etime)
+        read uptime <<< $(ps -p $pid -ho etime)
 
-	echo "Server running on $pid, uptime: $uptime"
+        echo "Server running on $pid, uptime: $uptime"
     fi
 
     return 0
@@ -186,16 +187,16 @@ server_status() {
 
 server_send() {
     if server_status -q; then
-	:
+        :
     else
-	echo "** Server not running **"
-	return 0
+        echo "** Server not running **"
+        return 0
     fi
 
     cd ${RUN_DIR}
 
     if [ "X$1" = "X--auto" ]; then
-	shift
+        shift
     fi
 
     local string="$*^M"
@@ -211,17 +212,17 @@ server_send() {
 
 server_stop() {
     if server_status -q; then
-	:
+        :
     else
-	echo "** Server not running **"
-	return 0
+        echo "** Server not running **"
+        return 0
     fi
 
     cd "${RUN_DIR}"
 
     if [ ! -f "screenlog.0" ]; then
-	echo "** screenlog is missing, did you run the server from $0?"
-	return 1
+        echo "** screenlog is missing, did you run the server from $0?"
+        return 1
     fi
 
     local sz=$(stat -c '%s' screenlog.0)
@@ -232,8 +233,8 @@ server_stop() {
     local gdb=false
 
     if [[ $pcmd =~ ^gdb ]]; then
-	gdb=true
-	echo "** running under gdb **"
+        gdb=true
+        echo "** running under gdb **"
     fi
 
     echo "** send 'save' command to server **"
@@ -242,103 +243,151 @@ server_stop() {
     shopt -s nocasematch
 
     if [[ "${state}" == "S" || "${state}" == "R" || "${state}" == "D" ]]; then
-	screen -S swgemu-server -X stuff "save^M"
+        screen -S swgemu-server -X stuff "save^M"
 
-	# TODO add timeout?
-	if ~/bin/sentinel --stop-next-backup --seek $sz; then
-	    echo "** server backup complete **"
-	else
-	    echo "** sentinel failed with err=$?"
-	fi
+        # TODO add timeout?
+        if ~/bin/sentinel --stop-next-backup --seek $sz; then
+            echo "** server backup complete **"
+        else
+            echo "** sentinel failed with err=$?"
+        fi
     else
-	echo -e $(tput setab 3;tput setaf 0)"WARNING: Server state is ${state}, it is not running or sleeping, something is wrong!"$(tput sgr0)
+        echo -e $(tput setab 3;tput setaf 0)"WARNING: Server state is ${state}, it is not running or sleeping, something is wrong!"$(tput sgr0)
     fi
 
     echo -n "** sending SIGINT to core3($pid).."
 
     if $gdb; then
-	echo -n ". State: "
+        echo -n ". State: "
     fi
 
     kill -INT $pid
 
     for i in 10 9 8 7 6 5 4 3 2 1
     do
-	if pgrep core3 > /dev/null 2>&1; then
-	    if $gdb; then
-		# Look for state 't'
-		local state=$(ps -p $pid -ho state)
-		echo -n $state
+        if pgrep core3 > /dev/null 2>&1; then
+            if $gdb; then
+                # Look for state 't'
+                local state=$(ps -p $pid -ho state)
+                echo -n $state
 
-		if [[ "${state}" == "t" || "${state}" == "T" || "${state}" == "Z" ]]; then
-		    echo -en "\n** killing gdb($ppid) **"
-		    kill $ppid
-		    sleep 2
-		    if kill -0 $ppid 2> /dev/null; then
-			echo "** killing gdb($ppid) with SIGKILL **"
-			kill -KILL $ppid
-		    fi
-		    break
-		fi
-	    else
-		echo -n "."
-	    fi
-	    sleep 1
+                if [[ "${state}" == "t" || "${state}" == "T" || "${state}" == "Z" ]]; then
+                    echo -en "\n** killing gdb($ppid) **"
+                    kill $ppid
+                    sleep 2
+                    if kill -0 $ppid 2> /dev/null; then
+                        echo "** killing gdb($ppid) with SIGKILL **"
+                        kill -KILL $ppid
+                    fi
+                    break
+                fi
+            else
+                echo -n "."
+            fi
+            sleep 1
         fi
     done
 
     if pgrep core3 > /dev/null 2>&1; then
-	echo "** WARNING: Server is still up, sending KILL **"
-	kill -KILL $pid
-	if $gdb; then
-	    if kill -0 $ppid 2> /dev/null; then
-		echo "** WARNING: killing gdb($ppid) with SIGKILL **"
-		kill -KILL $ppid
-	    fi
-	fi
+        echo "** WARNING: Server is still up, sending KILL **"
+        kill -KILL $pid
+        if $gdb; then
+            if kill -0 $ppid 2> /dev/null; then
+                echo "** WARNING: killing gdb($ppid) with SIGKILL **"
+                kill -KILL $ppid
+            fi
+        fi
     fi
 
     if pgrep core3 > /dev/null 2>&1; then
-	echo "** WARNING: Unable to stop server! pid=$pid **"
-	return 1
+        echo "** WARNING: Unable to stop server! pid=$pid **"
+        return 1
     else
-	echo -e $(tput setaf 2)"\n** server stopped **"$(tput sgr0)
+        echo -e $(tput setaf 2)"\n** server stopped **"$(tput sgr0)
 
-	echo -e "\n** "$(date)" SERVER SHUTDOWN BY swgemu COMMAND. **\n" >> screenlog.0
+        echo -e "\n** "$(date)" SERVER SHUTDOWN BY swgemu COMMAND. **\n" >> screenlog.0
     fi
 
     return 0
 }
 
+server_build_step() {
+    cd ${BUILD_DIR}
+
+    if [ -f "${BUILD_LOG}" ]; then
+        mv "${BUILD_LOG}" "${BUILD_LOG}.prev"
+    fi
+
+    local build_status_file=$(mktemp /tmp/swgemu-build-status.XXXXXX)
+
+    echo 254 > ${build_status_file}
+
+    (time make -k $@ build 2>&1; echo $? > ${build_status_file}) | tee "${BUILD_LOG}"
+
+    local status=$(cat $build_status_file)
+
+    rm -f "${build_status_file}"
+
+    return $status
+}
+
 server_build() {
     if server_status; then
-	echo "** Server is running **"
+        echo "** Server is running **"
 
-	if yorn "Would you like to join the console so you can shut it down?"; then
-	    screen -D -RR swgemu-server
-	else
-	    echo "** USER ABORTED BUILD **"
-	    return 12
-	fi
+        if yorn "Would you like to join the console so you can shut it down?"; then
+            screen -D -RR swgemu-server
+        else
+            echo "** USER ABORTED BUILD **"
+            return 12
+        fi
     fi
 
     cd "${BUILD_DIR}"
 
+    local extra=''
+
     if [ ! -f build/unix/config.log ]; then
-	if time make config; then
-	    :
-	else
-	    echo "** make config failed **"
-	    return 10
-	fi
+        extra='config'
     fi
 
-    if time make -k build; then
-	echo "** BUILD SUCCESS IN $SECONDS SECOND(S) **"
-	return 0
+    if server_build_step $extra; then
+        echo "** BUILD SUCCESS IN $SECONDS SECOND(S) **"
+        return 0
     else
-	echo "** BUILD FAILED **"
-	return 11
+        echo "** BUILD FAILED **"
+
+	# Check to see if build failed because of new lua 5.3.x code requirements...
+        if grep 'error: ‘lua_version’ was not declared in this scope' "${BUILD_LOG}"; then
+	    # Can we auto-upgrade them?
+            local upgrade_script=$(echo $HOME/ZonamaDev/fasttrack/scripts/devsetup.d/*lua53)
+
+            if [ -f "$upgrade_script" ]; then
+                echo
+                echo "##########################################"
+                echo "## AUTO-UPGRADING YOUR LUA TO LUA 5.3.x ##"
+                echo "##########################################"
+                echo
+                (cd $HOME;$HOME/ZonamaDev/fasttrack/scripts/devsetup --force $(basename $upgrade_script))
+
+                if [ $? -eq 0 ]; then
+                    # try one more time
+                    if server_build_step config clean; then
+                        echo "** BUILD SUCCESS IN $SECONDS SECOND(S) **"
+                        return 0
+                    else
+                        echo "** BUILD FAILED AGAIN, GET HELP! **"
+                        return 13
+                    fi
+                else
+                    echo "** Failed to auto-upgrade to Lua 5.3.x **"
+                fi
+            fi
+            echo '** You need to manually upgrade Lua to 5.3.x before you can build the server codebase. **'
+            return 12
+        fi
+
+        return 11
     fi
 }
 
@@ -346,19 +395,19 @@ server_update_ip() {
     local server_ip='127.0.0.1'
 
     if [ -f ~/.force_ip ]; then
-	server_ip=$(cat ~/.force_ip)
+        server_ip=$(cat ~/.force_ip)
     else
-	local i2=$(netstat -ni|grep eth2)
+        local i2=$(netstat -ni|grep eth2)
 
-	# If they have an eth2 they might have enabled the "public" interface
-	if [ -n "$i2" ]; then
-	    # Find the default route
-	    read -a aa <<<$(ip -o route show|egrep '^default')
-	    # What's the address of the interface with default route?
-	    read -a aa <<<$(ip -o -4 addr show ${aa[4]})
-	    # Let's suggest that ip
-	    server_ip=$(echo ${aa[3]}|cut -d/ -f1)
-	fi
+        # If they have an eth2 they might have enabled the "public" interface
+        if [ -n "$i2" ]; then
+            # Find the default route
+            read -a aa <<<$(ip -o route show|egrep '^default')
+            # What's the address of the interface with default route?
+            read -a aa <<<$(ip -o -4 addr show ${aa[4]})
+            # Let's suggest that ip
+            server_ip=$(echo ${aa[3]}|cut -d/ -f1)
+        fi
     fi
 
     echo "Server IP: $server_ip"
@@ -369,7 +418,7 @@ server_update_ip() {
     mysql swgemu -ve "UPDATE galaxy SET name = 'swgemudev' WHERE galaxy_id = ${ZoneGalaxyID} AND name = 'Core3'";
 
     if [ ! -f ~/.force_ip ]; then
-	echo "$server_ip" > ~/.force_ip
+        echo "$server_ip" > ~/.force_ip
     fi
 }
 
@@ -378,42 +427,42 @@ server_backup() {
     local restartserver=false
 
     if [ "X$1" = "X--auto" ]; then
-	autobackup=true
-	shift
+        autobackup=true
+        shift
     fi
 
     if server_status; then
-	echo "** Server is running **"
+        echo "** Server is running **"
 
-	if $autobackup; then
-	    echo "** send info **"
-	    server_send "info"
-	    for i in 5 4 3 2
-	    do
-		server_send "broadcast Server going down for backups in $i minutes"
-		sleep 60
-	    done
+        if $autobackup; then
+            echo "** send info **"
+            server_send "info"
+            for i in 5 4 3 2
+            do
+                server_send "broadcast Server going down for backups in $i minutes"
+                sleep 60
+            done
 
-	    server_send "broadcast Server going down for backups in 1 minute, get somewhere safe!"
-	    sleep 60
+            server_send "broadcast Server going down for backups in 1 minute, get somewhere safe!"
+            sleep 60
 
-	    server_send "broadcast Server going down for backups, should be back up in 10 minutes, enjoy the ghost world..."
+            server_send "broadcast Server going down for backups, should be back up in 10 minutes, enjoy the ghost world..."
 
-	    echo "** send info **"
-	    server_send "info"
+            echo "** send info **"
+            server_send "info"
 
-	    echo "** stopping server **"
-	    server_stop
-	    restartserver=true
-	else
-	    if yorn "Would you like to shutdown the server first?"; then
-		server_stop
-		restartserver=true
-	    else
-		echo "** USER ABORTED BACKUP **"
-		return 12
-	    fi
-	fi
+            echo "** stopping server **"
+            server_stop
+            restartserver=true
+        else
+            if yorn "Would you like to shutdown the server first?"; then
+                server_stop
+                restartserver=true
+            else
+                echo "** USER ABORTED BACKUP **"
+                return 12
+            fi
+        fi
     fi
 
     # NOTE: not the most space efficent way to do it but will work as it's simple for people to understand the format
@@ -433,56 +482,56 @@ server_backup() {
     BULOG=${BUDIR}/swgemu-backup-${STAMP}.log
 
     (
-	trap 'set +xe;st=$?;echo "** UNEXPECTED EXIT=$st, PARTIAL BACKUP LEFT IN ${TMPDIR} **";rm -f ${SWGEMU_LOCKFILE};exit $st' 0
+        trap 'set +xe;st=$?;echo "** UNEXPECTED EXIT=$st, PARTIAL BACKUP LEFT IN ${TMPDIR} **";rm -f ${SWGEMU_LOCKFILE};exit $st' 0
 
-	date
+        date
 
-	mkdir -p "${TMPDIR}/bin"
+        mkdir -p "${TMPDIR}/bin"
 
-	echo "** Backing up to ${BUFILE} **"
+        echo "** Backing up to ${BUFILE} **"
 
-	set -xe
+        set -xe
 
-	mysqldump --opt swgemu > "${TMPDIR}/mysqldump.sql"
+        mysqldump --opt swgemu > "${TMPDIR}/mysqldump.sql"
 
-	cd "${RUN_DIR}"
+        cd "${RUN_DIR}"
 
-	# TODO do we need the __db files if the db is closed?
-	cp -rv databases log conf custom_scripts ${TMPDIR}/bin/
+        # TODO do we need the __db files if the db is closed?
+        cp -rv databases log conf custom_scripts ${TMPDIR}/bin/
 
-	# Copy anything that has been modified in scripts/* dir
-	git ls-files -m scripts | while read fn
-	do
-	    dir="${TMPDIR}/bin/"$(dirname $fn)
-	    [ -d "${dir}" ] || mkdir -p "${dir}"
-	    cp -v $fn ${dir}
-	done
+        # Copy anything that has been modified in scripts/* dir
+        git ls-files -m scripts | while read fn
+        do
+            dir="${TMPDIR}/bin/"$(dirname $fn)
+            [ -d "${dir}" ] || mkdir -p "${dir}"
+            cp -v $fn ${dir}
+        done
 
-	if $autobackup; then
-	    # Include bin in an autobackup
-	    cp -v core3 ${TMPDIR}/bin/
-	fi
+        if $autobackup; then
+            # Include bin in an autobackup
+            cp -v core3 ${TMPDIR}/bin/
+        fi
 
-	cd ${TMPDIR}
+        cd ${TMPDIR}
 
-	read sz dir <<< $(du -s --block-size=1 .)
+        read sz dir <<< $(du -s --block-size=1 .)
 
-	# TODO - Other useful metadata here?
-	echo '{"backup_size_bytes":"'${sz}'","backup_date":"'$(date -d@${NOW})'","backup_isodate":"'$(date -d@${NOW} -Iseconds)'","backup_unixepoc":"'${NOW}'"}' > ${TMPDIR}/metadata.json
+        # TODO - Other useful metadata here?
+        echo '{"backup_size_bytes":"'${sz}'","backup_date":"'$(date -d@${NOW})'","backup_isodate":"'$(date -d@${NOW} -Iseconds)'","backup_unixepoc":"'${NOW}'"}' > ${TMPDIR}/metadata.json
 
-	tar cvzf ${BUFILE} metadata.json $(ls | grep -v metadata.json)
+        tar cvzf ${BUFILE} metadata.json $(ls | grep -v metadata.json)
 
-	rm -fr ${TMPDIR}
+        rm -fr ${TMPDIR}
 
-	set +xe
+        set +xe
 
-	trap - 0
+        trap - 0
 
-	echo "** SUCCESS: Backup saved to ${BUFILE} **"
+        echo "** SUCCESS: Backup saved to ${BUFILE} **"
     ) 2>&1 | tee "${BULOG}"
 
     if $restartserver; then
-	server_start "--auto"
+        server_start "--auto"
     fi
 
     return 0
@@ -518,8 +567,8 @@ show_version()
 
     local json="{ "
 
-	json="${json} "'"server_version":{"remote-'${name}'":"'${url}'","remote-git-tag":"'${git_remote}'","local-get-tag":"'${git_local}'","asof_isodate":"'$(date -Iseconds)'","swgemu-script":"'${me}'","swgemu-md5":"'${me_md5}'","zd-tag":"'${zd_tag}'","collection_errors":"'${errors}'"}'
-	json="${json}, "'"box_buildinfo":'$(< /.swgemudev.builinfo.json)
+        json="${json} "'"server_version":{"remote-'${name}'":"'${url}'","remote-git-tag":"'${git_remote}'","local-get-tag":"'${git_local}'","asof_isodate":"'$(date -Iseconds)'","swgemu-script":"'${me}'","swgemu-md5":"'${me_md5}'","zd-tag":"'${zd_tag}'","collection_errors":"'${errors}'"}'
+        json="${json}, "'"box_buildinfo":'$(< /.swgemudev.builinfo.json)
 
     json="$json }"
 
@@ -555,73 +604,73 @@ post_debug()
     echo -e "** to get immediate feedback and quicker support.\n**"
 
     if [ -z "$gori" ]; then
-	read -p 'Post a [G]ist or an [I]ssue? ' gori
-	echo
+        read -p 'Post a [G]ist or an [I]ssue? ' gori
+        echo
     fi
 
     if [ -z "$title" ]; then
-	read -p "Title: " title
-	echo
+        read -p "Title: " title
+        echo
     fi
 
     if [ -z "$desc" ]; then
-	read -p "One-line description of your problem: " desc
-	echo
+        read -p "One-line description of your problem: " desc
+        echo
     fi
 
     local url=""
 
     case $gori in
-	[Ii]* )
-	    type ghi > /dev/null 2>&1 || (set -x;sudo gem install ghi)
+        [Ii]* )
+            type ghi > /dev/null 2>&1 || (set -x;sudo gem install ghi)
 
-	    if git config --get ghi.token; then
-		:
-	    else
-		echo "Please login to github to post an issue:"
-		read -p "What is your github username? " ghuser
+            if git config --get ghi.token; then
+                :
+            else
+                echo "Please login to github to post an issue:"
+                read -p "What is your github username? " ghuser
 
-		if [ -z "$ghuser" ]; then
-		    echo "** Can't post an issues without a github account, please try again with a gist or provide your github username."
-		    echo "** ABORTED BY USER **"
-		    return 2
-		fi
+                if [ -z "$ghuser" ]; then
+                    echo "** Can't post an issues without a github account, please try again with a gist or provide your github username."
+                    echo "** ABORTED BY USER **"
+                    return 2
+                fi
 
-		ghi config --auth $ghuser
-	    fi
-	    echo "** Posting Issue..."
-	    local issue=$(ghi open --label "type/automated-help" -m "$(post_debug_body)" -- lordkator/ZonamaDev 2>&1)
-	    echo "** Looking for issue id"
-	    local issue_num=$(echo "$issue"|sed -ne '1s!^#\([0-9][0-9]*\):.*!\1!p')
+                ghi config --auth $ghuser
+            fi
+            echo "** Posting Issue..."
+            local issue=$(ghi open --label "type/automated-help" -m "$(post_debug_body)" -- lordkator/ZonamaDev 2>&1)
+            echo "** Looking for issue id"
+            local issue_num=$(echo "$issue"|sed -ne '1s!^#\([0-9][0-9]*\):.*!\1!p')
 
-	    if [ -n "$issue_num" ]; then
-		echo "** Found issue #${issue_num}"
-		url="https://github.com/lordkator/ZonamaDev/issues/"${issue_num}
-	    else
-		echo -e "WARNING: Unexpected output from ghi:\n\t${issue}\n\nGET HELP!"
-	    fi
-	    ;;
-	* | [Gg]* )
-	    type gist > /dev/null 2>&1 || (set -x;sudo gem install gist)
+            if [ -n "$issue_num" ]; then
+                echo "** Found issue #${issue_num}"
+                url="https://github.com/lordkator/ZonamaDev/issues/"${issue_num}
+            else
+                echo -e "WARNING: Unexpected output from ghi:\n\t${issue}\n\nGET HELP!"
+            fi
+            ;;
+        * | [Gg]* )
+            type gist > /dev/null 2>&1 || (set -x;sudo gem install gist)
 
-	    if [ ! -f ~/.gist ] && yorn "Would you like to use your github userid for this? "; then
-		gist --login
-	    fi
+            if [ ! -f ~/.gist ] && yorn "Would you like to use your github userid for this? "; then
+                gist --login
+            fi
 
-	    url=$(post_debug_body | gist -p -d "swgemu postdebug - ${title}" -f "ZonamaDev/post_debug-"$(date +%s)".md" 2>&1)
-	    ;;
+            url=$(post_debug_body | gist -p -d "swgemu postdebug - ${title}" -f "ZonamaDev/post_debug-"$(date +%s)".md" 2>&1)
+            ;;
     esac
 
     if [ -z "$url" ]; then
-	echo "** WARNING: Something seems to have failed, look for clues in any errors above."
-	return 1
+        echo "** WARNING: Something seems to have failed, look for clues in any errors above."
+        return 1
     fi
 
     echo -e "\nShare this URL to get help: ${url}"
 
     if xset q > /dev/null 2>&1; then
-	local browser=$( (for i in chromium google-chrome chromium-browser firefox; do type -P $i; done)|head -1)
-	nohup $browser $url > /dev/null 2>&1 &
+        local browser=$( (for i in chromium google-chrome chromium-browser firefox; do type -P $i; done)|head -1)
+        nohup $browser $url > /dev/null 2>&1 &
     fi
 
     return 0
@@ -633,16 +682,16 @@ post_debug_body() {
     #       see: xargs --show-limits < /dev/null
     #
     local debug_commands=(
-	"show_version"
-	"tail -5 ${HOME}/workspace/Initial_Core3_Build.log"
-	"${HOME}/bin/get_config --bash 'Zone..'"
-	"${HOME}/bin/get_config --bash 'Tre..'"
-	"${HOME}/bin/tre_check"
-	"tail -100 ${HOME}/workspace/Core3/MMOCoreORB/bin/screenlog.0"
-	"tail -100 ${HOME}/workspace/Core3/MMOCoreORB/bin/log/core3.log"
-	"uname -a"
-	"df -h"
-	"top -Hbn 1"
+        "show_version"
+        "tail -5 ${HOME}/workspace/Initial_Core3_Build.log"
+        "${HOME}/bin/get_config --bash 'Zone..'"
+        "${HOME}/bin/get_config --bash 'Tre..'"
+        "${HOME}/bin/tre_check"
+        "tail -100 ${HOME}/workspace/Core3/MMOCoreORB/bin/screenlog.0"
+        "tail -100 ${HOME}/workspace/Core3/MMOCoreORB/bin/log/core3.log"
+        "uname -a"
+        "df -h"
+        "top -Hbn 1"
     )
 
     exec 2>&1
@@ -664,49 +713,49 @@ post_debug_body() {
     # Commands to run and capture ouput
     for cmd in "${debug_commands[@]}"
     do
-	echo -e '\n```\n---\n'"${cmd}"'\n```\n'
-	eval $cmd
+        echo -e '\n```\n---\n'"${cmd}"'\n```\n'
+        eval $cmd
     done
     echo -e '\n```'
 
     if [ -n "$old_display" ]; then
-	export DISPLAY="${old_display}"
+        export DISPLAY="${old_display}"
     fi
 }
 
 server_latest()
 {
     if server_status; then
-	echo "** Server is running **"
+        echo "** Server is running **"
 
-	if yorn "Would you like to shut it down?"; then
-	    if server_stop; then
-		:
-	    else
-		echo "** server stop error=$? **"
-		return 15
-	    fi
-	else
-	    echo "** USER ABORTED **"
-	    return 16
-	fi
+        if yorn "Would you like to shut it down?"; then
+            if server_stop; then
+                :
+            else
+                echo "** server stop error=$? **"
+                return 15
+            fi
+        else
+            echo "** USER ABORTED **"
+            return 16
+        fi
     fi
 
     (
-	set -xe
-	cd ${BUILD_DIR}
-	git stash save "swgemu-latest "$(date)
-	git pull
-	git stash pop
-	cd ~/workspace/PublicEngine
-	git pull
+        set -xe
+        cd ${BUILD_DIR}
+        git stash save "swgemu-latest "$(date)
+        git pull
+        git stash pop
+        cd ~/workspace/PublicEngine
+        git pull
     )
 
     local ret=$?
 
     if [ $ret -gt 0 ]; then
-	echo "** Latest pull failed, look at errors above for clues. **"
-	return 17
+        echo "** Latest pull failed, look at errors above for clues. **"
+        return 17
     fi
 
     return $ret
@@ -714,7 +763,7 @@ server_latest()
 
 is_setup_pending() {
     if [ -f ~vagrant/.devsetup.ran ]; then
-	return 1
+        return 1
     fi
 
     echo '
@@ -739,7 +788,7 @@ is_setup_pending() {
 
     # Allow these to get through in case they have problems with setup
     if [ "$1" = "postdebug" ]; then
-	return 1
+        return 1
     fi
 
     return 0
@@ -755,7 +804,7 @@ yorn() {
       echo -n -e "$@ Y\b" > /dev/tty
       read yorn < /dev/tty
       case $yorn in
-	[Nn]* ) return 1;;
+        [Nn]* ) return 1;;
       esac
   fi
 
@@ -764,7 +813,7 @@ yorn() {
 
 release_lock() {
     if $HAVELOCK; then
-	rm -f ${SWGEMU_LOCKFILE}
+        rm -f ${SWGEMU_LOCKFILE}
     fi
 }
 
@@ -777,34 +826,34 @@ get_lock() {
     echo "$$ "$(date +%s) > ${locktmp}
 
     if ln ${locktmp} ${SWGEMU_LOCKFILE} 2> /dev/null; then
-	rm -f ${locktmp}
-	export HAVELOCK=true
+        rm -f ${locktmp}
+        export HAVELOCK=true
     else
-	read pid tm_lock < ${SWGEMU_LOCKFILE}
-	tm_now=$(date +%s)
+        read pid tm_lock < ${SWGEMU_LOCKFILE}
+        tm_now=$(date +%s)
 
-	let "tm_delta=${tm_now} - ${tm_lock}"
+        let "tm_delta=${tm_now} - ${tm_lock}"
 
-	if kill -0 $pid; then
-	    echo -e ">> PID $pid HAS HAD LOCK FOR ${tm_delta} SECOND(S) RUNNING:\n\n\t"$(ps -p $pid -ho cmd)"\n\nAborting, can't continue until other command is done."
-	    return 1
-	else
-	    echo ">> Stealing lock from PID $pid which has gone away, locked ${tm_delta} second(s) ago"
-	    if ln -f ${locktmp} ${SWGEMU_LOCKFILE}; then
-		rm -f ${locktmp}
-		read pid tm_lock < ${SWGEMU_LOCKFILE}
-		if [ "$pid" -eq "$$" ]; then
-		    echo ">> STOLE LOCK, PROCEEDING"
-		else
-		    echo ">> Can't steal lock, somone got in before us!? pid=${pid}"
-		    return 2
-		fi
-	    else
-		rm -f ${locktmp}
-		echo ">> Failed to steal lock, **ABORT**"
-		return 1
-	    fi
-	fi
+        if kill -0 $pid; then
+            echo -e ">> PID $pid HAS HAD LOCK FOR ${tm_delta} SECOND(S) RUNNING:\n\n\t"$(ps -p $pid -ho cmd)"\n\nAborting, can't continue until other command is done."
+            return 1
+        else
+            echo ">> Stealing lock from PID $pid which has gone away, locked ${tm_delta} second(s) ago"
+            if ln -f ${locktmp} ${SWGEMU_LOCKFILE}; then
+                rm -f ${locktmp}
+                read pid tm_lock < ${SWGEMU_LOCKFILE}
+                if [ "$pid" -eq "$$" ]; then
+                    echo ">> STOLE LOCK, PROCEEDING"
+                else
+                    echo ">> Can't steal lock, somone got in before us!? pid=${pid}"
+                    return 2
+                fi
+            else
+                rm -f ${locktmp}
+                echo ">> Failed to steal lock, **ABORT**"
+                return 1
+            fi
+        fi
     fi
 
     export HAVELOCK=true
@@ -841,9 +890,9 @@ echo
 
 if $IS_PANEL; then
     if [ $ret -eq 0 ]; then
-	echo -e $(tput setaf 2)"\n** SUCCESS **\n"$(tput sgr0)
+        echo -e $(tput setaf 2)"\n** SUCCESS **\n"$(tput sgr0)
     else
-	echo -e $(tput setab 3;tput setaf 0)"\nWARNING: ${cmd} command returned error code ${ret}\n"$(tput sgr0)
+        echo -e $(tput setab 3;tput setaf 0)"\nWARNING: ${cmd} command returned error code ${ret}\n"$(tput sgr0)
     fi
 
     read -p "Press <ENTER> to close the window: "
