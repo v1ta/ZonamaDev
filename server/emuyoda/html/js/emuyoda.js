@@ -299,13 +299,13 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
 	    auth = $rootScope.authToken;
 	}
 
-	$scope.ws = new WebSocket('ws://' + $location.host() + ':' + $location.port() + '/api/console', null, {
-		headers: { 'Authorization': auth }
-	});
+	var proto = $location.protocol() == "https" ? 'wss://' : 'ws://';
+
+	$scope.ws = new WebSocket(proto + $location.host() + ':' + $location.port() + '/api/console?token=' + auth);
 
 	$scope.ws.onmessage = function (e) {
 	    // TODO has to be a more AngularJS way to do this...
-	    var logPre = document.getElementById('logPre')
+	    var logPre = document.getElementById('logPre');
 
 	    if(logPre) {
 		logPre.appendChild(document.createTextNode(e.data + "\n"));
@@ -323,6 +323,9 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
 	$scope.ws.onclose = function () {
 	    $scope.message = "Console Closed";
 	    console.log($scope.message);
+	    var tmp_ws = $scope.ws;
+	    delete $scope.ws;
+	    tmp_ws.close();
 	}
     }
 
