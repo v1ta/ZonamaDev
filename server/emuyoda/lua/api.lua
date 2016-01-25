@@ -727,7 +727,7 @@ function service_control(path)
 
     r.response = { output = "", command = cmd }
 
-    local fh = io.popen(os.getenv("HOME") .. "/bin/swgemu --api " .. cmd)
+    local fh = io.popen(os.getenv("HOME") .. "/ZonamaDev/fasttrack/bin/swgemu --api " .. cmd)
 
     while true do
 	local ln, err = fh:read("*l")
