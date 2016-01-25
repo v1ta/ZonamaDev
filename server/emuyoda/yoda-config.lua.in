@@ -1,5 +1,4 @@
 -- EmuYoda Configuration
-server_ip = '127.0.0.1'
 emuConfigPath = '/home/vagrant/workspace/Core3/MMOCoreORB/bin/conf/config.lua'
 yodaSecret = '460b06d2de997fac8a54aa87636cd937'
 consoleLevelRead = 1

@@ -347,27 +347,30 @@ server_update_ip() {
 
     if [ -f ~/.force_ip ]; then
 	server_ip=$(cat ~/.force_ip)
+    else
+	local i2=$(netstat -ni|grep eth2)
+
+	# If they have an eth2 they might have enabled the "public" interface
+	if [ -n "$i2" ]; then
+	    # Find the default route
+	    read -a aa <<<$(ip -o route show|egrep '^default')
+	    # What's the address of the interface with default route?
+	    read -a aa <<<$(ip -o -4 addr show ${aa[4]})
+	    # Let's suggest that ip
+	    server_ip=$(echo ${aa[3]}|cut -d/ -f1)
+	fi
     fi
 
-    local i2=$(netstat -ni|grep eth2)
-
-    # If they have an eth2 they might have enabled the "public" interface
-    if [ -n "$i2" ]; then
-	# Find the default route
-	read -a aa <<<$(ip -o route show|egrep '^default')
-	# What's the address of the interface with default route?
-	read -a aa <<<$(ip -o -4 addr show ${aa[4]})
-	# Let's suggest that ip
-	server_ip=$(echo ${aa[3]}|cut -d/ -f1)
-    fi
-
-    echo "Suggested IP: $server_ip"
+    echo "Server IP: $server_ip"
 
     eval $(~/bin/get_config --bash ZoneGalaxyID)
 
     mysql swgemu -ve "UPDATE galaxy SET address = '${server_ip}' WHERE galaxy_id = ${ZoneGalaxyID}";
     mysql swgemu -ve "UPDATE galaxy SET name = 'swgemudev' WHERE galaxy_id = ${ZoneGalaxyID} AND name = 'Core3'";
-    sed -e "/server_ip/s/server_ip = '[^']*'/server_ip = '"${server_ip}"'/" -i /home/vagrant/server/emuyoda/yoda-config.lua > /dev/null 2>&1
+
+    if [ ! -f ~/.force_ip ]; then
+	echo "$server_ip" > ~/.force_ip
+    fi
 }
 
 server_backup() {
