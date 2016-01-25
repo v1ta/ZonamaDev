@@ -17,7 +17,9 @@ else
     if eval $LUA53_TEST_SRC; then
 	msg "Lua 5.3 required by source tree"
     else
-	if [ -d ${LUA53_TEST_DIR} ]; then
+	if [ ! -d ${LUA53_TEST_DIR} ]; then
+	    return 0
+	else
 	    # Check of we have 64 bit ints
 	    bignum=$(echo 'print('${LUA_BIGNUM}')' | /usr/local/bin/lua -)
 	    if [ "$bignum" != "${LUA_BIGNUM}" ]; then
