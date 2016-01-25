@@ -13,13 +13,14 @@ if [ -z "$BASH_VERSION" ]; then
 fi
 
 trepath=''
-default='/c/SWGEmu'
 
 main() {
     msg "TRE File Copy"
 
-    # Check for default location
-    if check_emudir "$default"; then
+    # Check for default location(s)
+    local default=$(hunt_emudir)
+
+    if [ -n "${default}" ]; then
 	if yorn "\n** We found your tre files in ${default} do you want to copy them to the server now?"; then
 	    trepath="$default"
 	else
@@ -103,9 +104,21 @@ ask_emudir() {
     done
 }
 
+hunt_emudir() {
+    for i in '/c/SWGEmu' '/Volumes/BOOTCAMP/SWGEmu'
+    do
+	if check_emudir "$i"; then
+	    echo $i
+	    return 0
+	fi
+    done
+
+    return 1
+}
+
 check_emudir() {
-    local dir=$1
-    local cnt=$(ls "$dir"/*.tre 2> /dev/null|wc -l)
+    local dir="$1"
+    local cnt=$(ls "${dir}"/*.tre 2> /dev/null|wc -l)
 
     if [ $cnt -eq 0 ]; then
 	return 1
