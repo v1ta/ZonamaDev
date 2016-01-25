@@ -27,7 +27,14 @@ setup_yoda() {
 	    notice "EmuYoda Installed" "The EmuYoda API and Web Interface has been installed."
 	)
 
-	$BROWSER 'http://127.0.0.1:'${OPENRESTY_PORT}'/' > /dev/null 2>&1 < /dev/null &
+	url='http://127.0.0.1:'${OPENRESTY_PORT}'/' 
+
+	echo "** Check ${url} ***"
+
+	if curl -k "${url}/api/status/"; then
+	    echo "** Launch $BROWSER '${url}' **"
+	    $BROWSER "${url}" > /dev/null 2>&1 < /dev/null &
+	fi
     fi
 }
 
