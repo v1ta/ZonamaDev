@@ -11,16 +11,20 @@ LUA_LNUM_TEST_FILE="/usr/local/lib/liblua.a"
 
 LUA_BIGNUM='4611686018427387904' # 2^62
 
-if [ -f ${LUA_LNUM_TEST_FILE} ]; then
-    # Check of we have 64 bit ints
-    bignum=$(echo 'print('${LUA_BIGNUM}')' | /usr/local/bin/lua -)
-    if [ "$bignum" != "${LUA_BIGNUM}" ]; then
-	echo "** /usr/local/bin/lua not built with 64bit ints!"
-	echo "** Will rebuild with LNUM_INT64"
-    else
-	echo "Looks like ${LUA_LNUM_REPO} is already installed"
-	echo "To force rebuild do: sudo rm -f ${LUA_LNUM_TEST_FILE}"
-	return 0
+if $FORCE; then
+    echo "Force rebuild of lua-lnum"
+else
+    if [ -f ${LUA_LNUM_TEST_FILE} ]; then
+	# Check of we have 64 bit ints
+	bignum=$(echo 'print('${LUA_BIGNUM}')' | /usr/local/bin/lua -)
+	if [ "$bignum" != "${LUA_BIGNUM}" ]; then
+	    echo "** /usr/local/bin/lua not built with 64bit ints!"
+	    echo "** Will rebuild with LNUM_INT64"
+	else
+	    echo "Looks like ${LUA_LNUM_REPO} is already installed"
+	    echo "To force rebuild do: sudo rm -f ${LUA_LNUM_TEST_FILE}"
+	    return 0
+	fi
     fi
 fi
 
