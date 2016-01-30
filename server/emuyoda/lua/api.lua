@@ -26,6 +26,7 @@ local procps = require "procps"
 local resty_sha1 = require "resty.sha1"
 local resty_sha256 = require "resty.sha256"
 local resty_string = require "resty.string"
+local ws_server = require "resty.websocket.server"
 local websocket_console = require "websocket_console"
 local assert = assert
 local loadfile = loadfile
@@ -59,8 +60,17 @@ end
 
 function return_response(r, status)
     r.response.status = status or "OK"
-    ngx.say(cjson.encode(r) .. "\n")
-    ngx.exit(ngx.HTTP_OK)
+    if r.ws then
+	local stash_ws = r.ws
+	r.ws = nil
+	r.response.dbg_info.is_websocket = true
+	ngx.log(ngx.ERR, "return_response-WEBSOCKET:[" .. cjson.encode(r) .. "]")
+	stash_ws:send_text(cjson.encode(r) .. "\n")
+	r.ws = stash_ws
+    else
+	ngx.say(cjson.encode(r) .. "\n")
+	ngx.exit(ngx.HTTP_OK)
+    end
 end
 
 function return_error(r, error, error_code, error_description, error_id, method, service)
@@ -71,6 +81,11 @@ function return_error(r, error, error_code, error_description, error_id, method,
     r.response.method = method
     r.response.service = service
     return_response(r, "ERROR")
+
+    if r.ws then
+	r.ws:send_close()
+	ngx.exit(ngx.HTTP_OK)
+    end
 end
 
 function api_lock(...)
@@ -230,7 +245,7 @@ end
 function get_auth_user()
     local cfg = load_config()
 
-    local token = ngx.var.cookie_ZDAPI_SESSID or ngx.req.get_headers()['authorization']
+    local token = ngx.var.cookie_ZDAPI_SESSID or ngx.req.get_headers()['authorization'] or ngx.var.arg_token
 
     -- Localhost or server_ip w/o token logs in as yoda
     if token == nil and (ngx.var.remote_addr == '127.0.0.1' or (cfg.yoda.yodaHosts ~= nil and cfg.yoda.yodaHosts[ngx.var.remote_addr])) then
@@ -700,6 +715,24 @@ function service_control(path)
 
     local r = init_response()
 
+    if ngx.var.arg_websocket then
+	ngx.log(ngx.ERR, "trying websocket")
+
+	local ws, err = ws_server:new{
+	    timeout = 1000,
+	    max_payload_len = 16 * 1204
+	}
+
+	if err then
+	    ngx.log(ngx.ERR, "failed to create new websocket: ", err)
+	    return_error(r, "IO ERROR", "IO_ERROR", cmd .. ": I/O error creating websocket: " .. err, "SYSTEM", ngx.req.get_method(), "control")
+	end
+
+	-- Stash it for future use
+	r.ws = ws
+	ngx.log(ngx.ERR, "have websocket")
+    end
+
     if ngx.req.get_method() ~= "GET" then
 	return_error(r, "METHOD NOT SUPPORTED FOR THIS SERVICE", "INVALID_METHOD", "Method is not accepted for the this service", "SYSTEM", ngx.req.get_method(), "control")
     end
@@ -725,7 +758,8 @@ function service_control(path)
 
     ngx.log(ngx.ERR, "cmd=[" .. cmd .. "]")
 
-    r.response = { output = "", command = cmd }
+    r.response.output = ""
+    r.response.command = cmd
 
     local fh = io.popen(os.getenv("HOME") .. "/ZonamaDev/fasttrack/bin/swgemu --api " .. cmd)
 
@@ -734,12 +768,20 @@ function service_control(path)
 
 	if err then
 	    r.response.error_message = err
-	    break
+	    return_error(r, "IO ERROR", "IO_ERROR", cmd .. ": I/O error reading output: " .. err, "SYSTEM", ngx.req.get_method(), "control")
 	end
 
 	if ln then
-	    parts[#parts+1] = ln
+	    ngx.log(ngx.ERR, "LN:[" .. ln .. "]")
+
+	    if r.ws then
+		r.response.output = ln
+		return_response(r, "CONTINUE")
+	    else
+		parts[#parts+1] = ln
+	    end
 	else
+	    ngx.log(ngx.ERR, "LN:NIL")
 	    break
 	end
     end
@@ -747,6 +789,10 @@ function service_control(path)
     r.response.output = table.concat(parts, "\n")
 
     return_response(r, "OK")
+
+    if r.ws then
+	r.ws:send_close()
+    end
 end
 
 function service_console(path)

@@ -240,7 +240,6 @@ emuYodaApp.controller('connectController', function($scope, yodaApiService) {
 });
 
 emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout, $location, yodaApiService) {
-    $scope.message = "";
     $scope.pendingCmd = "";
     $scope.pendingSend = false;
     $scope.sendText = "";
@@ -251,14 +250,32 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
 	}).catch(function() {
 	    $scope.error = "/api/status call failed";
 	});
-    }
+    };
+
+    $scope.consoleAppend = function(ln, className) {
+	// TODO has to be a more AngularJS way to do this...
+	var e = document.getElementById('logPre');
+
+	if(e) {
+	    var s = document.createElement("span");
+	    if (!className) {
+		className = "white";
+	    }
+	    s.className = "consoleText label-" + className;
+	    s.appendChild(document.createTextNode(ln + "\n"));
+	    e.appendChild(s);
+	    e.scrollTop = e.scrollHeight;
+	} else {
+	    console.log("consoleAppend: Failed to find element (logPre): ln=" + ln);
+	}
+    };
 
     $scope.serverCommand = function(cmd) {
 	if(cmd == "send") {
 	    if($scope.pendingSend) {
 		$scope.pendingSend = false;
 		if($scope.sendText == "") {
-		    $scope.message = "<b>Missing text to send</b>";
+		    $scope.consoleAppend("Missing text to send", "danger");
 		    return;
 		}
 		cmd = cmd + "&arg1=" + $scope.sendText;
@@ -269,30 +286,71 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
 	}
 
 	if($scope.pendingCmd != "") {
-	    $scope.message = $scope.message + "<br><b>Waiting for <i>" + $scope.pendingCmd + "</i> command to complete</b>";
+	    $scope.consoleAppend("Waiting for " + $scope.pendingCmd + " to complete.", "danger");
 	    return;
 	}
 
 	$scope.pendingCmd = cmd;
-	$scope.message = "Sending cmd " + cmd;
 
-	yodaApiService.serverCommand(cmd).then(function(data) {
-	    if (data.response.output) {
-		$scope.message = data.response.output;
-	    } else {
-		$scope.message = "Error:" + data.response.error_description
+	if(cmd == "build" || cmd == "backup" || cmd == "stop" || cmd == "start") {
+	    var auth = "none";
+
+	    if ($rootScope.authToken) {
+		auth = $rootScope.authToken;
 	    }
-	    $scope.pendingCmd = "";
-	    $scope.updateStatus();
-	}).catch(function() {
-	    $scope.error = "/api/control call failed";
-	    $scope.pendingCmd = "";
-	    $scope.updateStatus();
-	});
+
+	    var proto = $location.protocol() == "https" ? 'wss://' : 'ws://';
+
+	    $scope.ws_cmd = new WebSocket(proto + $location.host() + ':' + $location.port() + '/api/control?websocket=1&command=' + cmd + '&token=' + auth);
+
+	    $scope.ws_cmd.onmessage = function (e) {
+		var data = JSON.parse(e.data);
+
+		if(data) {
+		    var r = data.response;
+
+		    if (r.status == "OK" || r.status == "CONTINUE") {
+			$scope.consoleAppend(cmd + ">> " + r.output, "success");
+		    } if (r.error) {
+			$scope.consoleAppend(cmd + ">> ERROR: " + r.error_description, "danger");
+		    }
+		} else {
+		    $scope.consoleAppend(cmd + ">> ERROR: UNEXPECTED RESPONSE FORMAT: " + e.data, "danger");
+		}
+	    };
+
+	    /*
+	    $scope.ws_cmd.onopen = function () {
+		$scope.consoleAppend(cmd + ">> [Control Channel Connected]", "success");
+	    };
+	    */
+
+	    $scope.ws_cmd.onclose = function () {
+		$scope.pendingCmd = "";
+		// $scope.consoleAppend(cmd + ">> [Control Channel Closed]", "success");
+		$scope.consoleAppend(cmd + ">> [Command Complete]", "success");
+		var tmp_ws = $scope.ws_cmd;
+		delete $scope.ws_cmd;
+		tmp_ws.close();
+	    };
+	} else {
+	    yodaApiService.serverCommand(cmd).then(function(data) {
+		if (data.response.output) {
+		    $scope.consoleAppend(cmd + ">> " + data.response.output, "success");
+		} else {
+		    $scope.consoleAppend(cmd + ">> ERROR: " + data.response.error_description, "danger");
+		}
+		$scope.pendingCmd = "";
+		$scope.updateStatus();
+	    }).catch(function() {
+		$scope.consoleAppend(cmd + ">> ERROR: API Call Failure.", "danger");
+		$scope.pendingCmd = "";
+		$scope.updateStatus();
+	    });
+	}
     }
 
     if(!$scope.ws) {
-	console.log("Connecting to console websocket..");
         var auth = "none";
 
 	if ($rootScope.authToken) {
@@ -304,29 +362,23 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
 	$scope.ws = new WebSocket(proto + $location.host() + ':' + $location.port() + '/api/console?token=' + auth);
 
 	$scope.ws.onmessage = function (e) {
-	    // TODO has to be a more AngularJS way to do this...
-	    var logPre = document.getElementById('logPre');
-
-	    if(logPre) {
-		logPre.appendChild(document.createTextNode(e.data + "\n"));
-		logPre.scrollTop = logPre.scrollHeight;
-	    }
+	    $scope.consoleAppend(e.data);
 
 	    if ($scope.server_status && !$scope.server_status.server_pid) {
 		$scope.updateStatus();
 	    }
-	}
+	};
+
 	$scope.ws.onopen = function () {
-	    $scope.message = "Console Connected";
-	    console.log($scope.message);
-	}
+	    $scope.consoleAppend("[Console Channel Connected]");
+	};
+
 	$scope.ws.onclose = function () {
-	    $scope.message = "Console Closed";
-	    console.log($scope.message);
+	    $scope.consoleAppend("[Console Channel Closed]");
 	    var tmp_ws = $scope.ws;
 	    delete $scope.ws;
 	    tmp_ws.close();
-	}
+	};
     }
 
     $scope.updateStatus();
@@ -365,7 +417,10 @@ emuYodaApp.controller('loginModalController', function ($scope, $uibModalInstanc
     }
 });
 
-emuYodaApp.run(function ($rootScope, $state, loginModalService) {
+emuYodaApp.run(function ($rootScope, $state, $templateCache, loginModalService) {
+  // breaks embeded modal template:
+  // GET http://127.0.0.1:44480/uib/template/modal/window.html 404 (Not Found)
+  // $rootScope.$on('$viewContentLoaded', function() { $templateCache.removeAll(); });
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
     var requireLogin = toState.data.requireLogin;
 

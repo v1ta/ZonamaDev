@@ -2,6 +2,11 @@ form {
     display: table-cell;
 }
 
+.consoleText {
+    margin: 0 -9999rem;
+    padding: 0.25rem 9999rem;
+}
+
 .control-buttonbar {
     display: table;
     text-align: center;
@@ -53,4 +58,5 @@ a:focus {
 
 .consoleLog {
     height: 300px;
+    overflow-x: hidden;
 }
