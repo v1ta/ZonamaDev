@@ -252,18 +252,23 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
 	});
     };
 
-    $scope.consoleAppend = function(ln, className) {
+    $scope.consoleAppend = function(text, className) {
 	// TODO has to be a more AngularJS way to do this...
 	var e = document.getElementById('logPre');
 
 	if(e) {
-	    var s = document.createElement("span");
-	    if (!className) {
-		className = "white";
+	    var lines = text.split("\n");
+
+	    for (var i in lines) {
+		var s = document.createElement("span");
+		if (!className) {
+		    className = "white";
+		}
+		s.className = "consoleText label-" + className;
+		s.appendChild(document.createTextNode(lines[i]));
+		e.appendChild(s);
+		e.appendChild(document.createElement("br"));
 	    }
-	    s.className = "consoleText label-" + className;
-	    s.appendChild(document.createTextNode(ln + "\n"));
-	    e.appendChild(s);
 	    e.scrollTop = e.scrollHeight;
 	} else {
 	    console.log("consoleAppend: Failed to find element (logPre): ln=" + ln);
@@ -319,15 +324,8 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
 		}
 	    };
 
-	    /*
-	    $scope.ws_cmd.onopen = function () {
-		$scope.consoleAppend(cmd + ">> [Control Channel Connected]", "success");
-	    };
-	    */
-
 	    $scope.ws_cmd.onclose = function () {
 		$scope.pendingCmd = "";
-		// $scope.consoleAppend(cmd + ">> [Control Channel Closed]", "success");
 		$scope.consoleAppend(cmd + ">> [Command Complete]", "success");
 		var tmp_ws = $scope.ws_cmd;
 		delete $scope.ws_cmd;
@@ -336,7 +334,7 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
 	} else {
 	    yodaApiService.serverCommand(cmd).then(function(data) {
 		if (data.response.output) {
-		    $scope.consoleAppend(cmd + ">> " + data.response.output, "success");
+		    $scope.consoleAppend(cmd + ">> " + data.response.output.replace(/\n$/, ""), "success");
 		} else {
 		    $scope.consoleAppend(cmd + ">> ERROR: " + data.response.error_description, "danger");
 		}
@@ -418,8 +416,7 @@ emuYodaApp.controller('loginModalController', function ($scope, $uibModalInstanc
 });
 
 emuYodaApp.run(function ($rootScope, $state, $templateCache, loginModalService) {
-  // breaks embeded modal template:
-  // GET http://127.0.0.1:44480/uib/template/modal/window.html 404 (Not Found)
+  // Causes http://127.0.0.1:44480/uib/template/modal/window.html 404
   // $rootScope.$on('$viewContentLoaded', function() { $templateCache.removeAll(); });
   $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
     var requireLogin = toState.data.requireLogin;
