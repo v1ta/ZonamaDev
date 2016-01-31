@@ -8,6 +8,33 @@ fi
 OS='unknown'
 
 main() {
+    case $HOME in
+	*' '* )
+	    echo
+	    echo 'Your $HOME has spaces in it:'
+	    echo
+	    echo "  HOME=[$HOME]"
+	    echo
+	    echo 'Vagrant is based on Ruby which has issues with spaces in $HOME'
+	    echo
+	    echo 'In order to use this system you must have a username without spaces'
+	    echo 'or you must manually override HOME to a directory without spaces.'
+	    echo
+	    echo 'You could try working around this by doing the following:'
+	    echo
+	    echo '  mkdir /c/swgemudev'
+	    echo '  export HOME=/c/swgemudev'
+	    echo '  cd $HOME'
+	    echo '  curl -L http://downloads.lordkator.com/bootstrap.sh | bash'
+	    echo
+	    echo 'However, every time you want to work with this system you will need to reset'
+	    echo 'your HOME when you open the bash shell window.'
+	    echo
+	    echo '** Process aborted, Spaces in HOME **'
+	    exit 13
+	    ;;
+    esac
+
     case $(uname -s) in
 	Darwin ) OS='osx' ;;
 	*Linux* ) OS='linux' ;;
