@@ -20,6 +20,10 @@ if [ -z "$ME" ]; then
     fi
 fi
 
+if [ -z "$ZONAMADEV_CONFIG_HOME" ]; then
+    export ZONAMADEV_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}/ZonamaDev
+fi
+
 TAG=$(basename $ME)
 RUN_STEP="init"
 HAVEX=false
@@ -124,6 +128,24 @@ yorn() {
   return 0
 }
 
+completed_step() {
+    if [ -f "${RUN_FLAGS_DIR}/${RUN_STEP}.status" ]; then
+	read tm st < "${RUN_FLAGS_DIR}/${RUN_STEP}.status"
+	return $st
+    fi
+
+    return 255
+}
+
+completed_full_run() {
+    if [ -f "${RUN_FLAGS_DIR}/__full_run.status" ]; then
+	read tm st < "${RUN_FLAGS_DIR}/__full_run.status"
+	return $st
+    fi
+
+    return 255
+}
+
 # We at least made it this far!
 echo 252 > $CHILD_STATUS
 
@@ -188,11 +210,13 @@ run_dir=$(echo ${ME}'.d')
 
 cd $run_dir
 
+full_run=true
 steps=$(echo ${run_dir}/*)
 
 # Did the user call us with specific steps?
 if [ -n "$1" ]; then
     msg "Custom steps: $@"
+    full_run=false
     # 00* always run
     steps=$(echo ${run_dir}/00*)
 
@@ -212,12 +236,24 @@ else
     echo "Steps: "$(echo "$steps" | sed "s!${run_dir}/!!g")
 fi
 
+RUN_FLAGS_DIR="${ZONAMADEV_CONFIG_HOME}/flags/$(basename $ME)"
+
+[ ! -d "${RUN_FLAGS_DIR}" ] && mkdir -p "${RUN_FLAGS_DIR}"
+
 for step in $steps
 do
-    RUN_STEP=$(basename $step)
-    msg "Run $step md5:"$(md5sum $step)
-    source $step
+    if [ -f $step ]; then
+	RUN_STEP=$(basename $step)
+	RUN_FLAG_FILE="${RUN_FLAGS_DIR}/${RUN_STEP}.status"
+	msg "Run $step md5:"$(md5sum $step)
+	source $step
+	date "+%s $?" > "${RUN_FLAG_FILE}"
+    fi
 done
+
+if $full_run; then
+    date "+%s 0 seconds=$SECONDS" > "${RUN_FLAGS_DIR}/__full_run.status"
+fi
 
 msg "$ME COMPLETE AFTER $SECONDS SECOND(S)"
 
