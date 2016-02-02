@@ -1,0 +1,46 @@
+#!/bin/bash
+#
+# zdcfg - set/get ZD configuration values
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Mon Feb  1 07:59:52 EST 2016
+#
+
+if [ -z "$ZONAMADEV_CONFIG_HOME" ]; then
+    export ZONAMADEV_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}/ZonamaDev
+fi
+
+cfg="${ZONAMADEV_CONFIG_HOME}/config"
+
+if [ ! -d "${cfg}" ]; then
+    mkdir -p "${cfg}" && echo "** Created ${cfg} **" >&2
+fi
+
+case $1 in
+    'set' ) shift; key=$1; shift; echo "$*" > "${cfg}/${key}";;
+    'get' )
+	shift;
+	key=$1;
+
+	if [ ! -f "${cfg}/${key}" ]; then
+	    exit 1
+	fi
+	cat "${cfg}/${key}"
+	exit 0
+	;;
+    'get-each')
+	shift
+	;;
+    'get-all')
+	set -- $(cd "${cfg}";ls)
+	;;
+    * ) echo "Usage: $0 {set key value}|{get key}|{get-each key1 key2 ...}|{get-all}"; exit 1 ;;
+esac
+
+for key in $@
+do
+    echo "${key}='"$(sed -e 's!\x27!\x27\d34\x27\d34\x27!' "${cfg}/${key}")"';"
+done
+
+exit 0
