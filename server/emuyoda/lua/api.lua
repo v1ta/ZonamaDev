@@ -740,7 +740,7 @@ function service_control(path)
     local required_level = cfg.yoda.control_permission_level[cmd]
 
     if required_level == nil then
-	return_error(r, "COMMAND NOT ENABLED", "INVALID_CONTROL_COMMAND", "The command '" .. cmd .. "' is not enabled on the server.", "SYSTEM", ngx.req.get_method(), "control")
+	return_error(r, "COMMAND NOT ENABLED", "INVALID_CONTROL_COMMAND", "The command '" .. cmd .. "' is not enabled on the server. Edit ~/server/emuyoda/yoda-config.lua to enable.", "SYSTEM", ngx.req.get_method(), "control")
     end
 
     if u.admin_level < required_level then

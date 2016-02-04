@@ -22,7 +22,8 @@ control_permission_level = {
     ['stop'] = 9,
     ['status'] = 1,
     ['backup'] = 15,
+    ['latest'] = 15,
     ['build'] = 15,
     ['send'] = 15,
-    ['version'] = 15,
+    ['version'] = 1,
 }
