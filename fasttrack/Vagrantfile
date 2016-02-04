@@ -69,6 +69,21 @@ Vagrant.configure(2) do |config|
 
   UPMSG
 
+  ##################################
+  ## Configure your settings here ##
+  ##################################
+
+  # We recommend no less than 2 cores
+  cores = 2
+
+  # Recommend 768k per core for build success
+  ram = (cores * 768)
+
+  # We recommend no less than 2G of ram
+  if ram < 2048
+    ram = 2048
+  end
+
   ###############
   ## Providers ##
   ###############
@@ -76,8 +91,8 @@ Vagrant.configure(2) do |config|
   [ "vmware_fusion", "vmware_workstation", "virtualbox" ].each do |provider|
     config.vm.provider provider do |v|
       v.name = "ZonamaDev-" + Time.now.to_i.to_s
-      v.memory = "2048"
-      v.cpus = 2
+      v.cpus = cores
+      v.memory = ram
       v.gui = true
 
       if provider == "virtualbox"
