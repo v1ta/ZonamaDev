@@ -322,7 +322,7 @@ server_build_step() {
 
     echo 254 > ${build_status_file}
 
-    (time make -k $@ build 2>&1; echo $? > ${build_status_file}) | tee "${BUILD_LOG}"
+    (export MAKE=$(type -P make)' -j'$(nproc);time $MAKE -k $@ build 2>&1; echo $? > ${build_status_file}) | tee "${BUILD_LOG}"
 
     local status=$(cat $build_status_file)
 
