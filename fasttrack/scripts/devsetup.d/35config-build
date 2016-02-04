@@ -42,6 +42,11 @@ config_build() {
     rm -f $status_pipe
 }
 
+if $HAVE_YODA; then
+    echo "** Let Yoda handle it"
+    return
+fi
+
 if [ ! -f $WORKSPACE/Core3/MMOCoreORB/build/unix/config.log ]; then
     if yorn "Would you like to run the initial config and build process?\n\n(This could run for quite a while)"; then
 	echo "User requested conf-build"

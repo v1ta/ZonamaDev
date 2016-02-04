@@ -7,6 +7,8 @@
 # Created: Sun Jan 24 20:29:52 EST 2016
 #
 
+HAVE_YODA=false
+
 setup_yoda() {
     if [ ! -d "${EMUYODA_DIR}/." ]; then
 	echo "** setting up emuyoda **"
@@ -34,6 +36,7 @@ setup_yoda() {
 	if curl -s -k "${url}/api/status/" | python -m json.tool; then
 	    echo "** Launch $BROWSER '${url}' **"
 	    $BROWSER "${url}" > /dev/null 2>&1 < /dev/null &
+	    HAVE_YODA=true
 	fi
     fi
 }
