@@ -64,7 +64,7 @@ function return_response(r, status)
 	local stash_ws = r.ws
 	r.ws = nil
 	r.response.dbg_info.is_websocket = true
-	ngx.log(ngx.ERR, "return_response-WEBSOCKET:[" .. cjson.encode(r) .. "]")
+	-- ngx.log(ngx.ERR, "return_response-WEBSOCKET:[" .. cjson.encode(r) .. "]")
 	stash_ws:send_text(cjson.encode(r) .. "\n")
 	r.ws = stash_ws
     else
@@ -772,7 +772,7 @@ function service_control(path)
 	end
 
 	if ln then
-	    ngx.log(ngx.ERR, "LN:[" .. ln .. "]")
+	    -- ngx.log(ngx.ERR, "LN:[" .. ln .. "]")
 
 	    if r.ws then
 		r.response.output = ln
@@ -781,7 +781,7 @@ function service_control(path)
 		parts[#parts+1] = ln
 	    end
 	else
-	    ngx.log(ngx.ERR, "LN:NIL")
+	    -- ngx.log(ngx.ERR, "LN:NIL")
 	    break
 	end
     end
