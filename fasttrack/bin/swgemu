@@ -8,9 +8,10 @@
 #
 
 # TODO make these use global config
-BUILD_DIR=~/workspace/Core3/MMOCoreORB
+WORKSPACE=~vagrant/workspace
+BUILD_DIR=${WORKSPACE}/Core3/MMOCoreORB
 BUILD_LOG=${BUILD_DIR}/build.out
-RUN_DIR=~/workspace/Core3/MMOCoreORB/bin
+RUN_DIR=${WORKSPACE}/Core3/MMOCoreORB/bin
 IS_PANEL=false
 IS_API_CALL=false
 
@@ -314,6 +315,10 @@ server_stop() {
 server_build_step() {
     cd ${BUILD_DIR}
 
+    if [ ! -f "${WORKSPACE}/Initial_Core3_Build.log" ]; then
+	BUILD_LOG="${WORKSPACE}/Initial_Core3_Build.log"
+    fi
+
     if [ -f "${BUILD_LOG}" ]; then
         mv "${BUILD_LOG}" "${BUILD_LOG}.prev"
     fi
@@ -322,7 +327,22 @@ server_build_step() {
 
     echo 254 > ${build_status_file}
 
-    (export MAKE=$(type -P make)' -j'$(nproc);time $MAKE -k $@ build 2>&1; echo $? > ${build_status_file}) | tee "${BUILD_LOG}"
+    echo "Logging to ${BUILD_LOG}"
+
+    (
+        if [ -n "$@" ]; then
+	    echo make -k $@
+	    make -k $@
+	fi
+
+        export MAKE=$(type -P make)' -j'$(nproc)
+
+	echo time $MAKE -k build
+
+	time $MAKE -k build 2>&1
+
+	echo $? > ${build_status_file}
+    ) | tee "${BUILD_LOG}"
 
     local status=$(cat $build_status_file)
 
@@ -683,12 +703,12 @@ post_debug_body() {
     #
     local debug_commands=(
         "show_version"
-        "tail -5 ${HOME}/workspace/Initial_Core3_Build.log"
+        "tail -5 ${WORKSPACE}/Initial_Core3_Build.log"
         "${HOME}/bin/get_config --bash 'Zone..'"
         "${HOME}/bin/get_config --bash 'Tre..'"
         "${HOME}/bin/tre_check"
-        "tail -100 ${HOME}/workspace/Core3/MMOCoreORB/bin/screenlog.0"
-        "tail -100 ${HOME}/workspace/Core3/MMOCoreORB/bin/log/core3.log"
+        "tail -100 ${WORKSPACE}/Core3/MMOCoreORB/bin/screenlog.0"
+        "tail -100 ${WORKSPACE}/Core3/MMOCoreORB/bin/log/core3.log"
 	"/sbin/ifconfig -a"
 	"mysql swgemu -tve 'select galaxy_id,name,address,port,pingport,population from galaxy'"
 	"grep -v 'Public' ~/.iplist"
