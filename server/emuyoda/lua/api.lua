@@ -720,7 +720,7 @@ function service_control(path)
 
 	local ws, err = ws_server:new{
 	    timeout = 1000,
-	    max_payload_len = 16 * 1204
+	    max_payload_len = 65535
 	}
 
 	if err then
