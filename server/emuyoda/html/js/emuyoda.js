@@ -297,7 +297,7 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
 
 	$scope.pendingCmd = cmd;
 
-	if(cmd == "build" || cmd == "backup" || cmd == "stop" || cmd == "start") {
+	if(cmd != "status") {
 	    var auth = "none";
 
 	    if ($rootScope.authToken) {
