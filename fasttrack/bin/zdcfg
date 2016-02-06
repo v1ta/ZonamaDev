@@ -21,11 +21,17 @@ main() {
     local cmd=$1; shift
     local key=$1; shift
 
+    if [ "$cmd" = "get" -a "$key" = "ZONAMADEV_CONFIG_HOME" ]; then
+	echo "${ZONAMADEV_CONFIG_HOME}"
+	return 0
+    fi
+
     case $cmd in
 	'set-flag' ) 	set_value "${flags}/${key}" "${@:-$(date '+$s')}"; return $?;;
 	'get-flag' ) 	get_value "${flags}/${key}";	return $?;;
 	'check-flag' )	check_value "${flags}/${key}";	return $?;;
 	'clear-flag' )	clear_value "${flags}/${key}";	return $?;;
+	'dump-flags' )  (cd "${ZONAMADEV_CONFIG_HOME}";find flags -type f|sort|while read f; do echo "$f: "$(<$f); done ); return 0 ;;
 	'set' )		set_value "${cfg}/${key}" "$@";	return $?;;
 	'get' )		get_value "${cfg}/${key}";	return $?;;
 	'clear' )	clear_value "${cfg}/${key}";	return $?;;
