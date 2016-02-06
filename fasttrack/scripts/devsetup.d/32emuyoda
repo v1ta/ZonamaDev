@@ -37,6 +37,7 @@ setup_yoda() {
 	    echo "** Launch $BROWSER '${url}' **"
 	    $BROWSER "${url}" > /dev/null 2>&1 < /dev/null &
 	    HAVE_YODA=true
+	    step_complete 0
 	fi
     fi
 }

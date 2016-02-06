@@ -30,6 +30,8 @@ setup_bindir() {
     # Append our new path and status check (including warning if they're too quick to draw)
     echo -e '## START DEVSETUP ##\nexport PATH=$HOME/bin:$PATH\n$HOME/bin/swgemu status\n## END DEVSETUP ##' >> ~/.bashrc
     chmod 600 ~/.bashrc
+
+    step_complete 0
 }
 
 setup_bindir

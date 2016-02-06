@@ -8,6 +8,7 @@
 #
 
 # TODO make these use global config
+export PATH=/home/vagrant/ZonamaDev/fasttrack/bin:/home/vagrant/bin:$PATH
 WORKSPACE=~vagrant/workspace
 BUILD_DIR=${WORKSPACE}/Core3/MMOCoreORB
 BUILD_LOG=${BUILD_DIR}/build.out
@@ -786,7 +787,7 @@ server_latest()
 }
 
 is_setup_pending() {
-    if [ -f ~vagrant/.devsetup.ran ]; then
+    if zdcfg get-flag 'devsetup/__full_run.status'; then
         return 1
     fi
 

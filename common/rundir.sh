@@ -21,7 +21,7 @@ if [ -z "$ME" ]; then
 fi
 
 if [ -z "$ZONAMADEV_CONFIG_HOME" ]; then
-    export ZONAMADEV_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}/ZonamaDev
+    export ZONAMADEV_CONFIG_HOME=${XDG_CONFIG_HOME:-/home/vagrant/.config}/ZonamaDev
 fi
 
 TAG=$(basename $ME)
@@ -128,22 +128,51 @@ yorn() {
   return 0
 }
 
-completed_step() {
+step_status() {
+    local ret=255
+
     if [ -f "${RUN_FLAGS_DIR}/${RUN_STEP}.status" ]; then
-	read tm st < "${RUN_FLAGS_DIR}/${RUN_STEP}.status"
-	return $st
+	read tm st misc < "${RUN_FLAGS_DIR}/${RUN_STEP}.status"
+	ret=$st
     fi
 
-    return 255
+    return $ret
 }
 
-completed_full_run() {
+step_not_complete() {
+    if step_status; then
+	return 1
+    else
+	return 0
+    fi
+}
+
+step_complete() {
+    echo $(date '+%s')" $@" > "${RUN_FLAGS_DIR}/${RUN_STEP}.status"
+    msg "Step ${RUN_STEP} complete: $@"
+}
+
+full_run_status() {
+    local ret=255
+
     if [ -f "${RUN_FLAGS_DIR}/__full_run.status" ]; then
-	read tm st < "${RUN_FLAGS_DIR}/__full_run.status"
-	return $st
+	read tm st misc < "${RUN_FLAGS_DIR}/__full_run.status"
+	ret=$st
     fi
 
-    return 255
+    return $st
+}
+
+full_run_not_complete() {
+    if full_run_status; then
+	return 1
+    else
+	return 0
+    fi
+}
+
+full_run_complete() {
+    date "+%s 0 seconds=$SECONDS" > "${RUN_FLAGS_DIR}/__full_run.status"
 }
 
 # We at least made it this far!
@@ -244,15 +273,19 @@ for step in $steps
 do
     if [ -f $step ]; then
 	RUN_STEP=$(basename $step)
-	RUN_FLAG_FILE="${RUN_FLAGS_DIR}/${RUN_STEP}.status"
 	msg "Run $step md5:"$(md5sum $step)
 	source $step
-	date "+%s $?" > "${RUN_FLAG_FILE}"
     fi
 done
 
 if $full_run; then
-    date "+%s 0 seconds=$SECONDS" > "${RUN_FLAGS_DIR}/__full_run.status"
+    if full_run_not_complete; then
+	full_run_complete
+    else
+	if $FOCE; then
+	    full_run_complete
+	fi
+    fi
 fi
 
 msg "$ME COMPLETE AFTER $SECONDS SECOND(S)"

@@ -65,4 +65,7 @@ setup_extras() {
     fi
 }
 
-setup_extras
+if step_not_complete; then
+    setup_extras
+    step_complete 0
+fi

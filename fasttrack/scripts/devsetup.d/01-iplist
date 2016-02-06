@@ -6,23 +6,22 @@
 #
 # Created: Sat Jan 16 10:37:28 EST 2016
 #
-# Depends: IPLIST OPENRESTY_PORT
+# Depends: OPENRESTY_PORT
 #
 # NOTE: We run this in the background to give it a head start before the devsetup needs the list
 #
 
-[ -n "$IPLIST" ] || error "Missing IPLIST configuration" 101
 [ -n "$OPENRESTY_PORT" ] || error "Missing OPENRESTY_PORT configuration" 101
 
 update_iplist() {
   (
+    SECONDS=0
+
     local pub_ip=$(dig @ns1.google.com -t txt o-o.myaddr.l.google.com +short | tr -d '"')
 
-    # Simple lock file so others can see if it's done later
-    echo "$$ "$(date +%s) > ${IPLIST}.lock
-    trap 'rm -f '${IPLIST}.lock 0
-
-    cp /dev/null ${IPLIST}
+    # Simple lock so others can see if it's done later
+    zdcfg set-flag iplist.lock
+    trap 'zdcfg clear-flag iplist.lock' 0
 
     if [ -z "$pub_ip" ]; then
 	echo "** Failed to find public ip so we can't reverse engineer the LAN network address"
@@ -37,7 +36,7 @@ update_iplist() {
 	pub_rev=" (${pub_rev})"
     fi
 
-    echo "${pub_ip},Public Internet IP${pub_rev}" >> ${IPLIST}
+    zdcfg set iplist "${pub_ip},Public Internet IP${pub_rev}"
 
     IFS='.' read -ra t <<<${pub_ip}
 
@@ -85,12 +84,14 @@ update_iplist() {
 
     echo "** Local Network IP: ${lan_ip}"
 
-    echo "${lan_ip},Local Network IP" >> ${IPLIST}
+    zdcfg set iplist "${pub_ip},Public Internet IP${pub_rev}\n${lan_ip},Local Network IP"
 
-    return 0
+    step_complete 0 "seconds=$SECONDS"
+
+    exit 0
   ) < /dev/null > /tmp/iplist.out 2>&1 &
 }
 
-if [ ! -f "${IPLIST}" ]; then
+if step_not_complete; then
     update_iplist 
 fi

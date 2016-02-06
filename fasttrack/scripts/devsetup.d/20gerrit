@@ -11,7 +11,7 @@ GERRIT_FIRSTTIME=false
 
 setup_gerrit() {
     # is it setup already?
-    local gerrit_username=$(cat ~/.gerrit_username 2>/dev/null)
+    local gerrit_username=$(zdcfg get gerrit_username 2>/dev/null)
 
     if [ -z "$gerrit_username" -o "$gerrit_username" = "$GERRIT_UNKNOWN_USER" ]; then
 	# Looks like we need to get them started
@@ -43,13 +43,12 @@ setup_gerrit() {
 	echo "response=[$r]"
 
 	if [ -n "$r" -a "$?" -eq 0 ]; then
-	    echo "~/.gerrit_username=[$r]"
-	    echo "$r" > ~/.gerrit_username
+	    echo "gerrit_username=[$r]"
+	    zdcfg set gerrit_username "$r"
 	    setup_sshconfig
 	    GERRIT_FIRSTTIME=true
 	else
-	    alert "Gerrit Registration Required" "You must register, pick a username and set you ssh key before you can continue!"
-	    exit 202
+	    error "Gerrit Registration Required\nYou must register, pick a username and set you ssh key before you can continue!" 202
 	fi
     fi
 }
@@ -63,17 +62,18 @@ check_gerrit() {
 
 	if $GERRIT_FIRSTTIME; then
 	    alert "Gerrit Success" "Gerrit registration was successful."
+	    local gerrit_username=$(zdcfg get gerrit_username 2>/dev/null)
+	    step_complete 0 "gerrit_user=$gerrit_username"
 	fi
     else
 	alert "Gerrit Failure" "Gerrit does not appear to be setup correctly."
 
 	if zenity --question  --text="Do you want to try and repair your Gerrit setup?"; then
-	    rm -f ~/.gerrit_username
+	    zdcfg clear gerrit_username
 	    GERRIT_RETRY=true
-	    return
+	    return 0
 	else
-	    alert "Gerrit Broken" "Until you fix Gerrit you will not be able to continue with setup."
-	    exit 203
+	    error "Gerrit Broken\nUntil you fix Gerrit you will not be able to continue with setup." 203
 	fi
     fi
 
@@ -81,20 +81,15 @@ check_gerrit() {
 }
 
 if [ -z "$BROWSER" -o ! -x "$BROWSER" ]; then
-    alert "Can't find web browser!" "You must have a web browser installed to setup gerrit, did you remove it!?"
-    return
+    error "Can't find web browser!\nYou must have a web browser installed to setup gerrit, did you remove it!?" 204
 fi
 
-if $HAVEX; then
-    # TODO should we count the number of loops and at some point kill ssh keys etc?
-    GERRIT_RETRY=true
+# TODO should we count the number of loops and at some point kill ssh keys etc?
+GERRIT_RETRY=true
 
-    while $GERRIT_RETRY
-    do
-	GERRIT_RETRY=false
-	setup_gerrit
-	check_gerrit
-    done
-else
-    alert "Must run under X" "You need X windows to display your web browser for gerrit setup!"
-fi
+while $GERRIT_RETRY
+do
+    GERRIT_RETRY=false
+    setup_gerrit
+    check_gerrit
+done

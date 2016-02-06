@@ -1,5 +1,5 @@
 # Give X windows a bit of time to stabilize
-if [ ! -f ~/.devsetup.ran ]; then
+if full_run_not_complete; then
     notice "Please Wait" "Development Setup will run shortly."
 fi
 

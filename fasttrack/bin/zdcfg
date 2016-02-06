@@ -8,39 +8,78 @@
 #
 
 if [ -z "$ZONAMADEV_CONFIG_HOME" ]; then
-    export ZONAMADEV_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}/ZonamaDev
+    export ZONAMADEV_CONFIG_HOME=${XDG_CONFIG_HOME:-/home/vagrant/.config}/ZonamaDev
 fi
 
-cfg="${ZONAMADEV_CONFIG_HOME}/config"
+main() {
+    cfg="${ZONAMADEV_CONFIG_HOME}/config"
+    flags="${ZONAMADEV_CONFIG_HOME}/flags"
 
-if [ ! -d "${cfg}" ]; then
-    mkdir -p "${cfg}" && echo "** Created ${cfg} **" >&2
+    [ -d "${cfg}" ] || mkdir -vp "${cfg}"
+    [ -d "${flags}" ] || mkdir -vp "${flags}"
+
+    local cmd=$1; shift
+    local key=$1; shift
+
+    case $cmd in
+	'set-flag' ) 	set_value "${flags}/${key}" "${@:-$(date '+$s')}"; return $?;;
+	'get-flag' ) 	get_value "${flags}/${key}";	return $?;;
+	'check-flag' )	check_value "${flags}/${key}";	return $?;;
+	'clear-flag' )	clear_value "${flags}/${key}";	return $?;;
+	'set' )		set_value "${cfg}/${key}" "$@";	return $?;;
+	'get' )		get_value "${cfg}/${key}";	return $?;;
+	'clear' )	clear_value "${cfg}/${key}";	return $?;;
+	'get-all')	set -- $(cd "${cfg}";ls) ;;
+	'get-each')	set -- $key $@ ;;
+	* ) echo "Usage: $0 {set key value}|{get key}|{get-each key1 key2 ...}|{get-all}|{clear key}|{set-flag key [value]}|{get-flag key}|{check-flag key}|{clear-flag key}"; exit 1 ;;
+    esac
+
+    # Output in format suitable for bash eval
+    for key in $@
+    do
+	perl -ne 's!\x27!\x27\d34\x27\d34\x27!;s/\n$//m;push(@a, $_); END { print "'$key'=\x27" . join("\n", @a) . "\x27;\n" }' "${cfg}/${key}"
+    done
+
+    return 0
+}
+
+set_value() {
+    local path=$1; shift;
+    local dir=$(dirname "${path}")
+    [ -d "${dir}" ] || mkdir -vp "${dir}" >&2
+    echo -e "$@" > "${path}"
+    return 0
+}
+
+get_value() {
+    if [ -f "$1" ]; then
+	cat "$1"
+	return 0
+    fi
+    return 1
+}
+
+check_value() {
+    if [ -f "$1" ]; then
+	return 0
+    fi
+    return 1
+}
+
+clear_value() {
+    if [ -f "$1" ]; then
+	rm -f "$1"
+	return 0
+    fi
+    return 1
+}
+
+main "$@"
+
+ret=$?
+
+if [ $(id -u) -eq 0 ]; then
+    chown vagrant:vagrant "${ZONAMADEV_CONFIG_HOME}"
 fi
 
-case $1 in
-    'set' ) shift; key=$1; shift; echo "$*" > "${cfg}/${key}";;
-    'get' )
-	shift;
-	key=$1;
-
-	if [ ! -f "${cfg}/${key}" ]; then
-	    exit 1
-	fi
-	cat "${cfg}/${key}"
-	exit 0
-	;;
-    'get-each')
-	shift
-	;;
-    'get-all')
-	set -- $(cd "${cfg}";ls)
-	;;
-    * ) echo "Usage: $0 {set key value}|{get key}|{get-each key1 key2 ...}|{get-all}"; exit 1 ;;
-esac
-
-for key in $@
-do
-    echo "${key}='"$(sed -e 's!\x27!\x27\d34\x27\d34\x27!' "${cfg}/${key}")"';"
-done
-
-exit 0
+exit $ret
