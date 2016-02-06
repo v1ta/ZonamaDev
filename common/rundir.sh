@@ -152,6 +152,11 @@ step_complete() {
     msg "Step ${RUN_STEP} complete: $@"
 }
 
+reset_step() {
+    rm -f "${RUN_FLAGS_DIR}/${RUN_STEP}.status"
+    msg "Reset step ${RUN_STEP}"
+}
+
 full_run_status() {
     local ret=255
 
@@ -274,6 +279,13 @@ do
     if [ -f $step ]; then
 	RUN_STEP=$(basename $step)
 	msg "Run $step md5:"$(md5sum $step)
+	if $full_run; then
+	    :
+	else
+	    if $FORCE; then
+		reset_step
+	    fi
+	fi
 	source $step
     fi
 done
