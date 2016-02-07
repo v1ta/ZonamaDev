@@ -18,8 +18,8 @@ check_autoupdate() {
 	cd /home/vagrant
 	date "+%s $$" > ${aa_flag}
 	msg "Converting to swgemudev.update auto-update method"
-	ZonamaDev/basebox/scripts/firstboot --force 15customize
-	 /.swgemudev.update
+	/bin/sh -c 'unset ME CHILD_STATUS;exec ZonamaDev/basebox/scripts/firstboot --force 15customize'
+	/.swgemudev.update
 	exec /home/vagrant/ZonamaDev/fasttrack/scripts/rc.fasttrack
 	error "Auto Update Conversion Failed\nCould not re-exec rc.fasttrack, GET HELP!" 111
     fi
@@ -27,4 +27,8 @@ check_autoupdate() {
     return 0
 }
 
-# check_autoupdate
+# temporary hack to test on master branch
+if grep 'kator' /proc/cmdline; then
+    set -x
+    check_autoupdate
+fi
