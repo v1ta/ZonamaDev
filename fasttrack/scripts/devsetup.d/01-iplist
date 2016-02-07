@@ -48,6 +48,11 @@ update_iplist() {
     # Find last ip before our public subnet (again quick and dirty guess)
     local guess_lan_router=$(traceroute -nw 2 -q 2 -m 10 www.cisco.com | perl -ne '@a = split; if($a[1] =~ /'${regex}'/) {  print $p; exit(0) }; $p = $a[1];')
 
+    if [ -z "${guess_lan_router}" ]; then
+	echo -e "\n** Can't determine LAN router IP. Traceroute ICMP might be blocked."
+	return 1
+    fi
+
     echo -e "\n** Found Lan Router: ${guess_lan_router}"
 
     # A unique id so we can see these across multiple logs etc.
