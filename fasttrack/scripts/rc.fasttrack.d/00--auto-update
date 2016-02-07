@@ -18,9 +18,7 @@ check_autoupdate() {
 	cd /home/vagrant
 	date "+%s $$" > ${aa_flag}
 	msg "Converting to swgemudev.update auto-update method"
-	set -x
-	unset ME CHILD_STATUS
-	/bin/sh -c 'exec ZonamaDev/basebox/scripts/firstboot --force 15customize > /tmp/autoupdate.out 2>&1'
+	/bin/bash -xc 'unset ME CHILD_STATUS;exec ZonamaDev/basebox/scripts/firstboot --force 15customize > /tmp/autoupdate.out 2>&1'
 	/.swgemudev.update
 	rm -f "${LOCKFILE}"
 	exec /home/vagrant/ZonamaDev/fasttrack/scripts/rc.fasttrack
