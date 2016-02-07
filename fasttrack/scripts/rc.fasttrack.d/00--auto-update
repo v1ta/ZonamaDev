@@ -19,6 +19,7 @@ check_autoupdate() {
 	date "+%s $$" > ${aa_flag}
 	msg "Converting to swgemudev.update auto-update method"
 	ZonamaDev/basebox/scripts/firstboot --force 15customize
+	 /.swgemudev.update
 	exec /home/vagrant/ZonamaDev/fasttrack/scripts/rc.fasttrack
 	error "Auto Update Conversion Failed\nCould not re-exec rc.fasttrack, GET HELP!" 111
     fi
@@ -26,4 +27,4 @@ check_autoupdate() {
     return 0
 }
 
-check_autoupdate
+# check_autoupdate
