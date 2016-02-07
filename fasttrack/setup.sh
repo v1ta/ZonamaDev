@@ -29,7 +29,7 @@ main() {
 
     sleep 5
 
-    ./tre.sh
+    ./tre.sh --auto
 
     echo "** Now switch to the linux console and follow the directions!"
 

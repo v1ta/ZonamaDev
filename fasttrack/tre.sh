@@ -20,7 +20,12 @@ main() {
     # Check for default location(s)
     trepath=$(hunt_emudir)
 
-    if [ -z "${trepath}" ]; then
+    if [ -n "${trepath}" ]; then
+	if [ "X$1" == "X--auto" ]; then
+	    # Give guest some time to get moving
+	    sleep 30
+	fi
+    else
 	echo -e "\n** In order to run the server you must copy required '.tre' files from the client"
 	echo -e  "** If you've installed the client on this computer we can copy them for you.\n"
 	ask_emudir
@@ -179,6 +184,6 @@ last_tre=${trefiles[$i]}
 
 check_cmds
 
-main
+main "$@"
 
 # :vi ft=sh sw=4 ai
