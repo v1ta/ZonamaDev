@@ -10,10 +10,18 @@
 usermod -c "vagrant" vagrant
 usermod vagrant -a -G adm
 
+# Setup for auto-update
+cat << '!' > /.swgemudev.update
+#!/bin/bash
+(set -x;/usr/bin/perl -ne '$b="master";if(/zdbranch=(\S+)/){$b=$1} END {($u,$g,$ENV{"HOME"})=(getpwnam("vagrant"))[2,3,7];$)=$g;$>=$u;system("cd;id -a;pwd;set -x;pwd;git clone https://github.com/lordkator/ZonamaDev.git;cd ZonamaDev;git stash;git pull;git fetch;git checkout $b");}' /proc/cmdline)2>&1|logger -t $0
+!
+
+chmod 700 /.swgemudev.update
+
 # Add rc.fasttrak
 if [ ! -d /etc/systemd ]; then
     echo "Using /etc/rc.local for rc.fasttrack"
-    echo -e '## ZonamaDev Boot\n/bin/su vagrant -c "cd;set -x;pwd;git clone https://github.com/lordkator/ZonamaDev.git || (cd ZonamaDev;git stash;git pull)"' >> /etc/rc.local
+    echo -e '## ZonamaDev Boot\n/.swgemudev.update\n/home/vagrant/ZonamaDev/fasttrack/scripts/rc.fasttrack' >> /etc/rc.local
     sed -e '/^exit/{H;d}' -e '${p;x}' -i /etc/rc.local
     return
 fi
@@ -33,7 +41,7 @@ After=dbus.socket
 
 [Service]
 Type=forking
-ExecStartPre=/bin/su vagrant -c '(cd;set -x;pwd;git clone https://github.com/lordkator/ZonamaDev.git || (cd ZonamaDev;git stash;git pull))|logger -t rc.fasttrack.ExecStartPre'
+ExecStartPre=/.swgemudev.update
 ExecStart=/home/vagrant/ZonamaDev/fasttrack/scripts/rc.fasttrack
 TimeoutSec=0
 RemainAfterExit=yes
