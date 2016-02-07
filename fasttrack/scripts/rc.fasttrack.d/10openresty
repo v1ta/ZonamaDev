@@ -1,3 +1,5 @@
+#!/bin/bash
+#
 tm_start=$SECONDS
 # Allow userland openresty on port OPENRESTY_PORT to act like it's on 80
 iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port ${OPENRESTY_PORT}
@@ -5,7 +7,9 @@ iptables -t nat -I OUTPUT -p tcp -d 127.0.0.1 --dport 80 -j REDIRECT --to-port $
 # Update nginx.conf
 perl -pe 's/listen(\s+)\d+/listen${1}'${OPENRESTY_PORT}'/ if(m!^\s+listen\s+\d+;!)' -i ${OPENRESTY_DIR}/nginx/conf/nginx.conf
 # Start nginx as user, this is slow due to a bug in systemd and has to wait for a 25 second retry for the su session
-[ -x $OPENRESTY_DIR/nginx/sbin/nginx ] && su vagrant -c $OPENRESTY_DIR/nginx/sbin/nginx &
+#[ -x $OPENRESTY_DIR/nginx/sbin/nginx ] && su vagrant -c $OPENRESTY_DIR/nginx/sbin/nginx &
+# Bug in systemd causes su/sudo (anything with a session) to timeout, trying to get same effect here w/o a pam.session:
+[ -x $OPENRESTY_DIR/nginx/sbin/nginx ] && /usr/bin/perl -e '($u,$g,$ENV{"HOME"})=(getpwnam("vagrant"))[2,3,7];$)=$g;$>=$u;system("'$OPENRESTY_DIR/nginx/sbin/nginx' &");'
 delta=999
 let "delta=$SECONDS - $tm_start"
 step_complete 0 "delta=$delta"
