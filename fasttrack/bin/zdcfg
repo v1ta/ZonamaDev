@@ -27,7 +27,7 @@ main() {
     fi
 
     case $cmd in
-	'set-flag' ) 	set_value "${flags}/${key}" "${@:-$(date '+$s')}"; return $?;;
+	'set-flag' ) 	set_value "${flags}/${key}" "${@:-$(date '+%s')}"; return $?;;
 	'get-flag' ) 	get_value "${flags}/${key}";	return $?;;
 	'check-flag' )	check_value "${flags}/${key}";	return $?;;
 	'clear-flag' )	clear_value "${flags}/${key}";	return $?;;
