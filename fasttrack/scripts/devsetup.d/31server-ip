@@ -6,12 +6,8 @@
 #
 # Created: Sat Jan 16 11:54:00 EST 2016
 #
-# Depend: IPLIST
-#
 # NOTE: Depends on 01-iplist running to detect LAN and Public IP, if that fails they'll get localhost and MANUAL as an option
 #
-
-[ -n "$IPLIST" ] || error "Missing IPLIST configuration"
 
 SERVER_IP=''
 
@@ -19,7 +15,7 @@ prompt_ip() {
     local selected_ip=$(
 	(
 	echo -e "TRUE\n127.0.0.1\nDefault - Local Client and Server on one computer"
-	sed -e 'iFALSE' -e 's/,/\n/' ~/.iplist
+	zdcfg get iplist | sed -e 'iFALSE' -e 's/,/\n/'
 	echo -e "FALSE\nMANUAL\nEnter a manuall address (Expert Mode)"
 	) | zenity --list --radiolist --text="Choose your Server IP:" --title="Discovered IP Addresses" --column="Select" --column="IP Address" --column="Description" --print-column=2 --width=650 --height=250 2> /dev/null
     )
@@ -53,7 +49,7 @@ prompt_ip() {
 	done
     fi
 
-    if [ -n "$(egrep "^${selected_ip}," ~/.iplist | grep -y public)" ]; then
+    if [ -n "$(zdcfg get iplist | egrep "^${selected_ip}," | grep -y public)" ]; then
 	if zenity --question --icon-name=dialog-warning --window-icon=warning --title="Are you sure?" --text="Using a public ip is complicated and dangerous, you need to configure your firewall properly.\n\nIt can be dangerous because it exposes your network through this server to malicous people from all over the world.\n\nAre you sure you want to continue?" < /dev/null > /dev/null 2>&1; then
 	    SERVER_IP=$selected_ip
 	    return 0
@@ -70,25 +66,21 @@ prompt_ip() {
 
 setup_server_ip() {
     # Check to make sure iplist is done
-    while [ -f "${IPLIST}.lock" ]
+    for i in 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1
     do
-	read pid tm_lock <<<$(cat "${IPLIST}.lock")
-	tm_now=$(date +%s)
-
-	let "tm_delta=${tm_now} - ${tm_lock}"
-
-	if kill -0 $pid; then
-	    msg "PID $pid HAS HAD LOCK FOR ${tm_delta} SECOND(S), WAITING"
+	if zdcfg check-flag iplist.lock; then
+	    echo "$i: iplist.lock still set"
 	    sleep 1
 	else
-	    msg "PID $pid has gone away, locked ${tm_delta} second(s) ago, moving ahead..."
-	    rm -fr "${IPLIST}.lock"
+	    break
 	fi
     done
 
+    zdcfg clear-flag iplist.lock
+
     echo "** Setup Server IP **"
 
-    # Prompt them until they get one set of default
+    # Prompt them until they get one set or default
     while :
     do
 	prompt_ip
@@ -104,12 +96,13 @@ setup_server_ip() {
 
     # TODO should we check the zonama-instance-id service and see if this the right ip?
 
-    echo "$SERVER_IP" > ~/.force_ip
+    zdcfg set server_ip $SERVER_IP
+
+    step_complete 0 "server_ip=$SERVER_IP"
 }
 
-# TODO move from a hard coded filename to cfg var and ~/.config
-if [ -f ~/.force_ip ]; then
-    SERVER_IP=$(<~/.force_ip)
-else
+SERVER_IP=$(zdcfg get server_ip 2> /dev/null)
+
+if [ -z "$SERVER_IP" ]; then
     setup_server_ip
 fi

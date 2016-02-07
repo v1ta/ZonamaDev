@@ -20,6 +20,10 @@ if [ -z "$ME" ]; then
     fi
 fi
 
+if [ -z "$ZONAMADEV_CONFIG_HOME" ]; then
+    export ZONAMADEV_CONFIG_HOME=${XDG_CONFIG_HOME:-/home/vagrant/.config}/ZonamaDev
+fi
+
 TAG=$(basename $ME)
 RUN_STEP="init"
 HAVEX=false
@@ -124,6 +128,58 @@ yorn() {
   return 0
 }
 
+step_status() {
+    local ret=255
+
+    if [ -f "${RUN_FLAGS_DIR}/${RUN_STEP}.status" ]; then
+	read tm st misc < "${RUN_FLAGS_DIR}/${RUN_STEP}.status"
+	ret=$st
+    fi
+
+    return $ret
+}
+
+step_not_complete() {
+    if step_status; then
+	return 1
+    else
+	return 0
+    fi
+}
+
+step_complete() {
+    echo $(date '+%s')" $@" > "${RUN_FLAGS_DIR}/${RUN_STEP}.status"
+    msg "Step ${RUN_STEP} complete: $@"
+}
+
+reset_step() {
+    rm -f "${RUN_FLAGS_DIR}/${RUN_STEP}.status"
+    msg "Reset step ${RUN_STEP}"
+}
+
+full_run_status() {
+    local ret=255
+
+    if [ -f "${RUN_FLAGS_DIR}/__full_run.status" ]; then
+	read tm st misc < "${RUN_FLAGS_DIR}/__full_run.status"
+	ret=$st
+    fi
+
+    return $st
+}
+
+full_run_not_complete() {
+    if full_run_status; then
+	return 1
+    else
+	return 0
+    fi
+}
+
+full_run_complete() {
+    date "+%s 0 seconds=$SECONDS" > "${RUN_FLAGS_DIR}/__full_run.status"
+}
+
 # We at least made it this far!
 echo 252 > $CHILD_STATUS
 
@@ -193,11 +249,13 @@ run_dir=$(echo ${ME}'.d')
 
 cd $run_dir
 
+full_run=true
 steps=$(echo ${run_dir}/*)
 
 # Did the user call us with specific steps?
 if [ -n "$1" ]; then
     msg "Custom steps: $@"
+    full_run=false
     # 00* always run
     steps=$(echo ${run_dir}/00*)
 
@@ -217,12 +275,35 @@ else
     echo "Steps: "$(echo "$steps" | sed "s!${run_dir}/!!g")
 fi
 
+RUN_FLAGS_DIR="${ZONAMADEV_CONFIG_HOME}/flags/$(basename $ME)"
+
+[ ! -d "${RUN_FLAGS_DIR}" ] && mkdir -p "${RUN_FLAGS_DIR}"
+
 for step in $steps
 do
-    RUN_STEP=$(basename $step)
-    msg "Run $step md5:"$(md5sum $step)
-    source $step
+    if [ -f $step ]; then
+	RUN_STEP=$(basename $step)
+	msg "Run $step md5:"$(md5sum $step)
+	if $full_run; then
+	    :
+	else
+	    if $FORCE; then
+		reset_step
+	    fi
+	fi
+	source $step
+    fi
 done
+
+if $full_run; then
+    if full_run_not_complete; then
+	full_run_complete
+    else
+	if $FOCE; then
+	    full_run_complete
+	fi
+    fi
+fi
 
 msg "$ME COMPLETE AFTER $SECONDS SECOND(S)"
 

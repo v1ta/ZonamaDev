@@ -8,6 +8,7 @@
 #
 
 # TODO make these use global config
+export PATH=/home/vagrant/ZonamaDev/fasttrack/bin:/home/vagrant/bin:$PATH
 WORKSPACE=~vagrant/workspace
 BUILD_DIR=${WORKSPACE}/Core3/MMOCoreORB
 BUILD_LOG=${BUILD_DIR}/build.out
@@ -75,7 +76,7 @@ server_start() {
         return 0
     fi
 
-    if ~/bin/tre_check; then
+    if tre_check; then
         :
     else
         echo
@@ -144,7 +145,7 @@ server_start() {
     release_lock
 
     # TODO Spawn a watcher to alert when the server is up
-    ~/bin/sentinel --stop-at-init &
+    sentinel --stop-at-init &
 
     # Join the session so they can watch along..
     exec screen -D -RR swgemu-server
@@ -206,7 +207,7 @@ server_send() {
 
     screen -S swgemu-server -X stuff "$string"
 
-    ~/bin/sentinel --stop-next-prompt --tail --seek $sz
+    sentinel --stop-next-prompt --tail --seek $sz
 
     return 1
 }
@@ -247,7 +248,7 @@ server_stop() {
         screen -S swgemu-server -X stuff "save^M"
 
         # TODO add timeout?
-        if ~/bin/sentinel --stop-next-backup --seek $sz; then
+        if sentinel --stop-next-backup --seek $sz; then
             echo "** server backup complete **"
         else
             echo "** sentinel failed with err=$?"
@@ -412,11 +413,10 @@ server_build() {
 }
 
 server_update_ip() {
-    local server_ip='127.0.0.1'
+    local server_ip=$(zdcfg get server_ip 2> /dev/null)
 
-    if [ -f ~/.force_ip ]; then
-        server_ip=$(cat ~/.force_ip)
-    else
+    if [ -z "$server_ip" ]; then
+	server_ip='127.0.0.1'
         local i2=$(netstat -ni|grep eth2)
 
         # If they have an eth2 they might have enabled the "public" interface
@@ -428,18 +428,16 @@ server_update_ip() {
             # Let's suggest that ip
             server_ip=$(echo ${aa[3]}|cut -d/ -f1)
         fi
+
+	zdcfg set server_ip $server_ip
     fi
 
     echo "Server IP: $server_ip"
 
-    eval $(~/bin/get_config --bash ZoneGalaxyID)
+    eval $(get_config --bash ZoneGalaxyID)
 
     mysql swgemu -ve "UPDATE galaxy SET address = '${server_ip}' WHERE galaxy_id = ${ZoneGalaxyID}";
     mysql swgemu -ve "UPDATE galaxy SET name = 'swgemudev' WHERE galaxy_id = ${ZoneGalaxyID} AND name = 'Core3'";
-
-    if [ ! -f ~/.force_ip ]; then
-        echo "$server_ip" > ~/.force_ip
-    fi
 }
 
 server_backup() {
@@ -704,15 +702,15 @@ post_debug_body() {
     local debug_commands=(
         "show_version"
         "tail -5 ${WORKSPACE}/Initial_Core3_Build.log"
-        "${HOME}/bin/get_config --bash 'Zone..'"
-        "${HOME}/bin/get_config --bash 'Tre..'"
-        "${HOME}/bin/tre_check"
+        "get_config --bash 'Zone..'"
+        "get_config --bash 'Tre..'"
+        "tre_check"
         "tail -100 ${WORKSPACE}/Core3/MMOCoreORB/bin/screenlog.0"
         "tail -100 ${WORKSPACE}/Core3/MMOCoreORB/bin/log/core3.log"
 	"/sbin/ifconfig -a"
 	"mysql swgemu -tve 'select galaxy_id,name,address,port,pingport,population from galaxy'"
-	"grep -v 'Public' ~/.iplist"
-	"cat ~/.force_ip"
+	"zdcfg dump-flags"
+	"zdcfg get-all"
         "uname -a"
         "df -h"
         "top -Hbn 1"
@@ -723,13 +721,6 @@ post_debug_body() {
     date
     echo -e "\nDescription: ${desc}\n\n"
 
-    # Check various status files
-    echo -e '\nStatus Files:\n```\n'
-    for i in ~/.*.ran
-    do
-       echo "$i: "$(<$i)
-    done
-
     # Make sure commands don't try and use X windows
     local old_display="$DISPLAY"
     unset DISPLAY
@@ -737,10 +728,10 @@ post_debug_body() {
     # Commands to run and capture ouput
     for cmd in "${debug_commands[@]}"
     do
-        echo -e '\n```\n---\n'"${cmd}"'\n```\n'
+        echo -e '\n---\n'"${cmd}"'\n```\n'
         eval $cmd
+	echo -e '\n```'
     done
-    echo -e '\n```'
 
     if [ -n "$old_display" ]; then
         export DISPLAY="${old_display}"
@@ -786,7 +777,7 @@ server_latest()
 }
 
 is_setup_pending() {
-    if [ -f ~vagrant/.devsetup.ran ]; then
+    if zdcfg check-flag 'devsetup/__full_run.status'; then
         return 1
     fi
 

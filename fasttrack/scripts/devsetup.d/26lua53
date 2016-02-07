@@ -96,4 +96,6 @@ msg "LUA VERSION $lua_ver"
 
 if [ "X$lua_ver" != "X${LUA53_VERSION}" ]; then
     notice "Lua Upgrade Failed" "Expected Lua Version ${LUA53_VERSION} but version ${lua_ver} is installed in /usr/local/bin/lua"
+else
+    step_complete 0 "version=$lua_ver"
 fi

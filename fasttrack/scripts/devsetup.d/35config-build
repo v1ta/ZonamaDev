@@ -40,15 +40,18 @@ config_build() {
     zenity --info --text="Config and Build process finished.\n\n${result}\n\nYou can find a copy of the output in $logfile\n\nPress [OK] to close the log window"
     fuser -k $status_pipe
     rm -f $status_pipe
+    step_complete 0 "yoda=false"
 }
 
-if $HAVE_YODA; then
-    echo "** Let Yoda handle it"
-    return
-fi
-
 if [ ! -f $WORKSPACE/Core3/MMOCoreORB/build/unix/config.log ]; then
-    if yorn "Would you like to run the initial config and build process?\n\n(This could run for quite a while)"; then
+    if zdcfg check-flag have_yoda; then
+	echo "** Let Yoda handle it"
+	launch_yoda
+	step_complete 0 "yoda=true"
+	return 0
+    fi
+
+    if yorn "Would you like to run the initial config and build process?\n\n(This will run for quite a while)"; then
 	echo "User requested conf-build"
 	config_build
     fi

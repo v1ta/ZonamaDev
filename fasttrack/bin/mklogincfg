@@ -36,11 +36,7 @@ if [ -n "$DISPLAY" ] && xset q > /dev/null 2>&1; then
     fi
 fi
 
-server_ip='127.0.0.1'
-
-if [ -f ~/.force_ip ]; then
-    server_ip=$(cat ~/.force_ip)
-fi
+server_ip=$(~/bin/zdcfg get server_ip 2>/dev/null)
 
 i2=$(netstat -ni|grep eth2)
 

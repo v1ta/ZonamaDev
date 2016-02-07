@@ -34,6 +34,8 @@ internet_test() {
     if [ $delta -gt ${NETWORK_SLOW_SECONDS} ]; then
 	alert "Internet Speed Warning" "Your internet seems a bit slow, it took ${delta} seconds to verify your connection!"
     fi
+
+    step_complete 0 "delta=$delta"
 }
 
 internet_test

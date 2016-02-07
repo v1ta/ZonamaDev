@@ -1,1 +1,3 @@
-date +%s > ~/.devsetup.ran
+if step_not_complete; then
+    step_complete 0
+fi

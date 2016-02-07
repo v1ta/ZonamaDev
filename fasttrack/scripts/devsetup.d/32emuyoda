@@ -7,38 +7,66 @@
 # Created: Sun Jan 24 20:29:52 EST 2016
 #
 
-HAVE_YODA=false
+YODA_STARTED=false
+YODA_URL='http://127.0.0.1:'${OPENRESTY_PORT}'/' 
 
 setup_yoda() {
-    if [ ! -d "${EMUYODA_DIR}/." ]; then
-	echo "** setting up emuyoda **"
-	(
-	    ln -vs ~/ZonamaDev/server/emuyoda ${EMUYODA_DIR}
-
-	    cp -v ~/ZonamaDev/server/openresty/nginx/conf/* ${OPENRESTY_DIR}/nginx/conf
-
-	    sed -e "/^yodaSecret.*/s//yodaSecret = '$(dd if=/dev/urandom bs=1024 count=1 2> /dev/null|md5sum|cut -d' ' -f1)'/" -e "/^server_ip/d" ${EMUYODA_DIR}/yoda-config.lua.in > ${EMUYODA_DIR}/yoda-config.lua
-
-	    ${OPENRESTY_DIR}/nginx/sbin/nginx -s stop
-	    sleep 3
-	    killall -vw nginx
-	    rm -f ${OPENRESTY_DIR}/nginx/logs/* > /dev/null 2>&1
-	    sleep 3
-	    ${OPENRESTY_DIR}/nginx/sbin/nginx
-
-	    notice "EmuYoda Installed" "The EmuYoda API and Web Interface has been installed."
-	)
-
-	url='http://127.0.0.1:'${OPENRESTY_PORT}'/' 
-
-	echo "** Check ${url} ***"
-
-	if curl -s -k "${url}/api/status/" | python -m json.tool; then
-	    echo "** Launch $BROWSER '${url}' **"
-	    $BROWSER "${url}" > /dev/null 2>&1 < /dev/null &
-	    HAVE_YODA=true
-	fi
+    if [ -d "${EMUYODA_DIR}/." ]; then
+	return 1
     fi
+
+    echo "** setting up emuyoda **"
+    (
+	ln -vs ~/ZonamaDev/server/emuyoda ${EMUYODA_DIR}
+
+	cp -v ~/ZonamaDev/server/openresty/nginx/conf/* ${OPENRESTY_DIR}/nginx/conf
+
+	sed -e "/^yodaSecret.*/s//yodaSecret = '$(dd if=/dev/urandom bs=1024 count=1 2> /dev/null|md5sum|cut -d' ' -f1)'/" -e "/^server_ip/d" ${EMUYODA_DIR}/yoda-config.lua.in > ${EMUYODA_DIR}/yoda-config.lua
+
+	${OPENRESTY_DIR}/nginx/sbin/nginx -s stop
+	sleep 3
+	killall -vw nginx
+	rm -f ${OPENRESTY_DIR}/nginx/logs/* > /dev/null 2>&1
+	sleep 3
+	${OPENRESTY_DIR}/nginx/sbin/nginx
+
+	notice "EmuYoda Installed" "The EmuYoda API and Web Interface has been installed."
+    )
+
+    return 0
 }
 
-setup_yoda
+check_yoda() {
+    echo "** Check ${YODA_URL} ***"
+
+    if curl -s -k "${YODA_URL}/api/status/" | python -m json.tool; then
+	echo "** /api/status success **"
+	return 0
+    fi
+
+    echo "** /api/status failed **"
+    return 1
+}
+
+launch_yoda() {
+    if $YODA_STARTED; then
+	return 1
+    fi
+
+    echo "** Launch $BROWSER '${YODA_URL}' **"
+    $BROWSER "${YODA_URL}" > /dev/null 2>&1 < /dev/null &
+    YODA_STARTED=true
+}
+
+if setup_yoda; then
+    if check_yoda; then
+	launch_yoda
+	step_complete 0
+    fi
+fi
+
+if check_yoda; then
+    zdcfg set-flag have_yoda
+else
+    zdcfg clear-flag have_yoda
+fi

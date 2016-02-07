@@ -30,8 +30,7 @@ setup_gitconfig() {
 
 	if [ -z "$r" -o "$r" = "/" ]; then
 	    if zenity --question  --text="Are you sure you want to continue without setting up git?"; then
-		alert "User Aborted Setup" "You will need to logout or reboot to continue setup"
-		exit 0
+		error "Git must be configured before you can continue, you will need to logout or reboot to continue setup." 105
 	    else
 	        continue
 	    fi
@@ -77,12 +76,11 @@ setup_gitconfig() {
     do
       echo "git $f"
     done
+    step_complete 0 "username=$new_username"
 }
 
-if $HAVEX; then
+if step_not_complete; then
     setup_gitconfig
-else
-    echo "Without X we can't prompt the user!"
 fi
 
 return 0

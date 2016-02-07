@@ -15,6 +15,8 @@ setup_sshkey() {
 	    notice 'SSH Key Created' 'We created a new ssh key for you!\n\nPlease make sure to update your Gerrit key settings!'
 	fi
 	[ -n "$SSH_AGENT_PID" ] && ssh-add
+
+	step_complete 0
     else
 	msg "SSH $HOME/.ssh/id_rsa already exists"
     fi
@@ -26,7 +28,7 @@ setup_sshconfig() {
 	sed '/^## START DEVSETUP ##/,/^## END DEVSETUP ##/d' -i ~/.ssh/config
     fi
 
-    local gerrit_username=$(cat ~/.gerrit_username 2>/dev/null)
+    local gerrit_username=$(zdcfg get gerrit_username 2>/dev/null)
 
     # Do we know the GERRIT_USERNAME yet?
     if [ -z "$gerrit_username" ]; then

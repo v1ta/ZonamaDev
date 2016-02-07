@@ -8,26 +8,21 @@
 #
 ## Check for suspended setup
 
-SUSPEND_FLAG=~vagrant/.suspend_devsetup
-
-if [ -f $SUSPEND_FLAG ]; then
-    tm_now=$(date +%s)
-    tm_then=$(<$SUSPEND_FLAG)
-    let "tm_delta=$tm_now - $tm_then"
+if zdcfg check-flag suspend_devsetup; then
     if $HAVEX; then
-	if zenity --question  --text="Developer setup has been suspended for ${tm_delta} seconds so far.\n\nDo you want to continue to suspend developer setup?\n(usually YES on basebox build beofre packaging)"; then
-	    alert "setup suspended" "Developer setup has been suspended for ${tm_delta} seconds so far."
+	if zenity --question  --text="Developer setup is suspended.\n\nDo you want to continue to suspend developer setup?\n(usually YES on basebox build beofre packaging)"; then
+	    alert "setup suspended" "Developer setup has been suspended."
 	    exit 0
 	else
 	    if zenity --question  --text="Should I remove the suspend flag?\n(usually NO basebox build)"; then
-		msg "USER ASKED US TO REMOVE ${SUSPEND_FLAG}"
-		rm -f ${SUSPEND_FLAG}
-		alert "setup resumed" "Removed ${SUSPEND_FLAG}"
+		msg "USER ASKED US TO clear suspend_devsetup"
+		zdcfg clear-flag suspend_devsetup
+		alert "setup resumed" "Cleared suspend_devsetup flag"
 	    fi
 	fi
     else
-	alert "setup suspended" "Suspended because ${SUSPEND_FLAG} exists, ignore this if you're working on building the basebox."
-	msg "SUSPENDING SETUP BECAUSE ${SUSPEND_FLAG} EXISTS"
+	alert "setup suspended" "Suspended because suspend_devsetup flag, ignore this if you're working on building the basebox."
+	msg "SUSPENDING SETUP BECAUSE OF suspend_devsetup FLAG"
 	exit 0
     fi
 fi

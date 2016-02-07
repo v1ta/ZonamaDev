@@ -1,1 +1,3 @@
-date +%s > ~vagrant/.rc.fasttrack.ran
+if step_not_complete; then
+    step_complete 0
+fi

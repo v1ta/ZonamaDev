@@ -80,9 +80,11 @@ clone_repos() {
 }
 
 check_repos() {
+    local tm_start=$SECONDS
+
     msg "Check Repos"
 
-    if [ ! -f ~/.devsetup.ran ]; then
+    if full_run_not_complete; then
 	notice "Pull Latest" "Please wait while we pull latest changes from repos.\n"
     else
 	return 0
@@ -108,9 +110,12 @@ check_repos() {
 	fi
     done
 
-    if [ ! -f ~/.devsetup.ran ]; then
+    if full_run_not_complete; then
 	(set -x;cd Core3;git checkout -b unstable origin/unstable;sed -e '/push = /d' -e '/url/s!$!\n\tpush = HEAD:refs/for/unstable!' -i .git/config)
 	notice "Repos Updates" "All repos are up to date."
+	local delta=999
+	let "delta=$SECONDS - $tm_start"
+	step_complete 0 "delta=$delta"
     fi
 }
 
