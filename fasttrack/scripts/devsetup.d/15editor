@@ -39,10 +39,11 @@ setup_visual() {
 	fi
     done
 
-    if grep 'zdcfg get visual' ~/.bashrc; then
+    if grep 'bin/zdcfg get visual' ~/.bashrc; then
 	:
     else
-	echo 'export VISUAL=$(zdcfg get visual)' >> ~/.bashrc
+	sed '/^export VISUAL/d' -i ~/.bashrc
+	echo 'export VISUAL=$(~/bin/zdcfg get visual)' >> ~/.bashrc
     fi
 }
 
