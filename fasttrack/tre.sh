@@ -18,23 +18,12 @@ main() {
     msg "TRE File Copy"
 
     # Check for default location(s)
-    local default=$(hunt_emudir)
+    trepath=$(hunt_emudir)
 
-    if [ -n "${default}" ]; then
-	if yorn "\n** We found your tre files in ${default} do you want to copy them to the server now?"; then
-	    trepath="$default"
-	else
-	    msg "** ABORTED BY USER **"
-	    exit 1
-	fi
-    else
+    if [ -z "${trepath}" ]; then
 	echo -e "\n** In order to run the server you must copy required '.tre' files from the client"
 	echo -e  "** If you've installed the client on this computer we can copy them for you.\n"
-
-	# TODO do we want to ask?
-	#if yorn "Would you like to try and copy the '.tre' files now?"; then
-	    ask_emudir
-	#fi
+	ask_emudir
     fi
 
     if [ -z "${trepath}" ]; then
@@ -57,7 +46,7 @@ main() {
     echo "** Copying files..."
     ssh -F $sshcfg default mkdir -p Desktop/SWGEmu
 
-    if scp -F $sshcfg "${trepath}"/*.tre default:Desktop/SWGEmu; then
+    if scp -F $sshcfg -o Compression=no "${trepath}"/*.tre default:Desktop/SWGEmu; then
 	msg "SUCCESS!"
     else
 	msg "SCP SEEMS TO HAVE FAILED WITH ERR=$?, GET HELP!?"
@@ -71,6 +60,10 @@ ask_emudir() {
     do
 	echo
 	read -rp "Where did you install the swgemu client? " n
+
+	if [ -z "$n" ]; then
+	    continue
+	fi
 
 	local path=$(cygpath "${n//\\/\/}" 2> /dev/null || echo $n)
 
