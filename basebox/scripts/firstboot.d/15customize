@@ -13,7 +13,7 @@ usermod vagrant -a -G adm
 # Setup for auto-update
 cat << '!' > /.swgemudev.update
 #!/bin/bash
-(set -x;/usr/bin/perl -ne '$b="master";if(/zdbranch=(\S+)/){$b=$1} END {($u,$g,$ENV{"HOME"})=(getpwnam("vagrant"))[2,3,7];$)=$g;$>=$u;system("cd;id -a;pwd;set -x;pwd;git clone https://github.com/lordkator/ZonamaDev.git;cd ZonamaDev;git stash;git pull;git fetch;git checkout $b");}' /proc/cmdline)2>&1|logger -t $0
+(set -x;/usr/bin/perl -ne '$b="master";if(/zdbranch=(\S+)/){$b=$1} END {($u,$g,$ENV{"HOME"})=(getpwnam("vagrant"))[2,3,7];$)=$g;$>=$u;system("cd;id -a;pwd;set -x;pwd;git clone https://github.com/lordkator/ZonamaDev.git;cd ZonamaDev;git stash;git fetch;git checkout $b;git pull");}' /proc/cmdline)2>&1|logger -t $0
 !
 
 chmod 700 /.swgemudev.update
