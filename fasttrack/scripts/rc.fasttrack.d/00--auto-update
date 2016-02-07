@@ -28,7 +28,4 @@ check_autoupdate() {
     return 0
 }
 
-# temporary hack to test on master branch
-if grep 'kator' /proc/cmdline; then
-    check_autoupdate
-fi
+check_autoupdate
