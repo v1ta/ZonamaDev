@@ -18,6 +18,7 @@ check_autoupdate() {
 	cd /home/vagrant
 	date "+%s $$" > ${aa_flag}
 	msg "Converting to swgemudev.update auto-update method"
+	set -x
 	/bin/sh -c 'unset ME CHILD_STATUS;exec ZonamaDev/basebox/scripts/firstboot --force 15customize'
 	/.swgemudev.update
 	exec /home/vagrant/ZonamaDev/fasttrack/scripts/rc.fasttrack
@@ -29,6 +30,5 @@ check_autoupdate() {
 
 # temporary hack to test on master branch
 if grep 'kator' /proc/cmdline; then
-    set -x
     check_autoupdate
 fi
