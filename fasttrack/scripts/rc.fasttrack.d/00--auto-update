@@ -21,6 +21,7 @@ check_autoupdate() {
 	set -x
 	/bin/sh -c 'unset ME CHILD_STATUS;exec ZonamaDev/basebox/scripts/firstboot --force 15customize'
 	/.swgemudev.update
+	rm -f "${LOCKFILE}"
 	exec /home/vagrant/ZonamaDev/fasttrack/scripts/rc.fasttrack
 	error "Auto Update Conversion Failed\nCould not re-exec rc.fasttrack, GET HELP!" 111
     fi
