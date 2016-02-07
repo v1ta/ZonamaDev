@@ -158,26 +158,31 @@ if ln ${LOCKTMP} ${LOCKFILE}; then
     :
 else
     read pid tm_lock < ${LOCKFILE}
-    tm_now=$(date +%s)
 
-    let "tm_delta=${tm_now} - ${tm_lock}"
-
-    if kill -0 $pid; then
-	msg "PID $pid HAS HAD LOCK FOR ${tm_delta} SECOND(S), EXITING"
-	exit 0
+    if [ $pid -eq $$ ]; then
+	msg "We already own this lock as PID $pid"
     else
-	msg "Stealing lock from PID $pid which has gone away, locked ${tm_delta} second(s) ago"
-	if ln -f ${LOCKTMP} ${LOCKFILE}; then
-	    read pid tm_lock < ${LOCKFILE}
-	    if [ "$pid" -eq "$$" ]; then
-		msg "STOLE LOCK, PROCEEDING"
-	    else
-		msg "Can't steal lock, somone got in before us!? pid=${pid}"
-		exit 2
-	    fi
+	tm_now=$(date +%s)
+
+	let "tm_delta=${tm_now} - ${tm_lock}"
+
+	if kill -0 $pid; then
+	    msg "PID $pid HAS HAD LOCK FOR ${tm_delta} SECOND(S), EXITING"
+	    exit 0
 	else
-	    msg "Failed to steal lock, **ABORT**"
-	    exit 1
+	    msg "Stealing lock from PID $pid which has gone away, locked ${tm_delta} second(s) ago"
+	    if ln -f ${LOCKTMP} ${LOCKFILE}; then
+		read pid tm_lock < ${LOCKFILE}
+		if [ "$pid" -eq "$$" ]; then
+		    msg "STOLE LOCK, PROCEEDING"
+		else
+		    msg "Can't steal lock, somone got in before us!? pid=${pid}"
+		    exit 2
+		fi
+	    else
+		msg "Failed to steal lock, **ABORT**"
+		exit 1
+	    fi
 	fi
     fi
 fi
