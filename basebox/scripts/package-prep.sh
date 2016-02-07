@@ -107,7 +107,7 @@ echo ">> Cleanup user files that shouldn't be in the base box image."
 (
     cd ~vagrant
     mysql -e 'drop database swgemu' > /dev/null 2>&1 ;
-    rm -rf .bash* .profile .inputrc .vim* .cache /var/mail/* .ssh/config .visual .gerrit_username .mysql_history .devsetup.ran .tzdata.ran
+    rm -rf .bash* .profile .inputrc .vim* .cache /var/mail/* .ssh/config .visual .gerrit_username .mysql_history .devsetup.ran .tzdata.ran .config/ZonamaDev/config
     rm -rf .xsession* .gitconfig .lesshst .ssh/id_* .subversion .cache .force_ip .iplist*
     sed -e '/ vagrant$/p' -e 'd' -i .ssh/authorized_keys
 ) 2> /dev/null
@@ -167,7 +167,8 @@ chmod 644 /.swgemudev.version
 echo '{ "build_version": "'$version'", "build_timestamp": '$(date -u +'%s, "build_datetime": "%Y-%m-%dT%H:%M:%SZ"')', "builder_name": "'$builder_name'" }' | tee /.swgemudev.builinfo.json | python -m json.tool
 
 # Ok let these run on first boot of new fasttrack image
-rm -f ~vagrant/.suspend_fasttrack ~vagrant/.suspend_devsetup
+~/ZonamaDev/fasttrack/bin/zdcfg clear-flag suspend_devsetup
+~/ZonamaDev/fasttrack/bin/zdcfg clear-flag suspend_fasttrack
 
 # Wait for sync to disk
 echo ">> Sync disk"

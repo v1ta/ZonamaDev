@@ -1,2 +1,2 @@
-date +%s > ~vagrant/.suspend_devsetup
-date +%s > ~vagrant/.suspend_fasttrack
+~/ZonamaDev/fasttrack/bin/zdcfg set-flag suspend_devsetup
+~/ZonamaDev/fasttrack/bin/zdcfg set-flag suspend_fasttrack
