@@ -51,6 +51,8 @@ module(...)
 
 local yoda_config_path = os.getenv("HOME") .. '/server/emuyoda/yoda-config.lua'
 
+local zonamadev_config_home = os.getenv("ZONAMADEV_CONFIG_HOME") or (os.getenv("HOME") .. "/.config/ZonamaDev")
+
 ------------------------------------------------------------------------------
 -- Generic API helper functions
 ------------------------------------------------------------------------------
@@ -141,7 +143,7 @@ local function load_config()
 
     local emu_config_path = yoda_cfg['emuConfigPath']
 
-    local fh = io.open(os.getenv("HOME") .. "/.force_ip")
+    local fh = io.open(zonamadev_config_home .. "/config/server_ip")
 
     if fh then
 	yoda_cfg.server_ip = fh:read("*l");
