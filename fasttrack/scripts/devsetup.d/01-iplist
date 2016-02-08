@@ -46,7 +46,7 @@ update_iplist() {
     echo -ne "** Searching for Local Area Network...(${regex})"
 
     # Find last ip before our public subnet (again quick and dirty guess)
-    local guess_lan_router=$(traceroute -nw 2 -q 2 -m 10 www.cisco.com | perl -ne '@a = split; if($a[1] =~ /'${regex}'/) {  print $p; exit(0) }; $p = $a[1];')
+    local guess_lan_router=$(sudo traceroute -I -nw 2 -q 2 -m 10 www.cisco.com | perl -ne '@a = split; if($a[1] =~ /'${regex}'/) {  print $p; exit(0) }; $p = $a[1];')
 
     if [ -z "${guess_lan_router}" ]; then
 	echo -e "\n** Can't determine LAN router IP. Traceroute ICMP might be blocked."
