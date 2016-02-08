@@ -2,6 +2,12 @@
 
 eval $(~/bin/get_config --bash '^Tre')
 
+verbose=true
+
+if [ "X$1" = "X--auto" ]; then
+    verbose=false
+fi
+
 count=0
 need=''
 for i in ${TreFiles[@]}
@@ -19,14 +25,18 @@ if [ "$height" -gt 600 ]; then
 fi
 
 if [ $count -gt 0 ]; then
-    echo "Missing ${count} .tre files:"
-    echo -ne "$need"|sort
-    if xset q > /dev/null 2>&1; then
-	echo -ne "$need" | sort | zenity --list --title "Missing TRE Files" --text="${count} TRE files are missing in $TrePath\n" --column "Missing Filename" --height $height > /dev/null 2>&1 &
+    if $verbose; then
+	echo "Missing ${count} .tre files:"
+	if xset q > /dev/null 2>&1; then
+	    echo -ne "$need" | sort | zenity --list --title "Missing TRE Files" --text="${count} TRE files are missing in $TrePath\n" --column "Missing Filename" --height $height > /dev/null 2>&1 &
+	fi
     fi
+    echo -ne "$need"|sort
     exit $count
 fi
 
-echo "All expected .tre files where found in ${TrePath}"
+if $verbose; then
+    echo "All expected .tre files where found in ${TrePath}"
+fi
 
 exit 0
