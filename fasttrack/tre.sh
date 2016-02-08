@@ -15,13 +15,19 @@ fi
 trepath=''
 
 main() {
+    local is_auto=false
+
+    if [ "X$1" = "X--auto" ]; then
+	is_auto=true
+    fi
+
     msg "TRE File Copy"
 
     # Check for default location(s)
     trepath=$(hunt_emudir)
 
     if [ -n "${trepath}" ]; then
-	if [ "X$1" == "X--auto" ]; then
+	if $is_auto; then
 	    # Give guest some time to get moving
 	    sleep 30
 	fi
@@ -40,7 +46,8 @@ main() {
     echo -e "\n** Ok we found your files in ${trepath}, we will now try and copy them to your guest...\n"
 
     local sshcfg=$(mktemp /tmp/tre-ssh.XXXXXX)
-    trap 'rm -f "'$sshcfg'"' 0
+    local need=$(mktemp /tmp/tre-need.XXXXXX)
+    trap 'rm -f "'${sshcfg}'" "'${need}'"' 0
 
     echo "** Checking to make sure your guest is up..."
     vagrant up > /dev/null 2>&1
@@ -48,12 +55,12 @@ main() {
     echo "** Getting ssh configuration..."
     vagrant ssh-config > $sshcfg || error "Failed to get ssh config, GET HELP!" 11
 
-    if ssh -F $sshcfg default 'exec ZonamaDev/fasttrack/bin/tre_check'; then
-	if [ "X$1" == "X--auto" ]; then
+    if ssh -F $sshcfg default 'exec ZonamaDev/fasttrack/bin/tre_check --auto' > ${need}; then
+	if $is_auto; then
 	    echo "** All files are up to date **"
 	    exit 0
 	else
-	    if yorn "Your tre files seem to be up to date on the server, do you want to copy them again? "; then
+	    if yorn "\nYour tre files seem to be up to date on the server, do you want to copy them again? "; then
 		:
 	    else
 		echo "** aborted by user **"
@@ -65,10 +72,20 @@ main() {
     echo "** Copying files..."
     ssh -F $sshcfg default mkdir -p Desktop/SWGEmu
 
-    if scp -F $sshcfg -o Compression=no "${trepath}"/*.tre default:Desktop/SWGEmu; then
+    cd "${trepath}"
+
+    if $is_auto; then
+	scp -F $sshcfg -o Compression=no $(cat "${need}") default:Desktop/SWGEmu
+    else
+	scp -F $sshcfg -o Compression=no *.tre default:Desktop/SWGEmu
+    fi
+
+    local scp_ret=$?
+
+    if [ "$scp_ret" -eq 0 ]; then
 	msg "SUCCESS!"
     else
-	msg "SCP SEEMS TO HAVE FAILED WITH ERR=$?, GET HELP!?"
+	msg "SCP SEEMS TO HAVE FAILED WITH ERR=${scp_ret}, GET HELP!?"
     fi
 
     exit 0
@@ -175,7 +192,7 @@ msg() {
 }
 
 check_cmds() {
-    for i in cygpath tty mktemp sed scp ssh find
+    for i in tty mktemp sed scp ssh find
     do
 	if type -P $i > /dev/null; then
 	    :
