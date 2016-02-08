@@ -143,6 +143,8 @@ check_gitbash_win() {
 	fi
     done
 
+    echo "** BASH_VERSION: ${BASH_VERSION} **"
+
     return 1
 }
 
@@ -156,16 +158,18 @@ check_virtualbox_win() {
 
 	echo "** Please close this window, install VirtualBox, REBOOT and try again **"
 	exit 1
-    else
-	local ver=$("${VBOX_MSI_INSTALL_PATH:-${VBOX_INSTALL_PATH}}/VBoxManage" --version)
-
-	case $ver in
-	    5.[0-9].1[2-9]* ) : ;;
-	    * ) echo "Unsupported version of virtualbox ($ver), please upgrade to 5.0.12 or higher"
-		exit 1
-		;;
-	esac
     fi
+
+    local ver=$("${VBOX_MSI_INSTALL_PATH:-${VBOX_INSTALL_PATH}}/VBoxManage" --version)
+
+    case $ver in
+	5.[0-9].1[2-9]* ) : ;;
+	* ) echo "Unsupported version of virtualbox ($ver), please upgrade to 5.0.12 or higher"
+	    exit 1
+	    ;;
+    esac
+
+    echo "** Virtualbox version $ver **"
 }
 
 check_vagrant_win() {
