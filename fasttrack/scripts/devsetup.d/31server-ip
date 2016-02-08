@@ -16,7 +16,7 @@ prompt_ip() {
 	(
 	echo -e "TRUE\n127.0.0.1\nDefault - Local Client and Server on one computer"
 	zdcfg get iplist | sed -e 'iFALSE' -e 's/,/\n/'
-	echo -e "FALSE\nMANUAL\nEnter a manuall address (Expert Mode)"
+	echo -e "FALSE\nMANUAL\nEnter a manual address (Expert Mode)"
 	) | zenity --list --radiolist --text="Choose your Server IP:" --title="Discovered IP Addresses" --column="Select" --column="IP Address" --column="Description" --print-column=2 --width=650 --height=250 2> /dev/null
     )
 
