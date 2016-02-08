@@ -10,3 +10,4 @@ extras
 .visual
 .gerrit_username
 .id_rsa*
+config.yml
