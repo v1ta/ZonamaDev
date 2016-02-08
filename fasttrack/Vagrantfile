@@ -39,12 +39,6 @@ if ram < 2048
   ram = 2048
 end
 
-if cores != 2 or ram != 2048 then
-  puts "Cores: " + cores.to_s
-  puts "Ram  : " + ram.to_s
-  puts
-end
-
 ## Check for required plugins
 plugins_installed = false
 
