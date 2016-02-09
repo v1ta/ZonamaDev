@@ -66,10 +66,15 @@ prompt_ip() {
 
 setup_server_ip() {
     # Check to make sure iplist is done
-    for i in 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1
+    local a=0
+    for i in 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1
     do
 	if zdcfg check-flag iplist.lock; then
 	    echo "$i: iplist.lock still set"
+	    let "a=$i % 7"
+	    if [ $i -eq 20 -o $a -eq 0 ]; then
+		notice "Setup IP" "Waiting $i seconds for IP discovery to complete."
+	    fi
 	    sleep 1
 	else
 	    break
