@@ -86,7 +86,11 @@ Vagrant.configure(2) do |config|
 
   # TODO: Can we autoconfig this rather than prompting for which interface to bridge?
   if not bridge.empty?
+    if bridge == "auto"
         config.vm.network "public_network", use_dhcp_assigned_default_route: true, auto_config: true, bridge: bridge
+    else
+        config.vm.network "public_network", use_dhcp_assigned_default_route: true, auto_config: true, bridge: bridge
+    end
   end
 
   # This keeps windows hosts from blowing their brains out about rsync missing
