@@ -162,7 +162,7 @@ full_run_status() {
 
     if [ -f "${RUN_FLAGS_DIR}/__full_run.status" ]; then
 	read tm st misc < "${RUN_FLAGS_DIR}/__full_run.status"
-	ret=$ret
+	ret=$st
     fi
 
     return $ret
