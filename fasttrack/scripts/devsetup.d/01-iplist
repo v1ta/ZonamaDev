@@ -19,13 +19,14 @@ update_iplist() {
 
     local pub_ip=$(dig @ns1.google.com -t txt o-o.myaddr.l.google.com +short | tr -d '"')
 
+    zdcfg clear iplist
     # Simple lock so others can see if it's done later
     zdcfg set-flag iplist.lock
     trap 'zdcfg clear-flag iplist.lock' 0
 
     if [ -z "$pub_ip" ]; then
-	echo "** Failed to find public ip so we can't reverse engineer the LAN network address"
-	return 1
+	echo "** ERROR: Failed to find public ip, aborting."
+	exit 1
     fi
 
     echo "** Public IP: ${pub_ip}"
@@ -38,34 +39,66 @@ update_iplist() {
 
     zdcfg set iplist "${pub_ip},Public Internet IP${pub_rev}"
 
-    IFS='.' read -ra t <<<${pub_ip}
+    local default_route=$(ip -o -4 route show|egrep '^default')
 
-    # Just guessing it's a class B most of the time
-    local regex="${t[0]}\.${t[1]}\.${t[2]}.*"
+    read j j default_route_ip j interface <<<${default_route}
 
-    echo -ne "** Searching for Local Area Network...(${regex})"
+    local guess_lan_router=${default_route_ip}
 
-    # Find last ip before our public subnet (again quick and dirty guess)
-    local guess_lan_router=$(sudo traceroute -I -nw 2 -q 2 -m 10 www.cisco.com | perl -ne '@a = split; if($a[1] =~ /'${regex}'/) {  print $p; exit(0) }; $p = $a[1];')
+    # By default eth0 is NAT, if we found a different default route interface just assume it's the LAN
+    if [ "${interface}" != "eth0" ]; then
+	echo "** Default Route ${default_route_ip} is on ${interface}, assuming LAN is ${guess_lan_router}"
+    else
+	echo "** Default Route: ${default_route}"
 
-    if [ -z "${guess_lan_router}" ]; then
-	echo -e "\n** Can't determine LAN router IP. Traceroute ICMP might be blocked."
-	return 1
+	# Since ETH0 should be NAT we need to do some tricks to find LAN using traceroute
+
+	echo "** Default Route IP: ${default_route_ip}"
+
+	IFS='.' read -ra t <<<${default_route_ip}
+
+	# Just guessing it's a class B most of the time
+	local regex="${t[0]}\.${t[1]}\.${t[2]}\.*"
+
+	echo -ne "** Searching for Local Area Network past VM's NAT (${regex})"
+
+	# Find first ip just after our VM's NAT (again quick and dirty guess)
+	guess_lan_router=$(sudo traceroute -I -nw 2 -q 2 -m 10 www.cisco.com | perl -ne 'push(@a,(split)[1]); END { while(shift(@a)) { if($a[0] =~ /^10\.0\.2\./) { print($a[1] . "\n"); exit(0); } } }')
+
+	if [ -z "${guess_lan_router}" ]; then
+	    echo -e "\n** ERROR: Can't determine LAN router IP. Traceroute ICMP might be blocked."
+	    exit 1
+	fi
+
+	echo -e "\n** Found Lan Router: ${guess_lan_router}"
     fi
 
-    echo -e "\n** Found Lan Router: ${guess_lan_router}"
+    echo "** Checking to see if zonama-instance-id service is running up"
 
     # A unique id so we can see these across multiple logs etc.
     local scan_token=$(date|md5sum|cut -d' ' -f1)
 
-    read -a instance_query <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2> /dev/null)
+    for i in 5 4 3 2 1
+    do
+	read -a instance_query <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2> /dev/null)
+
+	if [ "${instance_query[1]}" = "200" ]; then
+	    echo "** Found zonama-instance-id service on localhost."
+	    break
+	fi
+
+	echo "** Waiting $i seconds for nginx zonama-instance-id service to start"
+	sleep 1
+    done
 
     if [ "${instance_query[1]}" != "200" ]; then
-	echo "Local zonama-instance-id service is not running on port ${OPENRESTY_PORT} as expected, giving up."
-	return 1
+	echo "** ERROR: Local zonama-instance-id service is not running on port ${OPENRESTY_PORT} as expected, giving up."
+	exit 1
     fi
 
     local our_instance="${instance_query[${#instance_query[@]}-1]}"
+
+    echo "** Our instance ID: ${our_instance}"
 
     # Typical home network
     IFS='.' read -ra t <<<${guess_lan_router}
@@ -78,7 +111,7 @@ update_iplist() {
     do
 	# echo -ne "\r$i\t"
 	local addr="${subnet}${i}"
-	local result=$(curl -s -A zonamaipscan --connect-timeout 0.02 -m 0.02 'http://'${addr}':'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
+	local result=$(curl -s -A zonamaipscan --connect-timeout 0.03 -m 0.03 'http://'${addr}':'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
 
 	if [ "X$result" = "X$our_instance" ]; then
 	    # TODO do we need to double check nginx log local just in case?
@@ -87,11 +120,17 @@ update_iplist() {
 	fi
     done
 
-    echo "** Local Network IP: ${lan_ip}"
+    echo "** Scan completed after $SECONDS second(s)"
 
-    zdcfg set iplist "${pub_ip},Public Internet IP${pub_rev}\n${lan_ip},Local Network IP"
+    if [ -z "${lan_ip}" ]; then
+	echo "** Failed to find LAN IP"
+    else
+	echo "** Local Network IP: ${lan_ip}"
 
-    step_complete 0 "seconds=$SECONDS"
+	zdcfg set iplist "${pub_ip},Public Internet IP${pub_rev}\n${lan_ip},Local Network IP"
+
+	step_complete 0 "seconds=$SECONDS"
+    fi
 
     exit 0
   ) < /dev/null > /tmp/iplist.out 2>&1 &
@@ -100,6 +139,7 @@ update_iplist() {
 IPLIST=$(zdcfg get iplist 2> /dev/null)
 
 if $FORCE; then
+    zdcfg clear iplist
     IPLIST=''
 fi
 
