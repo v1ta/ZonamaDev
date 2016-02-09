@@ -22,7 +22,13 @@ if File.exist?("#{dir}/config.yml")
   if user_config.has_key?('ram')
     ram = user_config['ram'].to_i
   end
+
+  if user_config.has_key?('bridge')
+    bridge = user_config['bridge']
+  end
 end
+
+bridge ||= ""
 
 # We recommend no less than 2 cores
 cores ||= 2
@@ -79,7 +85,9 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 44463, host: 44463, protocol: 'udp'
 
   # TODO: Can we autoconfig this rather than prompting for which interface to bridge?
-  # config.vm.network "public_network", use_dhcp_assigned_default_route: true, auto_config: true
+  if not bridge.empty?
+        config.vm.network "public_network", use_dhcp_assigned_default_route: true, auto_config: true, bridge: bridge
+  end
 
   # This keeps windows hosts from blowing their brains out about rsync missing
   config.vm.synced_folder '.', '/vagrant', :disabled => true
@@ -119,8 +127,8 @@ Vagrant.configure(2) do |config|
         v.customize ["modifyvm", :id, "--accelerate3d", "on"]
         v.customize ["modifyvm", :id, "--vram", "128"]
         v.customize 'post-boot', ["controlvm", :id, "setvideomodehint", "1280", "720", "24"]
-	# TODO need to test this more and see if we can optimize the network more, for now ethtool -i eth0 gro off seems to help
-	# v.customize ["modifyvm", :id, "--nictype1", "virtio"]
+        # TODO need to test this more and see if we can optimize the network more, for now ethtool -i eth0 gro off seems to help
+        # v.customize ["modifyvm", :id, "--nictype1", "virtio"]
         # v.customize ["modifyvm", :id, "--ioapic", "On"]
         # v.customize ["modifyvm", :id, "--audio", "coreaudio"]
         # v.customize ["modifyvm", :id, "--audiocontroller", "ac97"]
@@ -139,7 +147,7 @@ Vagrant.configure(2) do |config|
     if File.exist?(src)
       dst = fn
       if src[0..5] == 'id_rsa'
-	dst = ".ssh/" + src
+        dst = ".ssh/" + src
       end
       config.vm.provision :file, source: src, destination: dst
     end
