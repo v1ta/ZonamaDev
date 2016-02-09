@@ -41,13 +41,13 @@ update_iplist() {
 
     local default_route=$(ip -o -4 route show|egrep '^default')
 
-    read j j default_route_ip j interface <<<${default_route}
+    read j j default_route_ip j default_route_interface <<<${default_route}
 
     local guess_lan_router=${default_route_ip}
 
     # By default eth0 is NAT, if we found a different default route interface just assume it's the LAN
-    if [ "${interface}" != "eth0" ]; then
-	echo "** Default Route ${default_route_ip} is on ${interface}, assuming LAN is ${guess_lan_router}"
+    if [ "${default_route_interface}" != "eth0" ]; then
+	echo "** Default Route ${default_route_ip} is on ${default_route_interface}, assuming LAN is ${guess_lan_router}"
     else
 	echo "** Default Route: ${default_route}"
 
@@ -105,22 +105,41 @@ update_iplist() {
     local subnet="${t[0]}.${t[1]}.${t[2]}."
     local lan_ip=''
 
-    echo "** Scanning to find ourselves on the lan (${subnet}).."
+    # Maybe we can find outselves right on our own interface!
+    if [ "${default_route_interface}" != "eth0" ]; then
+	# Maybe we're already here!
+	read -a aa <<<$(ip -o -4 addr show ${default_route_interface})
+	local tmp_ip=$(echo ${aa[3]}|cut -d/ -f1)
 
-    for i in {1..254}
-    do
-	# echo -ne "\r$i\t"
-	local addr="${subnet}${i}"
-	local result=$(curl -s -A zonamaipscan --connect-timeout 0.03 -m 0.03 'http://'${addr}':'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
+	local result=$(curl -s -A zonamaipscan --connect-timeout 0.03 -m 0.03 'http://'${tmp_ip}':'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
 
 	if [ "X$result" = "X$our_instance" ]; then
-	    # TODO do we need to double check nginx log local just in case?
-	    lan_ip=$addr
-	    break
+	    echo "** Look 'ma no hands, found ourselves on ${default_route_interface} at ${tmp_ip}"
+	    lan_ip=${tmp_ip}
+	else
+	    echo "** WARNING: Default route interface is ${default_route_interface} with ip ${tmp_ip}, but we didn't find our zonama-instance-id service?"
 	fi
-    done
+    fi
 
-    echo "** Scan completed after $SECONDS second(s)"
+    # If not then we need to scan the subnet
+    if [ -z "${lan_ip}" ]; then
+	echo "** Scanning to find ourselves on the lan (${subnet}).."
+
+	for i in {1..254}
+	do
+	    # echo -ne "\r$i\t"
+	    local addr="${subnet}${i}"
+	    local result=$(curl -s -A zonamaipscan --connect-timeout 0.03 -m 0.03 'http://'${addr}':'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
+
+	    if [ "X$result" = "X$our_instance" ]; then
+		# TODO do we need to double check nginx log local just in case?
+		lan_ip=$addr
+		break
+	    fi
+	done
+
+	echo "** Scan completed after $SECONDS second(s)"
+    fi
 
     if [ -z "${lan_ip}" ]; then
 	echo "** Failed to find LAN IP"
