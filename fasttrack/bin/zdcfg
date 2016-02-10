@@ -84,6 +84,11 @@ clear_value() {
 wait_value() {
     local path="$1"
     local timeout=$2
+    local what=$3
+
+    if [ -z "$what" ]; then
+	what='flag'
+    fi
 
     if [ -z "$timeout" ]; then
 	timeout=180
@@ -95,12 +100,12 @@ wait_value() {
 	    echo
 	    return 0
 	else
-	    echo -ne "\rWaiting $i seconds for flag ${path}.."
+	    echo -ne "\rWaiting $i seconds for ${what}..."
 	    sleep 5
 	fi
     done
 
-    echo -ne "\rTimeout after $timeout second(s) waiting for ${path}."
+    echo -ne "\rTimeout after $timeout second(s) waiting for ${what}."
     return 1
 }
 
