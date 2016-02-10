@@ -84,10 +84,9 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 44462, host: 44462, protocol: 'udp'
   config.vm.network "forwarded_port", guest: 44463, host: 44463, protocol: 'udp'
 
-  # TODO: Can we autoconfig this rather than prompting for which interface to bridge?
   if not bridge.empty?
     if bridge == "auto"
-        config.vm.network "public_network", use_dhcp_assigned_default_route: true, auto_config: true, bridge: bridge
+        config.vm.network "public_network", use_dhcp_assigned_default_route: true, auto_config: true
     else
         config.vm.network "public_network", use_dhcp_assigned_default_route: true, auto_config: true, bridge: bridge
     end
