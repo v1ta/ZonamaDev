@@ -26,12 +26,7 @@ main() {
     # Check for default location(s)
     trepath=$(hunt_emudir)
 
-    if [ -n "${trepath}" ]; then
-	if $is_auto; then
-	    # Give guest some time to get moving
-	    sleep 30
-	fi
-    else
+    if [ -z "${trepath}" ]; then
 	echo -e "\n** In order to run the server you must copy required '.tre' files from the client"
 	echo -e  "** If you've installed the client on this computer we can copy them for you.\n"
 	ask_emudir
@@ -66,6 +61,16 @@ main() {
 		echo "** aborted by user **"
 		exit 100
 	    fi
+	fi
+    fi
+
+    if $is_auto; then
+	# Give guest a change to get setup done
+	echo "** Waiting for setup to complete in guest."
+	if ssh -F $sshcfg default 'exec ZonamaDev/fasttrack/bin/zdcfg wait-flag devsetup/__full_run.status 180'; then
+	    echo "** setup complete in guest."
+	else
+	    echo "** setup timeout, continue anyway."
 	fi
     fi
 
