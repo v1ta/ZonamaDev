@@ -756,6 +756,11 @@ server_latest()
         fi
     fi
 
+    local git_local=$(cd ${BUILD_DIR};git rev-parse refs/heads/unstable)
+    local git_remote=$(cd ${BUILD_DIR};git ls-remote origin refs/heads/unstable | cut -f1)
+
+    echo "$git_local ... $git_remote"
+
     (
         set -xe
         cd ${BUILD_DIR}
