@@ -27,7 +27,7 @@ setup_visual() {
 	    notice "Editor" "When in doubt we choose nano!"
 	    zdcfg set visual $(type -P nano)
 	else
-	    notice "Editor" "Set editor to $r"
+	    #notice "Editor" "Set editor to $r"
 	    zdcfg set visual $(type -P $r)
 	fi
 
