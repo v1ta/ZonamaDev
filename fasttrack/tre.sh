@@ -66,8 +66,8 @@ main() {
 
     if $is_auto; then
 	# Give guest a change to get setup done
-	echo "** Waiting for setup to complete in guest."
-	if ssh -F $sshcfg default 'exec ZonamaDev/fasttrack/bin/zdcfg wait-flag devsetup/__full_run.status 180'; then
+	echo "** Please follow directions in guest to complete user setup."
+	if ssh -F $sshcfg default 'exec ZonamaDev/fasttrack/bin/zdcfg wait-flag devsetup/__full_run.status 180 "user setup complete"'; then
 	    echo "** setup complete in guest."
 	else
 	    echo "** setup timeout, continue anyway."
