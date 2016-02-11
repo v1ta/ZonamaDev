@@ -45,6 +45,14 @@ Watch for instructions.
 
 ---
 
+### Updates
+
+The system should update on reboot, please reboot the vm:
+
+* via the applications menu "Loggout -> Restart"
+* via host control: vagrant reload
+* via terminal: sudo init 6
+
 ### Advanced Featues
 
 #### Local config for core and ram
