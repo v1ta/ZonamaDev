@@ -139,7 +139,7 @@ ask_emudir() {
 }
 
 hunt_emudir() {
-    for i in '/c/SWGEmu' '/d/SWGEmu' '/Volumes/BOOTCAMP/SWGEmu'
+    for i in '/c/SWGEmu' '/d/SWGEmu' '/cygdrive/c/SWGEmu' '/cygdrive/d/SWGEmu' '/Volumes/BOOTCAMP/SWGEmu'
     do
 	if [ -d $i ]; then
 	    if check_emudir "$i"; then
