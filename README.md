@@ -66,3 +66,17 @@ ram: 8192
 ```
 The config.yml is ignored in .gitignore so you can "set it and forget it".
 
+You can also setup a "bridged" network interface if you want the server to be directly on your LAN:
+
+````yaml
+bridge: "auto"
+```
+
+Under windows you can do 'auto' and it usually picks the right interface on OSX you will need to choose the right
+interface often "en0":
+
+````yaml
+bridge: "en0"
+```
+
+The next time you do vagrant reload or vagrant up these settings will take effect.
