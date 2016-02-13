@@ -1,2 +1,2 @@
 # Get official giturl for scripts
-curl http://downloads.lordkator.com/swgemudev/giturl.txt'?x-uuid='$(/usr/sbin/dmidecode -s system-uuid)'&x-version='$(cat /.swgemudev.version)'&x-zd-version='$(cd /home/vagrant/ZonamaDev/;git describe --tag)'&x-id='$(cat /var/lib/dbus/machine-id) 2> /dev/null > /.swgemudev.giturl
+curl http://downloads.lordkator.com/swgemudev/giturl.txt'?x-uuid='$(/usr/sbin/dmidecode -s system-uuid)'&x-version='$(cat /.swgemudev.version)'&x-zd-version='$(cd ${ZDHOME}/ZonamaDev/;git describe --tag)'&x-id='$(cat /var/lib/dbus/machine-id) 2> /dev/null > /.swgemudev.giturl

@@ -7,10 +7,6 @@
 # Created: Mon Feb  1 07:59:52 EST 2016
 #
 
-if [ -z "$ZONAMADEV_CONFIG_HOME" ]; then
-    export ZONAMADEV_CONFIG_HOME=${XDG_CONFIG_HOME:-/home/vagrant/.config}/ZonamaDev
-fi
-
 main() {
     cfg="${ZONAMADEV_CONFIG_HOME}/config"
     flags="${ZONAMADEV_CONFIG_HOME}/flags"
@@ -109,12 +105,38 @@ wait_value() {
     return 1
 }
 
+pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
+export ME=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
+popd > /dev/null
+
+# Hunt for global.config
+if [ -f "$HOME/ZonamaDev/common/global.config" ]; then
+    export ZDCFGPATH="${HOME}/common/global.config"
+else
+    dir=$(dirname $ME)
+    for i in "" "/.." "/../.." "/../../.."
+    do
+	cfg="${dir}${i}/ZonamaDev/common/global.config"
+
+	if [ -f "${cfg}" ]; then
+	    export ZDCFGPATH="${cfg}"
+	fi
+    done
+fi
+
+if [ -z "${ZDCFGPATH}" -o ! -f "${ZDCFGPATH}" ]; then
+    echo "** ERROR: Can not find global.config, GET HELP!"
+    exit 252
+fi
+
+source "${ZDCFGPATH}"
+
 main "$@"
 
 ret=$?
 
 if [ $(id -u) -eq 0 ]; then
-    chown vagrant:vagrant "${ZONAMADEV_CONFIG_HOME}"
+    chown ${ZDUSER}:${ZDUSER} "${ZONAMADEV_CONFIG_HOME}"
 fi
 
 exit $ret

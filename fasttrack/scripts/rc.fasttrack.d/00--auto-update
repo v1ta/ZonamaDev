@@ -15,13 +15,13 @@ check_autoupdate() {
 	    msg "LOOP DETECTED (${aa_flag} EXISTS: $(cat ${aa_flag})), GIVING UP, GET HELP!"
 	    return 0
 	fi
-	cd /home/vagrant
+	cd ${ZDHOME}
 	date "+%s $$" > ${aa_flag}
 	msg "Converting to swgemudev.update auto-update method"
 	/bin/bash -xc 'unset ME CHILD_STATUS;exec ZonamaDev/basebox/scripts/firstboot --force 15customize > /tmp/autoupdate.out 2>&1'
 	/.swgemudev.update
 	rm -f "${LOCKFILE}"
-	exec /home/vagrant/ZonamaDev/fasttrack/scripts/rc.fasttrack
+	exec ${ZDHOME}/ZonamaDev/fasttrack/scripts/rc.fasttrack
 	error "Auto Update Conversion Failed\nCould not re-exec rc.fasttrack, GET HELP!" 111
     fi
 

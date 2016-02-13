@@ -1,1 +1,3 @@
-(date;uname -a) > ~vagrant/.firstboot.ran
+if step_not_complete; then
+    step_complete 0
+fi

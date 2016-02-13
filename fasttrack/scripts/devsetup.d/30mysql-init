@@ -94,7 +94,7 @@ mysql_setup_auth() {
     if mysqladmin -uroot -p${DEFAULT_MYSQL_PASSWORD} status > /dev/null 2>&1; then
 	echo "** Looks like mysql password has been set to the default password"
 
-	if [ ! -f ~vagrant/.my.cnf ]; then
+	if [ ! -f ${ZDHOME}/.my.cnf ]; then
 	    echo "** Added missing .my.cnf to user's home dir"
 	    mysql_save_credentials root "${DEFAULT_MYSQL_PASSWORD}"
 	fi

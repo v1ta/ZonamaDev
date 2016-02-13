@@ -15,7 +15,7 @@ fi
 (
     echo "Install Eclipse from $ECLIPSE_URL"
 
-    cd ~vagrant
+    cd ${ZDHOME}
     mkdir Downloads || echo "Created Downloads directory"
     cd Downloads
     if wget --progress=dot:giga "$ECLIPSE_URL"; then
@@ -31,6 +31,6 @@ fi
 	echo "** Can't find downloaded file"
 	exit 100
     fi
-    cd ~vagrant
+    cd ${ZDHOME}
     tar xf $ECLIPSE_FN
 )

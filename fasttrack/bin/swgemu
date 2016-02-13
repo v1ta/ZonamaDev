@@ -49,7 +49,7 @@ main() {
     return $ret
 }
 
-ICON=/home/vagrant/ZonamaDev/fasttrack/assets/swgemu_icon.png
+ICON=${ZDHOME}/ZonamaDev/fasttrack/assets/swgemu_icon.png
 
 server_start() {
     local autostart=false
@@ -928,7 +928,7 @@ if [ "X$1" == "X--api" ]; then
     tmp=$1
     shift
     set -- $tmp --auto $*
-    export PATH=/home/vagrant/bin:/usr/local/bin:/usr/bin:/bin
+    export PATH=${ZDHOME}/bin:/usr/local/bin:/usr/bin:/bin
 fi
 
 if [ "X$1" == "X--panel" ]; then

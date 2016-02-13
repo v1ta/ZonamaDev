@@ -2,7 +2,9 @@
 #
 # 01check-already-ran - have we already ran?
 #
-if [ -f ~vagrant/.firstboot.ran ]; then
-    msg "** ALREADY RAN, REMOVE ~vagrant/.firstboot.ran TO FORCE RE-RUN **"
+if full_run_not_complete; then
+    :
+else
+    msg "** ALREADY RAN TO RE-RUN RUN: zdcfg clear-flag firstboot/__full_run.status"
     exit 0
 fi

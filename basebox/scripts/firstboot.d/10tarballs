@@ -9,7 +9,7 @@
 
 (
     umask 0
-    cd ~vagrant
+    cd ${ZDHOME}
     for i in $(dirname $ME)'/../tarballs/'*
     do
 	msg "unpack $i"

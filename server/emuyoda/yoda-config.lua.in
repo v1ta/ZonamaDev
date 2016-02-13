@@ -1,5 +1,5 @@
 -- EmuYoda Configuration
-emuConfigPath = '/home/vagrant/workspace/Core3/MMOCoreORB/bin/conf/config.lua'
+emuConfigPath = os.getenv('HOME') .. '/workspace/Core3/MMOCoreORB/bin/conf/config.lua'
 yodaSecret = '460b06d2de997fac8a54aa87636cd937'
 consoleLevelRead = 1
 consoleLevelWrite = 15

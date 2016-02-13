@@ -175,7 +175,7 @@ function notice(title, msg)
     end
 
     if havex then
-	os.execute('notify-send --icon=/home/vagrant/ZonamaDev/fasttrack/assets/swgemu_icon.png --expire-time=30000 "Server Sentinel: ' .. title .. '" "' .. msg .. '"')
+	os.execute('notify-send --icon=' .. os.getenv('HOME') .. '/ZonamaDev/fasttrack/assets/swgemu_icon.png --expire-time=30000 "Server Sentinel: ' .. title .. '" "' .. msg .. '"')
     end
 
     print("\n" .. termcap['smso'] .. "NOTICE: " .. title .. " - " .. msg .. termcap['rmso'] .. "\n")
