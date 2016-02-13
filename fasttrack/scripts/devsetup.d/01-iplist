@@ -14,15 +14,22 @@
 [ -n "$OPENRESTY_PORT" ] || error "Missing OPENRESTY_PORT configuration" 101
 
 update_iplist() {
+  # Simple lock so others can see if it's done later
+  zdcfg set-flag iplist.lock
+
+  # All of this in the background...
   (
+    ###########
+    ## CHILD ##
+    ###########
     SECONDS=0
 
-    local pub_ip=$(dig @ns1.google.com -t txt o-o.myaddr.l.google.com +short | tr -d '"')
+    # Clear lock when we're done...
+    trap 'zdcfg clear-flag iplist.lock' 0
 
     zdcfg clear iplist
-    # Simple lock so others can see if it's done later
-    zdcfg set-flag iplist.lock
-    trap 'zdcfg clear-flag iplist.lock' 0
+
+    local pub_ip=$(dig @ns1.google.com -t txt o-o.myaddr.l.google.com +short | tr -d '"')
 
     if [ -z "$pub_ip" ]; then
 	echo "** ERROR: Failed to find public ip, aborting."
@@ -140,6 +147,11 @@ update_iplist() {
 
     exit 0
   ) < /dev/null > /tmp/iplist.out 2>&1 &
+
+  ############
+  ## PARENT ##
+  ############
+  msg "Updating IP list in background..."
 }
 
 get_instance() {
@@ -170,6 +182,8 @@ get_instance() {
 }
 
 check_ip() {
+    msg "Validate server ip"
+
     local scan_token=$(date|md5sum|cut -d' ' -f1)
     local our_instance=$(get_instance "${scan_token}")
     local server_ip=$(zdcfg get server_ip)
@@ -184,11 +198,9 @@ check_ip() {
     if [ "X$result" = "X$our_instance" ]; then
 	echo "** Found ourselves at server_ip (${server_ip})"
 	return 0
-    else
-	alert "Invalid Server IP" "Server IP was ${server_ip}, but it does not appear to be valid anymore.  Please choose a new ip setting."
-	zdcfg clear server_ip
     fi
 
+    alert "Invalid Server IP" "Server IP was ${server_ip}, but it does not appear to be valid anymore.\nRe-running IP setup."
     return 1
 }
 
@@ -200,8 +212,10 @@ if $FORCE; then
 fi
 
 if check_ip; then
-    echo "IP Check passed."
+    :
 else
+    msg "Invalid server_ip, reset and re-scan"
+    zdcfg clear server_ip
     zdcfg clear iplist
     IPLIST=''
 fi
