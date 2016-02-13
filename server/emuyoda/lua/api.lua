@@ -342,6 +342,11 @@ function auth_user(username, password)
     end
 
     local user = users[1]
+    
+    if user == nil then
+      ngx.log(ngx.ERR, "user object nil for username: " .. username)
+      return false, nil
+    end
 
     ngx.log(ngx.ERR, "user object: " .. cjson.encode(user));
 
@@ -360,11 +365,13 @@ function auth_user(username, password)
 	passwordHashed = SHA256Hash(cfg.emu.DBSecret .. password .. user.salt)
     end
 
-    ngx.log(ngx.ERR, "user.password=[" .. user.password .. "] supplied=[" .. passwordHashed .. "]")
+    -- ngx.log(ngx.ERR, "user.password=[" .. user.password .. "] supplied=[" .. passwordHashed .. "]")
 
     if user.password == passwordHashed then
 	return true, user
     end
+
+    ngx.log(ngx.ERR, "Invalid password for user " .. username)
 
     return false, nil
 end
