@@ -18,6 +18,13 @@ main() {
 	exit 1
     fi
 
+    if [ ! -f 'config.yml' ]; then
+	local cores=$(calc_cores)
+	let "ram=(768 * $cores)"
+	echo -e "cores: ${cores}\nram: ${ram}" > config.yml
+	echo "Setting config.yml to use ${cores} cores for guest and ${ram}m of ram."
+    fi
+
     echo "vagrant up"
 
     time vagrant up
@@ -34,6 +41,61 @@ main() {
     echo "** Now switch to the linux console and follow the directions!"
 
     exit 0
+}
+
+size_ram_osx() {
+    sysctl -n hw.memsize
+}
+
+size_cores_osx() {
+    sysctl -n hw.physicalcpu
+}
+
+size_ram_win() {
+    wmic memorychip get capacity|awk 'NR > 1 {x = x + $1 } END { print x }'
+}
+
+size_cores_win() {
+    nproc 2> /dev/null || echo $NUMBER_OF_PROCESSORS
+}
+
+size_ram_linux() {
+    free -t -b|awk 'NR == 2 { print $2 }'
+}
+
+size_cores_linux() {
+    nproc
+}
+
+calc_cores() {
+    case $(uname -s) in
+	Darwin ) OS='osx' ;;
+	*Linux* ) OS='linux' ;;
+	*_NT* ) OS='win';;
+	* ) echo "Not sure what OS you are on, guessing Windows"; OS='win';;
+    esac
+
+    local total_ram=$(size_ram_$OS)
+    local total_cores=$(size_cores_$OS)
+    local bycore=0
+    local byram=0
+    local est_ram=0
+
+    let "byram=($total_ram / 1024 / 1024 / 4 * 3) / 768"
+    let "bycore=$total_cores / 4 * 3"
+    let "bycore=$bycore - $bycore % 2"
+
+    local cores=$byram
+
+    if [ "$cores" -gt "$bycore" ]; then
+	cores=$bycore
+    fi
+
+    if [ "$cores" -le "2" ]; then
+	cores=0
+    fi
+
+    echo $cores
 }
 
 yorn() {
