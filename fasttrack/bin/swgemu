@@ -804,7 +804,7 @@ server_latest()
     (
         set -xe
         cd ${BUILD_DIR}
-        git stash save "swgemu-latest "$(date)
+        git stash save "swgemu-latest $(date)"
         git pull
         git stash pop
         cd ~/workspace/PublicEngine
