@@ -7,12 +7,9 @@
 # Created: Sun Jan  3 13:30:33 UTC 2016
 #
 
-# TODO make these use global config
-export PATH=/home/vagrant/ZonamaDev/fasttrack/bin:/home/vagrant/bin:$PATH
-WORKSPACE=~vagrant/workspace
-BUILD_DIR=${WORKSPACE}/Core3/MMOCoreORB
+source ~/ZonamaDev/common/global.config
+
 BUILD_LOG=${BUILD_DIR}/build.out
-RUN_DIR=${WORKSPACE}/Core3/MMOCoreORB/bin
 IS_PANEL=false
 IS_API_CALL=false
 
@@ -40,8 +37,9 @@ main() {
         'start' )       server_start    "$@";;
         'status' )      server_status   "$@";;
         'stop' )        server_stop     "$@";;
+        'reset_ip' | 'resetip' | 'reset-ip' )    reset_server_ip "$@";;
         'version' )     show_version    "$@";;
-        'help' | * ) echo "Usage: $0 [backup|build|postdebug|latest|send|start|status|stop|version]"; return 1 ;;
+        'help' | * ) echo "Usage: $0 [backup|build|postdebug|latest|send|start|status|stop|reset_ip|version]"; return 1 ;;
     esac
 
     ret=$?
@@ -412,6 +410,27 @@ server_build() {
     fi
 }
 
+reset_server_ip() {
+    echo "** Re-running IP setup"
+    server_stop
+    zdcfg clear iplist
+    zdcfg clear server_ip
+
+    if [ -z "$DISPLAY" ]; then
+	export DISPLAY=':0'
+    fi
+
+    ~/ZonamaDev/fasttrack/scripts/devsetup --force 01-iplist 31server-ip
+
+    local server_ip=$(zdcfg get server_ip 2> /dev/null)
+
+    if [ -n "${server_ip}" ]; then
+	echo "** Server IP: ${server_ip}"
+    else
+	echo "** FAILED TO RESET server_ip"
+    fi
+}
+
 server_update_ip() {
     local server_ip=$(zdcfg get server_ip 2> /dev/null)
 
@@ -433,6 +452,31 @@ server_update_ip() {
     fi
 
     echo "Server IP: $server_ip"
+
+    # Check if ip is valid
+    read -a instance_query <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:'${OPENRESTY_PORT}'/zonama-instance-id?why=start' 2> /dev/null)
+
+    if [ "${instance_query[1]}" != "200" ]; then
+	echo "** ERROR: Local zonama-instance-id service is not running on port ${OPENRESTY_PORT} as expected, giving up." >&2
+	exit 12
+    fi
+
+    local our_instance="${instance_query[${#instance_query[@]}-1]}"
+
+    local result=$(curl -s -A zonamaipscan --connect-timeout 0.03 -m 0.03 'http://'${server_ip}':'${OPENRESTY_PORT}'/zonama-instance-id?why=start' 2>/dev/null)
+
+    if [ "X$result" != "X$our_instance" ]; then
+	echo "** ERROR: server_ip ($server_ip) is not valid."
+	reset_server_ip
+        server_ip=$(zdcfg get server_ip 2> /dev/null)
+
+	if [ -z "${server_ip}" ]; then
+	    echo "** failed to reset server ip, please fix."
+	    exit 12
+	fi
+    else
+	echo "** Verified server_ip against zonama-instance-id service"
+    fi
 
     eval $(get_config --bash ZoneGalaxyID)
 
@@ -707,6 +751,7 @@ post_debug_body() {
         "tre_check"
         "tail -100 ${WORKSPACE}/Core3/MMOCoreORB/bin/screenlog.0"
         "tail -100 ${WORKSPACE}/Core3/MMOCoreORB/bin/log/core3.log"
+        "tail -25 ${OPENRESTY_DIR}/nginx/logs/error.log"
 	"/sbin/ifconfig -a"
 	"mysql swgemu -tve 'select galaxy_id,name,address,port,pingport,population from galaxy'"
 	"zdcfg dump-flags"
@@ -759,7 +804,7 @@ server_latest()
     (
         set -xe
         cd ${BUILD_DIR}
-        git stash save "swgemu-latest "$(date)
+        git stash save "swgemu-latest $(date)"
         git pull
         git stash pop
         cd ~/workspace/PublicEngine
