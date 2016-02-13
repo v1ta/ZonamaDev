@@ -57,7 +57,7 @@ The system should update on reboot, please reboot the vm:
 
 #### Local config for core and ram
 
-In the ~/ZonamdaDev/fasttrack directory you can create a simple YAML file that sets cores and/or ram:
+On the host (usually Windows or OSX) in the ~/ZonamdaDev/fasttrack directory you can create a simple YAML file that sets cores and/or ram:
 
 Example config.yml:
 ```yaml
