@@ -758,6 +758,7 @@ post_debug_body() {
 	"zdcfg get-all"
         "uname -a"
         "df -h"
+	"nproc"
         "top -Hbn 1"
     )
 
