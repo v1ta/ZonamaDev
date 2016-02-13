@@ -71,7 +71,6 @@ setup_server_ip() {
     for i in $(seq ${timeout} -1 1)
     do
 	if zdcfg check-flag iplist.lock; then
-	    echo "$i: iplist.lock still set"
 	    let "a=$i % 7"
 	    if [ $a -eq 0 ]; then
 		notice "Setup IP" "Waiting up to $i seconds for IP discovery to complete."
@@ -89,7 +88,7 @@ setup_server_ip() {
 	notice "IP Discovery Complete" "Please choose your server's ip address."
     fi
 
-    echo "** Setup Server IP **"
+    echo "** Prompt user for server IP **"
 
     # Prompt them until they get one set or default
     while :
