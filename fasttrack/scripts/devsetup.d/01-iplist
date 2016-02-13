@@ -78,25 +78,12 @@ update_iplist() {
     # A unique id so we can see these across multiple logs etc.
     local scan_token=$(date|md5sum|cut -d' ' -f1)
 
-    for i in 5 4 3 2 1
-    do
-	read -a instance_query <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2> /dev/null)
+    local our_instance=$(get_instance "${scan_token}")
 
-	if [ "${instance_query[1]}" = "200" ]; then
-	    echo "** Found zonama-instance-id service on localhost."
-	    break
-	fi
-
-	echo "** Waiting $i seconds for nginx zonama-instance-id service to start"
-	sleep 1
-    done
-
-    if [ "${instance_query[1]}" != "200" ]; then
-	echo "** ERROR: Local zonama-instance-id service is not running on port ${OPENRESTY_PORT} as expected, giving up."
+    if [ -z "${our_instance}" ]; then
+	echo "** failed to find our instance!"
 	exit 1
     fi
-
-    local our_instance="${instance_query[${#instance_query[@]}-1]}"
 
     echo "** Our instance ID: ${our_instance}"
 
@@ -155,9 +142,66 @@ update_iplist() {
   ) < /dev/null > /tmp/iplist.out 2>&1 &
 }
 
+get_instance() {
+    local scan_token=$1
+
+    read -a instance_query <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2> /dev/null)
+    for i in 5 4 3 2 1
+    do
+	read -a instance_query <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2> /dev/null)
+
+	if [ "${instance_query[1]}" = "200" ]; then
+	    echo "** Found zonama-instance-id service on localhost." >&2
+	    break
+	fi
+
+	echo "** Waiting $i seconds for nginx zonama-instance-id service to start" >&2
+	sleep 1
+    done
+
+    if [ "${instance_query[1]}" != "200" ]; then
+	echo "** ERROR: Local zonama-instance-id service is not running on port ${OPENRESTY_PORT} as expected, giving up." >&2
+	return 1
+    fi
+
+    echo "${instance_query[${#instance_query[@]}-1]}"
+
+    return 0
+}
+
+check_ip() {
+    local scan_token=$(date|md5sum|cut -d' ' -f1)
+    local our_instance=$(get_instance "${scan_token}")
+    local server_ip=$(zdcfg get server_ip)
+
+    if [ -z "${server_ip}" ]; then
+	echo "server_ip not set, check_ip skipped"
+	return 0
+    fi
+
+    local result=$(curl -s -A zonamaipscan --connect-timeout 0.03 -m 0.03 'http://'${server_ip}':'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
+
+    if [ "X$result" = "X$our_instance" ]; then
+	echo "** Found ourselves at server_ip (${server_ip})"
+	return 0
+    else
+	alert "Invalid Server IP" "Server IP was ${server_ip}, but it does not appear to be valid anymore.  Please choose a new ip setting."
+	zdcfg clear server_ip
+    fi
+
+    return 1
+}
+
 IPLIST=$(zdcfg get iplist 2> /dev/null)
 
 if $FORCE; then
+    zdcfg clear iplist
+    IPLIST=''
+fi
+
+if check_ip; then
+    echo "IP Check passed."
+else
     zdcfg clear iplist
     IPLIST=''
 fi
