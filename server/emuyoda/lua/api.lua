@@ -135,7 +135,17 @@ local function load_config()
 	ngx.log(ngx.ERR, 'load_config failed: yoda_config_path=[' .. yoda_config_path .. '] err=' .. err)
     end
 
-    local yoda_cfg = setmetatable({ ZDHOME = os.getenv("HOME") }, {__index=_G})
+    -- TODO Automatically load these from common/global.config
+
+    local global_config = {
+      ['ZDUSER']		= os.getenv("LOGNAME"),
+      ['ZDHOME']		= os.getenv("HOME"),
+      ['WORKSPACE']		= os.getenv("WORKSPACE") or os.getenv("HOME") .. '/workspace',
+      ['RUN_DIR']		= os.getenv("RUN_DIR") or os.getenv("HOME") .. '/workspace/Core3/MMOCoreORB/bin',
+      ['ZONAMADEV_CONFIG_HOME']	= zonamadev_config_home,
+    }
+
+    local yoda_cfg = setmetatable(global_config, {__index=_G})
     assert(pcall(setfenv(assert(loadfile(yoda_config_path)), yoda_cfg)))
     setmetatable(yoda_cfg, nil)
 
