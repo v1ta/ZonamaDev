@@ -83,4 +83,4 @@ The next time you do vagrant reload or vagrant up these settings will take effec
 
 ### For More Information
 
-Please see [https://github.com/lordkator/ZonamaDev/wiki](The Wiki)
+Please see [The Wiki](https://github.com/lordkator/ZonamaDev/wiki)
