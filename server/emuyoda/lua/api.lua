@@ -135,7 +135,7 @@ local function load_config()
 	ngx.log(ngx.ERR, 'load_config failed: yoda_config_path=[' .. yoda_config_path .. '] err=' .. err)
     end
 
-    local yoda_cfg = setmetatable({}, {__index=_G})
+    local yoda_cfg = setmetatable({ ZDHOME = os.getenv("HOME") }, {__index=_G})
     assert(pcall(setfenv(assert(loadfile(yoda_config_path)), yoda_cfg)))
     setmetatable(yoda_cfg, nil)
 
