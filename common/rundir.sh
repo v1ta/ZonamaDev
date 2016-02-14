@@ -21,19 +21,16 @@ if [ -z "$ME" ]; then
 fi
 
 # Hunt for global.config
-if [ -f "$HOME/ZonamaDev/common/global.config" ]; then
-    export ZDCFGPATH="${HOME}/common/global.config"
-else
-    dir=$(dirname $ME)
-    for i in "" "/.." "/../.." "/../../.."
-    do
-	cfg="${dir}${i}/common/global.config"
+dir=$(dirname $ME)
+for i in "$HOME" "${dir}" "${dir}/.." "${dir}/../.." "${dir}/../../.."
+do
+    cfg="${i}/ZonamaDev/common/global.config"
 
-	if [ -f "${cfg}" ]; then
-	    export ZDCFGPATH="${cfg}"
-	fi
-    done
-fi
+    if [ -f "${cfg}" ]; then
+	export ZDCFGPATH="${cfg}"
+	break
+    fi
+done
 
 if [ -z "${ZDCFGPATH}" -o ! -f "${ZDCFGPATH}" ]; then
     echo "** ERROR: Can not find global.config, GET HELP!"
