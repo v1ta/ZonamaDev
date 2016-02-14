@@ -80,3 +80,7 @@ bridge: "en0"
 ```
 
 The next time you do vagrant reload or vagrant up these settings will take effect.
+
+### For More Information
+
+Please see [https://github.com/lordkator/ZonamaDev/wiki](The Wiki)
