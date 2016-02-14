@@ -1,5 +1,5 @@
 -- EmuYoda Configuration
-emuConfigPath = ZDHOME .. '/workspace/Core3/MMOCoreORB/bin/conf/config.lua'
+emuConfigPath = RUN_DIR .. '/conf/config.lua'
 yodaSecret = '460b06d2de997fac8a54aa87636cd937'
 consoleLevelRead = 1
 consoleLevelWrite = 15
