@@ -69,7 +69,7 @@ start_yoda() {
     if check_yoda; then
 	zdcfg set-flag "have_yoda"
 
-	local yoda_autolaunch=(zdcfg get yoda_autolaunch)
+	local yoda_autolaunch=$(zdcfg get yoda_autolaunch)
 
 	if [ -z "${yoda_autolaunch}" ]; then
 	    yoda_autolaunch="yes"
