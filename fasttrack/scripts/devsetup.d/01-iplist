@@ -105,7 +105,7 @@ update_iplist() {
 	read -a aa <<<$(ip -o -4 addr show ${default_route_interface})
 	local tmp_ip=$(echo ${aa[3]}|cut -d/ -f1)
 
-	local result=$(curl -s -A zonamaipscan --connect-timeout 0.03 -m 0.03 'http://'${tmp_ip}':'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
+	local result=$(curl -s -A zonamaipscan --connect-timeout 1 -m 1 'http://'${tmp_ip}':'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
 
 	if [ "X$result" = "X$our_instance" ]; then
 	    echo "** Look 'ma no hands, found ourselves on ${default_route_interface} at ${tmp_ip}"
@@ -193,7 +193,7 @@ check_ip() {
 	return 0
     fi
 
-    local result=$(curl -s -A zonamaipscan --connect-timeout 0.03 -m 0.03 'http://'${server_ip}':'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
+    local result=$(curl -s -A zonamaipscan --connect-timeout 5 -m 5 'http://'${server_ip}':'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
 
     if [ "X$result" = "X$our_instance" ]; then
 	echo "** Found ourselves at server_ip (${server_ip})"
