@@ -76,7 +76,7 @@ start_yoda() {
 	    zdcfg set yoda_autolaunch "${yoda_autolaunch}"
 	fi
 
-	if [ "X$yoda_autolaunch" -eq "Xyes" ]; then
+	if [ "X$yoda_autolaunch" = "Xyes" ]; then
 	    launch_yoda
 	fi
     else
