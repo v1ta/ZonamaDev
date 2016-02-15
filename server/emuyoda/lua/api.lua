@@ -763,7 +763,7 @@ function service_control(path)
     if ngx.var.arg_arg2 then cmd = cmd .. " " .. ngx.var.arg_arg2 end
 
     -- TODO is this enough to avoid injection attack?
-    cmd = cmd:gsub("[`$()%c]", "")
+    cmd = cmd:gsub("[;`$()%c\"|]", "")
 
     ngx.log(ngx.ERR, "cmd=[" .. cmd .. "]")
 
