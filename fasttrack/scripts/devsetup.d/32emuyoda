@@ -10,7 +10,7 @@
 YODA_STARTED=false
 YODA_URL='http://127.0.0.1:'${OPENRESTY_PORT}'/' 
 
-setup_yoda() {
+install_yoda() {
     if [ -d "${EMUYODA_DIR}/." ]; then
 	return 1
     fi
@@ -58,15 +58,30 @@ launch_yoda() {
     YODA_STARTED=true
 }
 
-if setup_yoda; then
-    if check_yoda; then
-	launch_yoda
-	step_complete 0
+start_yoda() {
+    if install_yoda; then
+	if check_yoda; then
+	    zdcfg set yoda_autolaunch 'yes'
+	    step_complete 0
+	fi
     fi
-fi
 
-if check_yoda; then
-    zdcfg set-flag have_yoda
-else
-    zdcfg clear-flag have_yoda
-fi
+    if check_yoda; then
+	zdcfg set-flag "have_yoda"
+
+	local yoda_autolaunch=(zdcfg get yoda_autolaunch)
+
+	if [ -z "${yoda_autolaunch}" ]; then
+	    yoda_autolaunch="yes"
+	    zdcfg set yoda_autolaunch "${yoda_autolaunch}"
+	fi
+
+	if [ "X$yoda_autolaunch" -eq "Xyes" ]; then
+	    launch_yoda
+	fi
+    else
+	zdcfg clear-flag "have_yoda"
+    fi
+}
+
+start_yoda
