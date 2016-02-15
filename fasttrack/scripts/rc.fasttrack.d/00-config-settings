@@ -22,27 +22,30 @@ SWGEMUDEV_GITURL=$(cat /.swgemudev.giturl)
 
 #
 ## Upgrade flags and configs to zdcfg
-for i in ~vagrant/.devsetup.ran ~vagrant/.rc.fasttrack.ran ~vagrant/.tzdata.ran ~vagrant/.firstboot.ran ~vagrant/.visual ~vagrant/.iplist ~vagrant/.gerrit_username ~vagrant/.force_ip ~vagrant/.suspend_fasttrack ~vagrant/.suspend_devsetup
-do
-    if [ -f $i ]; then
-	set -x
-	case "$i" in
-	    */.force_ip ) zdcfg set server_ip $(cat $i); rm -f "$i" ;;
-	    */.tzdata.ran ) zdcfg set-flag "devsetup/03tzdata.status" $(cat $i)" 0 ported=true"; rm -f "$i" ;;
-	    */.firstboot.ran ) zdcfg set-flag  "$(basename $i .ran|sed 's/^\.//')/__full_run.status" $(stat -c'%Y' "$i")" 0 "$(cat "$i")" ported=true"; rm -f "$i" ;;
-	    *.ran ) zdcfg set-flag "$(basename $i .ran|sed 's/^\.//')/__full_run.status" $(cat $i)" 0 ported=true"; rm -f "$i" ;;
-	    */.suspend* ) zdcfg set-flag $(basename $i|sed 's/^\.//'); rm -f "$i" ;;
-	    * ) zdcfg set "$(basename $i|sed 's/^\.//')" "$(cat $i)"; rm -f "$i" ;;
-        esac
-	set +x
+(
+    cd ${ZDHOME}
+    for i in .devsetup.ran .rc.fasttrack.ran .tzdata.ran .firstboot.ran .visual .iplist .gerrit_username .force_ip .suspend_fasttrack .suspend_devsetup
+    do
+	if [ -f "$i" ]; then
+	    set -x
+	    case "$i" in
+		.force_ip ) zdcfg set server_ip $(cat "$i"); rm -f "$i" ;;
+		.tzdata.ran ) zdcfg set-flag "devsetup/03tzdata.status" $(cat "$i")" 0 ported=true"; rm -f "$i" ;;
+		.firstboot.ran ) zdcfg set-flag  "$(basename $i .ran|sed 's/^\.//')/__full_run.status" $(stat -c'%Y' "$i")" 0 "$(cat "$i")" ported=true"; rm -f "$i" ;;
+		*.ran ) zdcfg set-flag "$(basename $i .ran|sed 's/^\.//')/__full_run.status" $(cat "$i")" 0 ported=true"; rm -f "$i" ;;
+		*.suspend* ) zdcfg set-flag $(basename $i|sed 's/^\.//'); rm -f "$i" ;;
+		* ) zdcfg set "$(basename $i|sed 's/^\.//')" "$(cat $i)"; rm -f "$i" ;;
+	    esac
+	    set +x
 
-	if [ ! -f $i ]; then
-	    msg "Ported $i to zdcfg"
-	else
-	    error "Failed to port $i to zdcfg!" 100
+	    if [ ! -f "$i" ]; then
+		msg "Ported $i to zdcfg"
+	    else
+		error "Failed to port $i to zdcfg!" 100
+	    fi
 	fi
-    fi
-done
+    done
+)
 
 #
 ## Check for suspend flag

@@ -1,13 +1,15 @@
 #!/bin/bash
 #
-# package-prep.sh - Prepare box for vagrant package
+# package-prep.sh - Prepare box for packaging
 #
 # Author: Lord Kator <lordkator@swgemu.com>
 #
 # Created: Mon Dec 28 13:54:13 EST 2015
 #
 
-cd ~vagrant
+source ~/ZonamaDev/common/global.config
+
+cd ${ZDHOME}
 
 if [ $# -ne 2 -o -z "$1" -o -z "$2" ]; then
     echo -e "Usage: $0 #=$# {version} {builder_name}\n\t{version} - Basebox version x.y.z (e.g. 0.0.3, 0.0.9 or 1.2.3)\n\t{builder_name} - Who is building this box (e.g lordkator, scurby, darthvaderdev)"
@@ -98,22 +100,22 @@ echo ">> Make new swap"
 #####################
 ## Fix permissions ##
 #####################
-chown -R vagrant:vagrant ~vagrant
+chown -R ${ZDUSER}:${ZDUSER} ${ZDHOME}
 
 ###################################################
 ## Clean up any misc stuff in dev's user account ##
 ###################################################
 echo ">> Cleanup user files that shouldn't be in the base box image."
 (
-    cd ~vagrant
+    cd ${ZDHOME}
     mysql -e 'drop database swgemu' > /dev/null 2>&1 ;
     rm -rf .bash* .profile .inputrc .vim* .cache /var/mail/* .ssh/config .visual .gerrit_username .mysql_history .devsetup.ran .tzdata.ran .config/ZonamaDev/config
     rm -rf .xsession* .gitconfig .lesshst .ssh/id_* .subversion .cache .force_ip .iplist*
-    sed -e '/ vagrant$/p' -e 'd' -i .ssh/authorized_keys
+    sed -e "/ ${ZDUSER}$/p" -e 'd' -i .ssh/authorized_keys
 ) 2> /dev/null
 
 # Basic files
-cp -vr /etc/skel/. ~vagrant
+cp -vr /etc/skel/. ${ZDHOME}
 
 ########################
 ## Stop all the noise ##
@@ -122,7 +124,7 @@ service lightdm stop
 service vboxadd stop
 service mysql stop
 service syslog stop
-/home/vagrant/server/openresty/nginx/sbin/nginx -s stop > /dev/null 2>&1
+${ZDHOME}/server/openresty/nginx/sbin/nginx -s stop > /dev/null 2>&1
 
 # Make sure VBox service really stops
 vbpid=$(cat /var/run/vboxadd-service.pid 2> /dev/null)
@@ -131,7 +133,7 @@ vbpid=$(cat /var/run/vboxadd-service.pid 2> /dev/null)
 
 sleep 5
 
-ps -fu vagrant
+ps -fu ${ZDUSER}
 
 ##########################
 ## Cleanup all the logs ##
@@ -141,7 +143,7 @@ find /var/log -name \*.gz -o -name \*.[0-9] | xargs --no-run-if-empty -t rm
 
 rm -fr /var/tmp/* /tmp/* /etc/ssh/ssh_host*_key* /root/.viminfo /root/.bash_history /root/.lesshst /root/.bash_history /root/.ssh/* /var/log/*.gz /var/log/*.[1-9]* /var/log/*.old /var/spool/anacron/*
 
-find /var/log ~vagrant/server/openresty/nginx/logs /etc/machine-id /var/lib/dbus/machine-id -type f | while read fn
+find /var/log ${ZDHOME}/server/openresty/nginx/logs /etc/machine-id /var/lib/dbus/machine-id -type f | while read fn
 do
     cp /dev/null "$fn"
 done

@@ -10,14 +10,17 @@
 for i in $(dirname $ME)'/../patches/'*
 do
     msg "Patch $i: APPLY"
-    if (cd /;exec patch --verbose -p0 -Nft) < "$i"; then
+    tmp="/tmp/"$(basename "${i}")
+    sed  -e 's!\${ZDUSER}!'"${ZDUSER}"'!g' -e 's!\${ZDHOME}!'"${ZDHOME}"'!g' "${i}" > "${tmp}"
+    if (cd /;exec patch --verbose -p0 -Nft) < "${tmp}"; then
 	msg "Patch $i: SUCCESS"
+	rm -f "${tmp}"
     else
 	st=$?
 	if [ $st -eq 1 ]; then
-	    msg "Patch $i: WARNING, Returned $st"
+	    msg "Patch ${tmp}: WARNING, Returned $st"
 	else
-	    msg "Patch $i: FAILED! Returned $st"
+	    msg "Patch ${tmp}: FAILED! Returned $st"
 	    exit 12
 	fi
     fi

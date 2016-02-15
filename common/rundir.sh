@@ -20,9 +20,24 @@ if [ -z "$ME" ]; then
     fi
 fi
 
-if [ -z "$ZONAMADEV_CONFIG_HOME" ]; then
-    export ZONAMADEV_CONFIG_HOME=${XDG_CONFIG_HOME:-/home/vagrant/.config}/ZonamaDev
+# Hunt for global.config
+dir=$(dirname $ME)
+for i in "$HOME" "${dir}" "${dir}/.." "${dir}/../.." "${dir}/../../.."
+do
+    cfg="${i}/ZonamaDev/common/global.config"
+
+    if [ -f "${cfg}" ]; then
+	export ZDCFGPATH="${cfg}"
+	break
+    fi
+done
+
+if [ -z "${ZDCFGPATH}" -o ! -f "${ZDCFGPATH}" ]; then
+    echo "** ERROR: Can not find global.config, GET HELP!"
+    exit 252
 fi
+
+source "${ZDCFGPATH}"
 
 TAG=$(basename $ME)
 RUN_STEP="init"

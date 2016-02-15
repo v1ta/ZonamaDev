@@ -27,7 +27,7 @@ local package = package
 
 module(...)
 
-local console_log = "/home/vagrant/workspace/Core3/MMOCoreORB/bin/screenlog.0"
+local console_log = os.getenv("HOME") .. "/workspace/Core3/MMOCoreORB/bin/screenlog.0"
 
 local function get_pid()
     local found = procps.pgrep_pidlist("core3")

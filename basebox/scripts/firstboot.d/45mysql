@@ -13,7 +13,7 @@
 # If a password is set we need to clean things up so basebox data doesn't leak to fasttrack
 if mysql -uroot -p${DEFAULT_MYSQL_PASSWORD} -e "SHOW DATABASES" > /dev/null 2>&1; then
     echo "** Looks like mysql password has been set, trying to clear it..."
-    rm -f ~vagrant/.my.cnf
+    rm -f ${ZDHOME}/.my.cnf
     mysqladmin -uroot -p"$DEFAULT_MYSQL_PASSWORD" password ''
 fi
 
