@@ -55,6 +55,23 @@ The system should update on reboot, please reboot the vm:
 
 ### Advanced Featues
 
+#### DESTROY AND START FRESH
+
+To uninstall and re-install fresh on the host system type:
+
+````
+curl -L http://downloads.lordkator.com/bootstrap.sh | bash -s destroy
+````
+
+
+#### UNINSTALL
+
+To uninstall on the host system type:
+
+````
+curl -L http://downloads.lordkator.com/bootstrap.sh | bash -s uninstall
+````
+
 #### Local config for core and ram
 
 On the host (usually Windows or OSX) in the ~/ZonamdaDev/fasttrack directory you can create a simple YAML file that sets cores and/or ram:
