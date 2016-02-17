@@ -122,9 +122,11 @@ check_win() {
 }
 
 check_osx() {
+    return 0
 }
 
 check_linux() {
+    return 0
 }
 
 yorn() {
