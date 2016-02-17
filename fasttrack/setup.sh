@@ -77,13 +77,6 @@ size_cores_linux() {
 }
 
 calc_cores() {
-    case $(uname -s) in
-	Darwin ) OS='osx' ;;
-	*Linux* ) OS='linux' ;;
-	*_NT* ) OS='win';;
-	* ) echo "Not sure what OS you are on, guessing Windows"; OS='win';;
-    esac
-
     local total_ram=$(size_ram_$OS)
     local total_cores=$(size_cores_$OS)
     local bycore=0
@@ -107,6 +100,33 @@ calc_cores() {
     echo $cores
 }
 
+check_win() {
+    # Check for bad embedded curl in Vagrant
+    # See https://github.com/mitchellh/vagrant/issues/6852
+    /c/HashiCorp/Vagrant/embedded/bin/curl.exe > /dev/null 2>&1
+
+    if [ $? -eq 127 ]; then
+	if [ -f /mingw64/bin/curl.exe ]; then
+	    echo "** WARNING: Patching your vagrant's embeded curl since it seems to be broken **"
+	    cp /mingw64/bin/curl.exe /c/HashiCorp/Vagrant/embedded/bin/curl.exe
+	else
+	    echo "###################################################################"
+	    echo "## YOU NEED TO INSTALL THE FOLLOWING PACKAGE FIRST, THEN RE-TRY: ##"
+	    echo "## Microsoft Visual C++ 2010 SP1 Redistributable Package         ##"
+	    echo "## https://www.microsoft.com/en-us/download/details.aspx?id=8328 ##"
+	    echo "###################################################################"
+	    explore "https://www.microsoft.com/en-us/download/details.aspx?id=8328"
+	    exit 0
+	fi
+    fi
+}
+
+check_osx() {
+}
+
+check_linux() {
+}
+
 yorn() {
     echo -n -e "$@ Y\b"
     read yorn
@@ -116,7 +136,18 @@ yorn() {
     return 0
 }
 
-time main
+export OS='unknown'
+
+case $(uname -s) in
+    Darwin ) OS='osx' ;;
+    *Linux* ) OS='linux' ;;
+    *_NT* ) OS='win';;
+    * ) echo "Not sure what OS you are on, guessing Windows"; OS='win';;
+esac
+
+check_$OS
+
+time main "$@"
 
 exit 0
 
