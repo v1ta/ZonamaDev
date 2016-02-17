@@ -42,6 +42,23 @@ main() {
 	* ) echo "Not sure what OS you are on, guessing Windows"; OS='win';;
     esac
 
+    # Handle destroy or uninstall
+    if [ "X$1" = "Xdestroy" -o "X$1" = "Xuninstall" ]; then
+	if reset_zd "$1"; then
+	    echo "######################################"
+	    echo "## ZonamaDev Host Environment Reset ##"
+	    echo "######################################"
+
+	    if [ "X$1" = "Xuninstall" ]; then
+		echo "** ZonamaDev has been uninstalled from this computer **"
+		exit 0
+	    fi
+	else
+	    echo "** Aborted by user **"
+	    exit 14
+	fi
+    fi
+
     ## Check for git
     if git --version > /dev/null 2>&1; then
 	:
@@ -62,6 +79,8 @@ main() {
 
     # If we're under the ZonamaDev dir back out to parent
     cd ${PWD/ZonamaDev*/}
+
+    echo "** ZDHOME=${PWD} **"
 
     ## Clone Repo
     if git clone https://github.com/lordkator/ZonamaDev.git; then
@@ -196,6 +215,70 @@ check_vagrant_win() {
     echo "** Vagrant version $ver **"
 }
 
+reset_zd() {
+    echo "##################################################################################"
+    echo "## WARNING THIS WILL REMOVE ALL ZonamaDev VM's AND REMOVE YOUR ZonamaDev FOLDER ##"
+    echo "##################################################################################"
+
+    local msg="Are you sure you want to destroy the old setup?"
+
+    if [ "X$1" = "Xuninstall" ]; then
+	msg="Are you sure you want to uninstall ZonamaDev?"
+    fi
+
+    if yorn "\n${msg}"; then
+	:
+    else
+	return 1
+    fi
+
+    (
+	cd /
+	echo "** Checking for ZonamaDev vagrant VM images..."
+	found=false
+	vagrant global-status|grep ZonamaDev|while read id name provider state dir
+	 do
+	     echo "Destroy VMid $id from $dir"
+	     vagrant destroy "${id}" --force
+	     found=true
+	 done
+
+	 if $found; then
+	     echo "** Removed all ZonamaDev VM images **"
+	 else
+	     echo "** No ZonamaDev VM images where found **"
+	 fi
+    )
+
+    echo "** Removing any cached copies of base box **"
+    vagrant box remove lordkator/swgemudev-deb-jessie --all --force
+
+    echo "** Looking for the ZonamaDev host directory..."
+    local found_zd=false
+    for i in "$PWD" "$HOME"
+    do
+	local zddir="${i}/ZonamaDev"
+	if [ -d "${zddir}" ]; then
+	    echo "** Removing ${zddir} **"
+	    rm -fr "${zddir}"
+	    found_zd=true
+	fi
+    done
+
+    if $found_zd; then
+	echo "** Removed ZonamaDev host directory **"
+    else
+	echo "** Did not find the ZonamaDev host directory **"
+    fi
+
+    if [ -d ~/.vagrant.d ]; then
+	echo "** Removing vagrant settings directory **"
+	rm -fr ~/.vagrant.d
+    fi
+
+    return 0
+}
+
 yorn() {
   if tty -s; then
       echo -n -e "$@ Y\b" > /dev/tty
@@ -208,6 +291,6 @@ yorn() {
   return 0
 }
 
-main < /dev/tty
+main "$@" < /dev/tty
 
 exit 0
