@@ -29,9 +29,18 @@ main() {
 
     time vagrant up
 
-    if [ $? == 101 ]; then
+    local ret=$?
+
+    if [ $ret -eq 101 ]; then
 	echo "** Running vagrant up again after plugin install **"
 	time vagrant up
+	ret=$?
+    fi
+
+    if [ $ret -ne 0 ]; then
+	echo "** Vagrant failed to bring the VM image up, look at errors above for clues **"
+	echo "** If this continues get help here: https://github.com/lordkator/ZonamaDev/issues **"
+	exit 1
     fi
 
     sleep 5
