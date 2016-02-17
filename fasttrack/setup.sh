@@ -20,9 +20,13 @@ main() {
 
     if [ ! -f 'config.yml' ]; then
 	local cores=$(calc_cores)
-	let "ram=(768 * $cores)"
-	echo -e "cores: ${cores}\nram: ${ram}" > config.yml
-	echo "Setting config.yml to use ${cores} cores for guest and ${ram}m of ram."
+	if [ $cores -gt 0 ]; then
+	    let "ram=(768 * $cores)"
+	    echo -e "cores: ${cores}\nram: ${ram}" > config.yml
+	    echo "** Setting config.yml to use ${cores} cores for guest and ${ram}m of ram. **"
+	else
+	    echo "** Using default cores/ram **"
+	fi
     fi
 
     echo "vagrant up"
