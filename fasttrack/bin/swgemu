@@ -453,29 +453,33 @@ server_update_ip() {
 
     echo "Server IP: $server_ip"
 
-    # Check if ip is valid
-    read -a instance_query <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:'${OPENRESTY_PORT}'/zonama-instance-id?why=start' 2> /dev/null)
+    if zdcfg check-flag disable_ipcheck; then
+	echo '** Skipping ipcheck because flag disable_ipcheck is on **'
+    else
+	# Check if ip is valid
+	read -a instance_query <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:'${OPENRESTY_PORT}'/zonama-instance-id?why=start' 2> /dev/null)
 
-    if [ "${instance_query[1]}" != "200" ]; then
-	echo "** ERROR: Local zonama-instance-id service is not running on port ${OPENRESTY_PORT} as expected, giving up." >&2
-	exit 12
-    fi
-
-    local our_instance="${instance_query[${#instance_query[@]}-1]}"
-
-    local result=$(curl -s -A zonamaipscan --connect-timeout 0.03 -m 0.03 'http://'${server_ip}':'${OPENRESTY_PORT}'/zonama-instance-id?why=start' 2>/dev/null)
-
-    if [ "X$result" != "X$our_instance" ]; then
-	echo "** ERROR: server_ip ($server_ip) is not valid."
-	reset_server_ip
-        server_ip=$(zdcfg get server_ip 2> /dev/null)
-
-	if [ -z "${server_ip}" ]; then
-	    echo "** failed to reset server ip, please fix."
+	if [ "${instance_query[1]}" != "200" ]; then
+	    echo "** ERROR: Local zonama-instance-id service is not running on port ${OPENRESTY_PORT} as expected, giving up." >&2
 	    exit 12
 	fi
-    else
-	echo "** Verified server_ip against zonama-instance-id service"
+
+	local our_instance="${instance_query[${#instance_query[@]}-1]}"
+
+	local result=$(curl -s -A zonamaipscan --connect-timeout 0.03 -m 0.03 'http://'${server_ip}':'${OPENRESTY_PORT}'/zonama-instance-id?why=start' 2>/dev/null)
+
+	if [ "X$result" != "X$our_instance" ]; then
+	    echo "** ERROR: server_ip ($server_ip) is not valid."
+	    reset_server_ip
+	    server_ip=$(zdcfg get server_ip 2> /dev/null)
+
+	    if [ -z "${server_ip}" ]; then
+		echo "** failed to reset server ip, please fix."
+		exit 12
+	    fi
+	else
+	    echo "** Verified server_ip against zonama-instance-id service"
+	fi
     fi
 
     eval $(get_config --bash ZoneGalaxyID)

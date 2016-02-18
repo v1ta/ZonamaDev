@@ -184,6 +184,11 @@ get_instance() {
 check_ip() {
     msg "Validate server ip"
 
+    if zdcfg check-flag disable_ipcheck; then
+	echo '** Skipping ipcheck because flag disable_ipcheck is on **'
+	return 0
+    fi
+
     local scan_token=$(date|md5sum|cut -d' ' -f1)
     local our_instance=$(get_instance "${scan_token}")
     local server_ip=$(zdcfg get server_ip)
