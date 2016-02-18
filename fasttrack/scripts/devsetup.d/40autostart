@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# 40autostart - Autostart server
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Thu Feb 18 07:00:14 EST 2016
+#
+
+autostart_server() {
+    msg "Starting server"
+    swgemu start --auto
+    msg "swgemu start --auto RET=$?"
+}
+
+if zdcfg check-flag autostart_server; then
+    autostart_server
+fi
