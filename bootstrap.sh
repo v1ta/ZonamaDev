@@ -204,7 +204,7 @@ check_virtualbox_linux() {
 	exit 1
     fi
 
-    local ver=$("${vbm}/VBoxManage" --version)
+    local ver=$("${vbm}" --version)
 
     case $ver in
 	5.[0-9].1[2-9]* ) : ;;
