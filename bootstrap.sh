@@ -191,6 +191,31 @@ check_virtualbox_win() {
     echo "** Virtualbox version $ver **"
 }
 
+check_virtualbox_linux() {
+    local vbm=$(type -P VBoxManage)
+
+    if [ -z "${vbm}" ]; then
+	echo -e "** You need to install VirtualBox for Linux **\n"
+
+	echo -e '** Please go to https://www.virtualbox.org/wiki/Linux_Downloads and follow directions there to install virtualbox'
+
+	echo -e '** After you have virtualbox installed re-try this command.'
+
+	exit 1
+    fi
+
+    local ver=$("${vbm}/VBoxManage" --version)
+
+    case $ver in
+	5.[0-9].1[2-9]* ) : ;;
+	* ) echo "Unsupported version of virtualbox ($ver), please upgrade to 5.0.12 or higher"
+	    exit 1
+	    ;;
+    esac
+
+    echo "** Virtualbox version $ver **"
+}
+
 check_vagrant_win() {
     local ver=$(vagrant --version | cut -d' ' -f2 2> /dev/null)
 
@@ -213,6 +238,30 @@ check_vagrant_win() {
     esac
 
     echo "** Vagrant version $ver **"
+}
+
+check_vagrant_osx() {
+    check_vagrant_win
+    return $?
+}
+
+check_vagrant_linux() {
+    check_vagrant_win
+
+    local dp=$(type -P dpkg)
+
+    if [ -z "${dp}" ]; then
+	echo "** WARNING: Without dpkg we can not check for zlib, you may need to manually install it for vagrant to work **"
+    else
+	if dpkg -s zlib1g-dev > /dev/null 2>&1; then
+	    :
+	else
+	    echo "** please make sure zlib1g-dev is installed **"
+	    exit
+	fi
+    fi
+
+    return $?
 }
 
 reset_zd() {
