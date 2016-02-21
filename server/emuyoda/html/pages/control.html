@@ -1,7 +1,17 @@
 <div class="container">
-<div class="panel" ng-class="{ 'panel-success': server_status.server_pid, 'panel-danger': !server_status.server_pid }">
+<div class="panel" ng-class="{ 'panel-success': server_status.zoneServer.uptime, 'panel-warning': server_status.server_pid && !server_status.zoneServer, 'panel-danger': !server_status.server_pid }">
 	<div class="panel-heading">
-	    <h3 class="panel-title">Server Console</h3>
+	    <h3 class="panel-title">Server Console
+	    <span ng-show="server_status.zoneServer">
+	    (Status: Ready for login, Name: {{ server_status.zoneServer.name }}, Connected: {{ server_status.zoneServer.users.connected }}, Max: {{ server_status.zoneServer.users.max }}, Uptime: {{ server_status.zoneServer.uptime | timestampToString }})
+	    </span>
+	    <span ng-show="server_status.server_pid && !server_status.zoneServer">
+	    (Status: Not ready for login, Process Uptime: {{ server_status.server_uptime }})
+	    </span>
+	    <span ng-show="!server_status.server_pid">
+	    (Status: Not running)
+	    </span>
+	    </h3>
 	</div>
 	<div class="panel-body">
 	    <div>
