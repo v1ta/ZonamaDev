@@ -27,7 +27,6 @@ local resty_sha1 = require "resty.sha1"
 local resty_sha256 = require "resty.sha256"
 local resty_string = require "resty.string"
 local ws_server = require "resty.websocket.server"
-local websocket_console = require "websocket_console"
 local assert = assert
 local loadfile = loadfile
 local math = math
@@ -40,12 +39,13 @@ local setfenv = setfenv
 local setmetatable = setmetatable
 local string = string
 local table = table
+local tcp = ngx.socket.tcp
 local tonumber = tonumber
 local tostring = tostring
 local session_dict = ngx.shared.session_dict
 local status_dict = ngx.shared.status_dict
 
-local api_version = "0.0.1"
+local api_version = "1.2.0"
 
 module(...)
 
@@ -180,7 +180,7 @@ local function load_config()
 
     emu_cfg['__FILE__'] = emu_config_path
 
-    local cfg = { ['emu'] = emu_cfg, ['yoda'] = yoda_cfg }
+    local cfg = { ['emu'] = emu_cfg, ['yoda'] = yoda_cfg, ['global'] = global_config }
 
     -- ngx.log(ngx.ERR, 'load_config = ' .. cjson.encode(cfg))
 
@@ -358,7 +358,7 @@ function auth_user(username, password)
       return false, nil
     end
 
-    ngx.log(ngx.ERR, "user object: " .. cjson.encode(user));
+    -- ngx.log(ngx.ERR, "user object: " .. cjson.encode(user));
 
     local accountStatus, err = updateAccount(user.account_id)
 
@@ -473,6 +473,135 @@ function auth_check(service)
     end
 
     return user
+end
+
+------------------------------------------------------------------------------
+-- Utility Functions
+------------------------------------------------------------------------------
+local function get_server_pid()
+    local found = procps.pgrep_pidlist("core3")
+
+    if #found > 1 then
+	ngx.log(ngx.ERR, "WARNING: Multiple copies of core running?")
+
+	return nil, "Multiple copies of core3 executable found"
+    end
+
+    return found[1]
+end
+
+-- parse_core3_status - Parse core3 serverStatus XML
+--
+-- Example XML:
+--
+-- <zoneServer>
+-- <name>swgemudev</name>
+-- <status>up</status>
+-- <users>
+-- <connected>2</connected>
+-- <cap>3000</cap>
+-- <max>0</max>
+-- <total>5</total>
+-- <deleted>0</deleted>
+-- </users>
+-- <uptime>11049</uptime>
+-- <timestamp>1455977014644</timestamp>
+-- </zoneServer>
+--
+local function parse_core3_status(xml)
+  local idx_cur = 1
+  local status = { }
+  local node_cur = status
+  local nodes = { }
+
+  while true do
+    local idx_start, idx_end, end_tag, label, args, empty = string.find(xml, "<(%/?)([%w:]+)(.-)(%/?)>", idx_cur)
+
+    if not idx_start then break end
+
+    if end_tag == "" then -- start tag
+      node_cur[label] = { }
+      nodes[#nodes+1] = node_cur[label]
+      node_cur = nodes[#nodes]
+    else -- end tag
+      table.remove(nodes)
+      node_cur = nodes[#nodes]
+
+      local value = string.sub(xml, idx_cur, idx_start - 1)
+
+      if not string.find(value, "^%s*$") then
+	  node_cur[label] = value
+      end
+    end 
+    idx_cur = idx_end + 1
+  end
+
+  return status
+end
+
+local function get_core3_status(cfg)
+    local err_msg
+    local sock, err = tcp()
+
+    if sock then
+	sock:settimeout(5000)
+
+	local ok, err = sock:connect(cfg.yoda.server_ip, cfg.emu.StatusPort)
+
+	if ok then
+	    local data, err, partial = sock:receiveuntil("</zoneServer>\n", { inclusive = true })()
+
+	    if data then
+		sock:close()
+
+		return parse_core3_status(data)
+	    else
+		err_msg = "Failed to read stream from socket (" .. cfg.yoda.server_ip .. "," .. cfg.emu.StatusPort .. "): " .. err
+	    end
+	else
+	    err_msg = "Failed to connect socket to (" .. cfg.yoda.server_ip .. "," .. cfg.emu.StatusPort .. "): " .. err
+	end
+    else
+	err_msg = "Failed to create socket: " .. err
+    end
+
+    sock:close()
+
+    return nil, err_msg
+end
+
+function get_server_status(cfg)
+    local pid, err = get_server_pid()
+
+    local server_status = {
+	["server_pid"] = pid or "",
+	["server_pid_error"] = err,
+	["server_ip"] = cfg.yoda.server_ip,
+	["login_port"] = cfg.emu.LoginPort,
+	["autoreg"] = cfg.emu.AutoReg,
+	["status_timestamp"] = os.time(),
+    }
+
+    local st, err = get_core3_status(cfg)
+
+    if st then
+	server_status.zoneServer = st.zoneServer
+    else
+	server_status.zoneServer_error = err
+    end
+
+    if pid then
+	local etime, err = procps.etime_string(pid)
+
+	if err then
+	    server_status.server_uptime = ""
+	    server_status.server_uptime_error = err
+	else
+	    server_status.server_uptime = etime
+	end
+    end
+
+    return server_status
 end
 
 ------------------------------------------------------------------------------
@@ -599,50 +728,30 @@ end
 function service_status(path)
     -- Anyone can get status? They could just try and login to get status etc..
     local u, token = get_auth_user()
-
     local r = init_response()
 
-    if ngx.req.get_method() == "GET" then
-	local cfg = load_config()
-
-	local pids = procps.pgrep_pidlist("core3")
-
-	r.response['server_status'] = {
-	    ["server_pid"] = pids[1] or "",
-	    ["server_ip"] = cfg.yoda.server_ip,
-	    ["login_port"] = cfg.emu.LoginPort,
-	    ["autoreg"] = cfg.emu.AutoReg
-	}
-
-	if pids[1] then
-	    local etime, err = procps.etime_string(pids[1])
-
-	    if err then
-		r.response.server_status.server_uptime = ""
-		r.response.server_status.server_uptime_error = err
-	    else
-		r.response.server_status.server_uptime = etime
-	    end
-	end
-
-	-- How many accounts do we have?
-	local res, err, errno, sqlstate = db_query("SELECT COUNT(*) as `count` FROM `accounts`;")
-
-	if res then
-	    r.response.server_status.mysql_status = 'ok'
-	    r.response.server_status.num_accounts = res[1]['count']
-	else
-	    r.response.server_status.mysql_status = errno .. ': ' .. err .. ' (' .. sqlstate .. ')'
-	end
-
-	if u then
-	    r.response.server_status.account = { username = u.username, admin_level = u.admin_level }
-	end
-
-	return_response(r, "OK")
+    if ngx.req.get_method() ~= "GET" then
+	return_error(r, "METHOD NOT SUPPORTED FOR THIS SERVICE", "INVALID_METHOD", "Method is not accepted for the this service", "SYSTEM", ngx.req.get_method(), "status")
     end
 
-    return_error(r, "METHOD NOT SUPPORTED FOR THIS SERVICE", "INVALID_METHOD", "Method is not accepted for the this service", "SYSTEM", ngx.req.get_method(), "status")
+    local cfg = load_config()
+
+    r.response.server_status = get_server_status(cfg)
+
+    -- How many accounts do we have?
+    local res, err, errno, sqlstate = db_query("SELECT COUNT(*) as `count` FROM `accounts`;")
+
+    if res then
+	r.response.server_status.num_accounts = res[1]['count']
+    else
+	r.response.server_status.mysql_error = errno .. ': ' .. err .. ' (' .. sqlstate .. ')'
+    end
+
+    if u then
+	r.response.server_status.account = { username = u.username, admin_level = u.admin_level }
+    end
+
+    return_response(r, "OK")
 end
 
 function service_account()
@@ -819,30 +928,190 @@ function service_console(path)
     local r = init_response()
     local cfg = load_config()
 
+    local tm_keepalive = cfg.yoda.consoleKeepalive or 5
+    local tail_bytes = cfg.yoda.consoleTailBytes or 4096
+    local tm_next_keepalive = os.time() + tm_keepalive
+    local server_pid = get_server_pid()
+    local ws, err = ws_server:new{
+	timeout = 1000,
+	max_payload_len = 65535
+    }
+
+    if err then
+	ngx.log(ngx.ERR, "failed to create new websocket: ", err)
+	return_error(r, "IO ERROR", "IO_ERROR", cmd .. ": I/O error creating websocket: " .. err, "SYSTEM", ngx.req.get_method(), "control")
+    end
+
+    r.response.output = ""
+    r.response.server_pid = server_pid
+
+    local function console_output(output, channel)
+	local output = output or ""
+	local partial = true
+
+	r.response.server_pid = server_pid
+	r.response.channel = channel or "CONSOLE"
+
+	for ln in string.gmatch(output, "([^\n]+)") do
+	    r.response.output = ln
+	    return_response(r, "CONTINUE")
+	    partial = false
+	end
+
+	if partial then
+	    r.response.output = output
+	    return_response(r, "CONTINUE")
+	end
+    end
+
+    local function send_server_status(output)
+	r.response.server_status = get_server_status(cfg)
+	console_output(output, "SERVER_STATUS")
+	r.response.server_status = nil
+    end
+
+    if err then
+	ngx.log(ngx.ERR, "failed to create new websocket: ", err)
+	return_error(r, "IO ERROR", "IO_ERROR", cmd .. ": I/O error creating websocket: " .. err, "SYSTEM", ngx.req.get_method(), "control")
+    end
+
+    -- Stash it for future use by return_... functions
+    r.ws = ws
+
     if cfg.yoda.consoleLevelRead == nil or cfg.yoda.consoleLevelWrite == nil then
 	local msg = "Missing consoleLevelRead and/or consoleLevelWrite in configuration."
 	ngx.log(ngx.ERR, msg)
 	return_error(r, "INVALID CONFIGURATION", "INVALID_CONFIG", msg, "SYSTEM", ngx.req.get_method(), "console")
     end
 
-    if ngx.req.get_method() == "GET" then
-	if u.admin_level < cfg.yoda.consoleLevelRead then
-	    return_error(r, "PERMISSION DENIED", "PERMISSION_DENIED", "You are not allowed to view the console", "SYSTEM", ngx.req.get_method(), "console")
-	end
-
-	local readonly = true
-
-	if u.admin_level >= cfg.yoda.consoleLevelWrite then
-	    readonly = false
-	end
-
-	-- Handle websocket protocol
-	websocket_console.run(readonly, 4096)
-
-	ngx.exit(ngx.HTTP_OK)
+    if ngx.req.get_method() ~= "GET" then
+	return_error(r, "METHOD NOT SUPPORTED FOR THIS SERVICE", "INVALID_METHOD", "Method is not accepted for the this service", "SYSTEM", ngx.req.get_method(), "console")
     end
 
-    return_error(r, "METHOD NOT SUPPORTED FOR THIS SERVICE", "INVALID_METHOD", "Method is not accepted for the this service", "SYSTEM", ngx.req.get_method(), "console")
+    if u.admin_level < cfg.yoda.consoleLevelRead then
+	return_error(r, "PERMISSION DENIED", "PERMISSION_DENIED", "You are not allowed to view the console", "SYSTEM", ngx.req.get_method(), "console")
+    end
+
+    local readonly = true
+
+    if u.admin_level >= cfg.yoda.consoleLevelWrite then
+	readonly = false
+    end
+
+    local pos, console_fh
+    local console_log = cfg.global.RUN_DIR .. "/screenlog.0"
+
+    while true do
+	if console_fh == nil and (pos == nil or server_pid ~= nil)  then
+	    local err
+	    console_fh, err = io.open(console_log, 'rb')
+
+	    if console_fh then
+		send_server_status(">> Opened " .. console_log .. " <<")
+
+		pos = 0
+
+		if tail_bytes then
+		    pos = console_fh:seek("end")
+
+		    if pos > tail_bytes then
+			pos = pos - tail_bytes
+			console_output("..skip " .. pos .. " bytes..\n")
+		    end
+		end
+	    elseif err then
+		send_server_status(">> Failed to open " .. console_log .. ": " .. err .. " <<")
+	    end
+	end
+
+	if console_fh then
+	    console_fh:seek("set", pos)
+
+	    -- for ln in console_fh:lines() do
+	    while true do
+		local ln = console_fh:read("*l")
+
+		if ln == nil then
+		    break
+		end
+
+		-- ln = string.gsub(string.gsub(ln, "\r$", ""), ".*\r", "")
+		ln = string.gsub(string.gsub(ln, "\r\n", "\n"), "\r", "\n")
+
+		console_output(ln)
+	    end
+
+	    pos = console_fh:seek()
+	end
+
+	if server_pid == nil then
+	    if console_fh then
+		console_fh = nil
+		send_server_status(">> Server not running <<")
+	    end
+
+	    server_pid = get_server_pid()
+
+	    if server_pid then
+		send_server_status(">> Server started on PID " .. server_pid .. " <<")
+		ngx.log(ngx.INFO, "server pid:", server_pid)
+	    end
+	else
+	    local fh = io.open("/proc/" .. server_pid .. "/cmdline")
+
+	    if fh then
+		local ln = fh:read("*l")
+
+		if ln == nil or not string.find(ln, ".*/core3$") then
+		    server_pid = nil
+		end
+
+		fh:close()
+	    else
+		server_pid = nil
+	    end
+
+	    if server_pid == nil then
+		ngx.log(ngx.INFO, "server stopped running")
+		send_server_status(">> Server stopped running <<")
+	    end
+	end
+
+	local data, frame_type, err = r.ws:recv_frame()
+
+	if r.ws.fatal then
+	    ngx.log(ngx.ERR, "failed to receive frame: ", err)
+	    return_error(r, "IO ERROR", "IO_ERROR", cmd .. ": I/O error receiving websocket frame: " .. err, "SYSTEM", ngx.req.get_method(), "control")
+	end
+
+	if frame_type == "close" then
+	    ngx.log(ngx.ERR, "client requested close")
+	    r.ws:send_close(1000, "client requested close")
+	    break
+	elseif frame_type == "ping" then
+	    ngx.log(ngx.INFO, "websocket ping")
+	    local bytes, err = r.ws:send_pong()
+	    if not bytes then
+		ngx.log(ngx.ERR, "failed to send pong: ", err)
+		return_error(r, "IO ERROR", "IO_ERROR", cmd .. ": I/O error sending websocket pong: " .. err, "SYSTEM", ngx.req.get_method(), "control")
+	    end
+	elseif frame_type == "pong" then
+	    ngx.log(ngx.INFO, "client ponged")
+	elseif frame_type == "text" then
+	    ngx.log(ngx.INFO, "WARNING: client sent[" .. data .. "]")
+	elseif frame_type ~= nil then
+	    ngx.log(ngx.INFO, "WARNING: received unexpected frame of type: ".. frame_type .. ", data: " .. data)
+	end
+
+	if os.time() > tm_next_keepalive then
+	    tm_next_keepalive = os.time() + tm_keepalive
+	    send_server_status(nil)
+	end
+    end
+
+    return_response(r, "OK")
+
+    r.ws:send_close()
 end
 
 ------------------------------------------------------------------------------
@@ -862,4 +1131,4 @@ setmetatable(_M, class_mt)
 
 _M.init()
 
--- vi: set ft=lua ai sw=2:
+-- vi: set ft=lua ai sw=4:

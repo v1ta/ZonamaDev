@@ -62,8 +62,8 @@ emuYodaApp.factory('yodaApiService', function($rootScope, $http) {
     };
 
     return {
-	authenticateUser: authenticateUser,
 	addAccount: addAccount,
+	authenticateUser: authenticateUser,
 	getAccount: getAccount,
 	getConfig: getConfig,
 	getStatus: getStatus,
@@ -270,8 +270,6 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
 		e.appendChild(document.createElement("br"));
 	    }
 	    e.scrollTop = e.scrollHeight;
-	} else {
-	    console.log("consoleAppend: Failed to find element (logPre): ln=" + ln);
 	}
     };
 
@@ -360,19 +358,38 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
 	$scope.ws = new WebSocket(proto + $location.host() + ':' + $location.port() + '/api/console?token=' + auth);
 
 	$scope.ws.onmessage = function (e) {
-	    $scope.consoleAppend(e.data);
+	    var data = JSON.parse(e.data);
 
-	    if ($scope.server_status && !$scope.server_status.server_pid) {
-		$scope.updateStatus();
+	    if(data) {
+		var r = data.response;
+
+		if ((r.channel = "SERVER_STATUS" && r.output != "") || (r.channel == "CONSOLE" && (r.status == "OK" || r.status == "CONTINUE"))) {
+		    if (r.server_pid) {
+			$scope.consoleAppend("Core3[" + r.server_pid + "]>> " + r.output);
+		    } else {
+			$scope.consoleAppend("Core3[not-running]>> " + r.output);
+		    }
+		}
+		
+		if (r.error) {
+		    $scope.consoleAppend(">> ERROR: " + r.error_description, "danger");
+		}
+
+		if (r.server_status) {
+		    $scope.server_status = r.server_status;
+		    $scope.$apply();
+		}
+	    } else {
+		$scope.consoleAppend(">> ERROR: UNEXPECTED RESPONSE FORMAT: " + e.data, "danger");
 	    }
 	};
 
 	$scope.ws.onopen = function () {
-	    $scope.consoleAppend("[Console Channel Connected]");
+	    $scope.consoleAppend("[Console channel connected to server]");
 	};
 
 	$scope.ws.onclose = function () {
-	    $scope.consoleAppend("[Console Channel Closed]");
+	    $scope.consoleAppend("[Console channel closed by server]");
 	    var tmp_ws = $scope.ws;
 	    delete $scope.ws;
 	    tmp_ws.close();
@@ -415,20 +432,80 @@ emuYodaApp.controller('loginModalController', function ($scope, $uibModalInstanc
     }
 });
 
-emuYodaApp.run(function ($rootScope, $state, $templateCache, loginModalService) {
-  // Causes http://127.0.0.1:44480/uib/template/modal/window.html 404
-  // $rootScope.$on('$viewContentLoaded', function() { $templateCache.removeAll(); });
-  $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
-    var requireLogin = toState.data.requireLogin;
+emuYodaApp.run(function ($rootScope, $state, $templateCache, $cacheFactory, loginModalService) {
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+	// TODO consider removing this cache dump at some point
+	if (typeof (toState) !== 'undefined' && typeof (toState.templateUrl) == 'string') {
+		$templateCache.remove(toState.templateUrl);
+	}
 
-    if (requireLogin && typeof $rootScope.currentUsername === 'undefined') {
-      event.preventDefault();
+	var requireLogin = toState.data.requireLogin;
 
-      loginModalService.openModal().then(function () {
-	  return $state.go(toState.name, toParams);
-      }).catch(function () {
-          return $state.go('home');
-      });
+	if (requireLogin && typeof $rootScope.currentUsername === 'undefined') {
+	    event.preventDefault();
+
+	    loginModalService.openModal().then(function () {
+		return $state.go(toState.name, toParams);
+	    }).catch(function () {
+		return $state.go('home');
+	    });
+	}
+    });
+});
+
+emuYodaApp.filter('timestampToString', [function () {
+    return function(timestamp) {
+	var ss = parseInt(timestamp, 10);
+	var dd = Math.floor(ss / 86400);
+	ss = ss - dd * 86400;
+	var hh = Math.floor(ss / 3600);
+	ss = ss - hh * 3600;
+	var mm = Math.floor(ss / 60);
+	ss = ss - mm * 60;
+
+	var str = (hh < 10 ? "0"+hh : hh)
+                  + ":"
+                  + (mm < 10 ? "0"+mm : mm)
+                  + ":"
+                  + (ss < 10 ? "0"+ss : ss);
+
+	if (dd > 0) {
+	    str = dd + " days, " + str
+	}
+
+	return str
+    };
+}]);
+
+emuYodaApp.directive('yodaNestedTable', function () {
+    return {
+	restrict: "A",
+	replace: false,
+	scope: {
+	    object: '=yodaNestedTable'
+	},
+	template: "<yodanestedtablerow ng-repeat='(key, value) in object' key='key' value='value'></yodanestedtablerow>"
     }
-  });
+})
+.directive('yodanestedtablerow', function ($compile) {
+    return {
+	restrict: "E",
+	replace: true,
+	scope: {
+	    key: '=',
+	    value: '='
+	},
+	template: "<tr>",
+	link: function (scope, element, attrs) {
+	    var val = "{{ value }}"
+
+	    if (angular.isObject(scope.value)) {
+		val = "<table class='table table-striped table-hover' yoda-nested-table='value'>";
+	    }
+
+	    element.append("<td>{{ key }}:</td><td style='text-align:left;'>" + val + "</td></tr>");
+
+	    $compile(element.contents())(scope);
+	}
+    }
 });
