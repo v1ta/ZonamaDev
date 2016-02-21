@@ -32,6 +32,30 @@ curl -L http://downloads.lordkator.com/bootstrap.sh | bash
 
 Watch for instructions.
 
+#### Linux bootstrap way (testing on linux mint 17.3, ubuntu/debian should be similar):
+First install git, curl, and zlib1g-dev via
+````
+sudo apt-get install git curl zlib1g-dev
+````
+Next install vagrant and virtualbox through thier websites:
+````
+https://www.virtualbox.org/wiki/Linux_Downloads
+https://www.vagrantup.com/downloads.html?
+````
+download packages for your linux version (I used the 14.04 ubuntu, as Linux Mint is based on 14.04) (virtualbox)
+and the debian for vagrant.  (the versions in the apt-get repos are older, and unsupported for ZonamaDev)
+
+Install downloaded packages:
+````
+sudo dpkg -i <pathtofile>/<nameoffile>
+````
+Type:
+````
+curl -L http://downloads.lordkator.com/bootstrap.sh | bash
+````
+Watch for error messages, and resolve any unmet dependancy problems.  Each distro of linux has different versions:
+For example, on my Debian Testing (Stretch) install on my laptop I could apt-get virtualbox and vagrant.
+
 #### Hard way
 
 Type:
