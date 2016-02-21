@@ -62,12 +62,12 @@ function etime_string(pid)
     local hh = math.floor(ss / 3600)
     ss = ss - (hh * 3600)
     local mm = math.floor(ss / 60)
-    ss = ss - (mm * 60)
+    ss = math.floor(ss - (mm * 60))
 
     if dd > 0 then
 	return string.format("%d days, %02d:%02d:%02d", dd, hh, mm, ss)
     else
-	return string.format("%02d:%02d:%02.02f", hh, mm, ss)
+	return string.format("%02d:%02d:%02d", hh, mm, ss)
     end
 end
 
