@@ -32,6 +32,19 @@ curl -L http://downloads.lordkator.com/bootstrap.sh | bash
 
 Watch for instructions.
 
+#### Hard way
+
+Type:
+````
+git clone https://github.com/lordkator/ZonamaDev.git
+cd ZonamaDev/fasttrack
+./setup.sh
+````
+
+Watch for instructions.
+
+---
+
 ## Linux Host
 
 ### Linux mint 17.3 / Ubuntu 14.04
@@ -57,17 +70,6 @@ curl -L http://downloads.lordkator.com/bootstrap.sh | bash
 ````
 Watch for error messages, and resolve any unmet dependancy problems.  Each distro of linux has different versions:
 For example, on Debian Testing (Stretch) install should be able to do apt-get virtualbox and vagrant.
-
-#### Hard way
-
-Type:
-````
-git clone https://github.com/lordkator/ZonamaDev.git
-cd ZonamaDev/fasttrack
-./setup.sh
-````
-
-Watch for instructions.
 
 ---
 
