@@ -574,8 +574,12 @@ server_backup() {
         done
 
         if $autobackup; then
-            # Include bin in an autobackup
-            cp -v core3 ${TMPDIR}/bin/
+	    if [ -f core3 ]; then
+		# Include bin in an autobackup
+		cp -v core3 ${TMPDIR}/bin/
+	    else
+		echo "** WARNING: core3 missing, proceeding anyway."
+	    fi
         fi
 
         cd ${TMPDIR}
