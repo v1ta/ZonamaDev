@@ -547,8 +547,12 @@ server_backup() {
 
     BULOG=${BUDIR}/swgemu-backup-${STAMP}.log
 
+    local bustat=$(mktemp /tmp/swgemu-backup-status.XXXXXX)
+
     (
-        trap 'set +xe;st=$?;echo "** UNEXPECTED EXIT=$st, PARTIAL BACKUP LEFT IN ${TMPDIR} **";rm -f ${SWGEMU_LOCKFILE};exit $st' 0
+        trap 'st=$?;echo "$st" > "'"${bustat}"'";echo "** UNEXPECTED EXIT=$st, PARTIAL BACKUP LEFT IN ${TMPDIR} **"' 0
+
+	echo 254 > "${bustat}"
 
         date
 
@@ -598,7 +602,16 @@ server_backup() {
         trap - 0
 
         echo "** SUCCESS: Backup saved to ${BUFILE} **"
+
+	echo 0 > "${bustat}"
     ) 2>&1 | tee "${BULOG}"
+
+    local ret=$(<"${bustat}")
+
+    if [ $ret -ne 0 ]; then
+	echo "** ERROR: Backup failed with status ${ret} **"
+	return ${ret}
+    fi
 
     if $restartserver; then
         server_start "--auto"
