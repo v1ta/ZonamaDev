@@ -153,6 +153,9 @@ local function load_config()
 
     local emu_config_path = yoda_cfg['emuConfigPath']
 
+    -- Default to localhost
+    yoda_cfg.server_ip = "127.0.0.1"
+
     local fh = io.open(zonamadev_config_home .. "/config/server_ip")
 
     if fh then
