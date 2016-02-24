@@ -23,6 +23,7 @@ local cjson = require "cjson"
 local io = require "io"
 local mysql = require "resty.mysql"
 local procps = require "procps"
+local scandir = require "scandir"
 local resty_sha1 = require "resty.sha1"
 local resty_sha256 = require "resty.sha256"
 local resty_string = require "resty.string"
@@ -42,6 +43,7 @@ local table = table
 local tcp = ngx.socket.tcp
 local tonumber = tonumber
 local tostring = tostring
+local type = type
 local session_dict = ngx.shared.session_dict
 local status_dict = ngx.shared.status_dict
 
@@ -161,6 +163,24 @@ local function load_config()
     if fh then
 	yoda_cfg.server_ip = fh:read("*l");
 	fh:close();
+    end
+
+    -- Defaults for well known flags
+    yoda_cfg.flags = {
+	['autostart_server'] = false,
+	['disable_ipcheck'] = false,
+	['have_yoda'] = false,
+    }
+
+    -- Set any flags that are on..
+    local files, err = scandir.scandir(zonamadev_config_home .. "/flags")
+
+    if files ~= nil then
+	for k,v in pairs(files) do
+	    if files[k].type == 'REG' then
+		yoda_cfg.flags[k] = true
+	    end
+	end
     end
 
     if emu_config_path == nil then
@@ -658,10 +678,54 @@ function service_config(path)
     end
 
     if call.config == nil then
-	return_error(r, "SYNTAX ERROR", "SYNTAX_ERROR", "Syntax error in request, missing config object", "SYSTEM", ngx.req.get_method(), "config")
+	local err_detail = ""
+
+	if type(call) == "string" then
+	    err_detail = ': ' .. call
+	end
+
+	return_error(r, "SYNTAX ERROR", "SYNTAX_ERROR", "Syntax error in request, missing config object" .. err_detail, "SYSTEM", ngx.req.get_method(), "config")
     end
 
-    -- Only support changing zones for now...
+    -- Support for yoda.flags
+    if call.config.yoda and call.config.yoda.flags then
+	local n_set = 0
+	local n_clear = 0
+	for k,v in pairs(call.config.yoda.flags) do
+	    -- Avoid exploits like ../../file 
+	    local flag_name = k:gsub(".*/", ""):gsub("[^-a-zA-Z0-9._]", "")
+
+	    if flag_name ~= k or flag_name == "" or string.sub(flag_name, 1, 1) == "." then
+		ngx.log(ngx.ERR, 'WARNING: /api/config PUT: Dangerous config.yoda.flag name provided [' .. k .. '], returning error.')
+		return_error(r, "SYNTAX ERROR", "SYNTAX_ERROR", "Syntax error: Invalid flag name provided [" .. k .. "]", "SYSTEM", ngx.req.get_method(), "config")
+	    end
+
+	    local path = zonamadev_config_home .. "/flags/" .. flag_name
+
+	    if v == "true" or v == "1" or v == true then
+		local fh, err = io.open(path, "w")
+
+		if err then
+		    return_error(r, "Unknown error", "INTERNAL_ERROR", "Unexpected error opening " .. path .. " for write: " .. err, "SYSTEM", ngx.req.get_method(), "config")
+		end
+		fh:write(os.time() .. "\n")
+		fh:close()
+		ngx.log(ngx.INFO, "set-flag ", k)
+		n_set = n_set + 1
+	    else
+		ngx.log(ngx.INFO, "clear-flag ", k)
+		os.remove(path)
+		n_clear = n_clear + 1
+	    end
+	end
+
+	r.response.flag_update_status = {
+	    ['set_count'] = n_set,
+	    ['clear_count'] = n_clear,
+	}
+    end
+
+    -- Support for ZonesEnabled changes..
     -- Really we just "edit" the existing config file and uncomment or comment as needed.. 
     -- Expects the ZonesEnabled = { 
     -- array to be well formatted :-(
