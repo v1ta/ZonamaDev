@@ -647,7 +647,13 @@ function service_config(path)
     local r = init_response()
 
     if ngx.req.get_method() == "GET" then
-	r.response.config = load_config()
+	local cfg = load_config()
+
+	if cfg ~= nil and cfg.yoda ~= nil then
+	    cfg.yoda.yodaSecret = nil;
+	end
+
+	r.response.config = cfg
 	return_response(r, "OK")
     end
 

@@ -162,11 +162,14 @@ emuYodaApp.controller('mainController', function($scope, $q, $location, yodaApiS
 
 		if (data.response.error) {
 		    $scope.messages = "API CALL TO " + data.response.service + " FAILED WITH ERROR: " + data.response.error;
+		    console.log($scope.messages);
 		}
 
-		$scope.cfg.emu.ZonesEnabled.forEach( function(zone) {
-		    $scope.zones[zone] = true;
-		});
+		if ($scope.cfg && $scope.cfg.emu && $scope.cfg.emu.ZonesEnabled) {
+		    $scope.cfg.emu.ZonesEnabled.forEach( function(zone) {
+			$scope.zones[zone] = true;
+		    });
+		}
 	    }).catch(function() {
 		$scope.error = "/api/config call failed";
 	    })
