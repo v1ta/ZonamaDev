@@ -1073,6 +1073,7 @@ function service_console(path)
 
     local pos, console_fh
     local console_log = cfg.global.RUN_DIR .. "/screenlog.0"
+    local console_log_err_sent = false
 
     while true do
 	if console_fh == nil and (pos == nil or server_pid ~= nil)  then
@@ -1081,6 +1082,7 @@ function service_console(path)
 
 	    if console_fh then
 		send_server_status(">> Opened " .. console_log .. " <<")
+		console_log_err_sent = false
 
 		pos = 0
 
@@ -1092,8 +1094,9 @@ function service_console(path)
 			console_output("..skip " .. pos .. " bytes..\n")
 		    end
 		end
-	    elseif err then
+	    elseif not console_log_err_sent and err then
 		send_server_status(">> Failed to open " .. console_log .. ": " .. err .. " <<")
+		console_log_err_sent = true
 	    end
 	end
 
