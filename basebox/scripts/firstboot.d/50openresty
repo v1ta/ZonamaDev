@@ -31,7 +31,7 @@ if [ $OPENRESTY_VERSION = 'latest' ]; then
     [ -n "$OPENRESTY_VERSION" ] || error "Failed to determine latest version" 130
 fi
 
-url="https://openresty.org/download/ngx_openresty-$OPENRESTY_VERSION.tar.gz"
+url="https://openresty.org/download/openresty-$OPENRESTY_VERSION.tar.gz"
 
 pushd ${EXTERNAL_SRC_DIR}/tarballs
 
