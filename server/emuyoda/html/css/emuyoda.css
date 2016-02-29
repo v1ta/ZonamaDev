@@ -7,6 +7,22 @@ form {
     padding: 0.25rem 9999rem;
 }
 
+.control-server-options {
+    float: right;
+}
+
+.control-server-options label {
+    white-space: nowrap;
+    color: #fff;
+    font-size: 8pt;
+}
+
+.control-server-options input[type=checkbox] {
+    vertical-align: middle;
+    position: relative;
+    bottom: 2px;
+}
+
 .control-buttonbar {
     display: table;
     text-align: center;

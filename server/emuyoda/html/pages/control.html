@@ -11,6 +11,11 @@
 	    <span ng-show="!server_status.server_pid">
 	    (Status: Not running)
 	    </span>
+		<div class="control-server-options">
+		    <label for="control-autostart-server" >Autostart Server:
+		    <input id="control-autostart-server" type="checkbox" ng-model="autostart_server" ng-change="updateServerOptions()" title="Check this to automatically start the emu server when the system boots.">
+		    </label>
+		</div>
 	    </h3>
 	</div>
 	<div class="panel-body">

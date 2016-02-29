@@ -31,6 +31,12 @@ emuYodaApp.factory('yodaApiService', function($rootScope, $http) {
 	});
     };
 
+    var putConfig = function(data) {
+	return $http.put("/api/config", data).then(function(r) {
+	    return r.data;
+	});
+    };
+
     var updateConfig = function(config) {
 	return $http.put("/api/config", config).then(function(response) {
 	    return response.data;
@@ -66,6 +72,7 @@ emuYodaApp.factory('yodaApiService', function($rootScope, $http) {
 	authenticateUser: authenticateUser,
 	getAccount: getAccount,
 	getConfig: getConfig,
+	putConfig: putConfig,
 	getStatus: getStatus,
 	serverCommand: serverCommand,
 	updateConfig: updateConfig,
@@ -246,12 +253,37 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
     $scope.pendingCmd = "";
     $scope.pendingSend = false;
     $scope.sendText = "";
+    $scope.autostart_server = false;
 
     $scope.updateStatus = function() {
 	yodaApiService.getStatus().then(function(data) {
 	    $scope.server_status = data.response.server_status;
 	}).catch(function() {
 	    $scope.error = "/api/status call failed";
+	});
+    };
+
+    $scope.updateServerOptions = function() {
+	console.log("updateServerOptions: $scope.autostart_server = " + $scope.autostart_server);
+	var newcfg = {
+	    config: {
+		yoda: {
+		    flags: {
+			autostart_server: $scope.autostart_server,
+		    }
+		}
+	    }
+	};
+	console.log("updateServerOptions: newcfg = " + JSON.stringify(newcfg));
+
+	yodaApiService.putConfig(newcfg).then(function(data) {
+	    if (data.response.error) {
+		$scope.consoleAppend("update server options>> ERROR: " + data.response.error_description, "danger");
+	    } else {
+		$scope.consoleAppend("update server options>> Set autostart_server to " + newcfg.config.yoda.flags.autostart_server, "success");
+	    }
+	}).catch(function() {
+	    console.log("/api/config call failed");
 	});
     };
 
@@ -400,6 +432,23 @@ emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout
     }
 
     $scope.updateStatus();
+
+    yodaApiService.getConfig().then(function(data) {
+	$scope.cfg = data.response.config;
+
+	if (data.response.error) {
+	    console.log($scope.messages);
+	    $scope.autostart_server = false;
+	} else {
+	    if ($scope.cfg && $scope.cfg.yoda && $scope.cfg.yoda.flags && $scope.cfg.yoda.flags.autostart_server) {
+		$scope.autostart_server = $scope.cfg.yoda.flags.autostart_server;
+	    } else {
+		$scope.autostart_server = false;
+	    }
+	}
+    }).catch(function() {
+	console.log("/api/config call failed");
+    });
 });
 
 // Login Handling
