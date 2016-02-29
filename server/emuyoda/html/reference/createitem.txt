@@ -1,0 +1,3764 @@
+
+/object createitem object/building/endor/endor_lake_platform.iff
+
+/object createitem object/building/military/mun_all_military_tower_impl_guard_s01.iff
+
+/object createitem object/building/player/city/garden_naboo_lrg_01.iff
+
+/object createitem object/creature/npc/theme_park/player_shuttle.iff
+
+/object createitem object/creature/npc/theme_park/player_transport.iff
+
+/object createitem object/creature/npc/theme_park/player_transport_theed_hangar.iff
+
+/object createitem object/installation/faction_perk/covert_detector/detector_base.iff
+
+/object createitem object/installation/faction_perk/minefield/field_1x1.iff
+
+/object createitem object/installation/faction_perk/turret/tower_lg.iff
+
+/object createitem object/mobile/atat.iff
+
+/object createitem object/mobile/cll8_binary_load_lifter.iff
+
+/object createitem object/mobile/dressed_corsec_officer_human_male_01.iff
+
+/object createitem object/mobile/dressed_fed_dub_patrolman_human_male_01.iff
+
+/object createitem object/mobile/dressed_rebel_crewman_human_male_01.iff
+
+/object createitem object/mobile/dressed_rsf_captain.iff
+
+/object createitem object/mobile/dressed_rsf_commando.iff
+
+/object createitem object/mobile/dressed_rsf_palace_guard.iff
+
+/object createitem object/mobile/dressed_rsf_pilot.iff
+
+/object createitem object/mobile/dressed_rsf_security_guard.iff
+
+/object createitem object/mobile/dressed_rsf_security_officer.iff
+
+/object createitem object/mobile/dressed_rsf_tier2_trainer.iff
+
+/object createitem object/mobile/dressed_stormtrooper_m.iff
+
+/object createitem object/mobile/dressed_tie_fighter_m.iff
+
+/object createitem object/mobile/eg6_power_droid.iff
+
+/object createitem object/mobile/jawa.iff
+
+/object createitem object/mobile/player_transport.iff
+
+/object createitem object/mobile/r2.iff
+
+/object createitem object/mobile/r3.iff
+
+/object createitem object/mobile/r4.iff
+
+/object createitem object/mobile/r5.iff
+
+/object createitem object/mobile/ra7_bug_droid.iff
+
+/object createitem object/player/player.iff
+
+/object createitem object/static/particle/particle_campfire_style_1.iff
+
+/object createitem object/static/particle/pt_campfire_s01.iff
+
+/object createitem object/static/particle/pt_lair_med_burn.iff
+
+/object createitem object/static/particle/pt_poi_broken_electronics.iff
+
+/object createitem object/static/particle/pt_poi_electricity_2x2.iff
+
+/object createitem object/static/particle/pt_sparks_large.iff
+
+/object createitem object/static/particle/pt_sparks_small.iff
+
+/object createitem object/static/structure/corellia/corl_banner_govt_tall_s01.iff
+
+/object createitem object/static/structure/corellia/corl_imprv_column_s02.iff
+
+/object createitem object/static/structure/corellia/corl_imprv_flagpole_s01.iff
+
+/object createitem object/static/structure/corellia/corl_imprv_gate_sm_s01.iff
+
+/object createitem object/static/structure/corellia/corl_imprv_wall_4x16_s03.iff
+
+/object createitem object/static/structure/corellia/corl_power_bubble_node.iff
+
+/object createitem object/static/structure/corellia/corl_power_transformer_s01.iff
+
+/object createitem object/static/structure/corellia/corl_power_transformer_s02.iff
+
+/object createitem object/static/structure/corellia/corl_tent_hut_s01.iff
+
+/object createitem object/static/structure/dantooine/dant_fire_pit.iff
+
+/object createitem object/static/structure/dantooine/dant_imprv_flagpole_s01.iff
+
+/object createitem object/static/structure/dathomir/dath_imprv_flagpole_s01.iff
+
+/object createitem object/static/structure/endor/endr_imprv_flagpole_s01.iff
+
+/object createitem object/static/structure/general/atat_debris_01.iff
+
+/object createitem object/static/structure/general/atat_debris_02.iff
+
+/object createitem object/static/structure/general/atat_destroyed.iff
+
+/object createitem object/static/structure/general/banner_imperial_style_01.iff
+
+/object createitem object/static/structure/general/banner_rebel_style_01.iff
+
+/object createitem object/static/structure/general/gravestone_generic_style_01.iff
+
+/object createitem object/static/structure/general/gravestone_generic_style_02.iff
+
+/object createitem object/static/structure/general/gravestone_generic_style_03.iff
+
+/object createitem object/static/structure/general/gravestone_generic_style_04.iff
+
+/object createitem object/static/structure/general/gravestone_generic_style_05.iff
+
+/object createitem object/static/structure/general/sandcrawler_debris_02.iff
+
+/object createitem object/static/structure/general/sandcrawler_destroyed.iff
+
+/object createitem object/static/structure/general/xwing.iff
+
+/object createitem object/static/structure/lok/lok_imprv_flagpole_s01.iff
+
+/object createitem object/static/structure/military/bunker_crate_style_01.iff
+
+/object createitem object/static/structure/military/military_column_med_imperial_style_01.iff
+
+/object createitem object/static/structure/military/military_column_med_rebel_style_01.iff
+
+/object createitem object/static/structure/military/military_column_weak_rebel_style_01.iff
+
+/object createitem object/static/structure/military/military_wall_med_imperial_16_style_01.iff
+
+/object createitem object/static/structure/military/military_wall_med_imperial_style_01.iff
+
+/object createitem object/static/structure/military/military_wall_med_rebl_16_style_01.iff
+
+/object createitem object/static/structure/military/military_wall_med_rebl_style_01.iff
+
+/object createitem object/static/structure/military/military_wall_weak_rebl_style_01.iff
+
+/object createitem object/static/structure/naboo/nboo_imprv_flagpole_s01.iff
+
+/object createitem object/static/structure/rori/rori_imprv_flagpole_s01.iff
+
+/object createitem object/static/structure/talus/talus_imprv_flagpole_s01.iff
+
+/object createitem object/static/structure/tatooine/palette_supply_01.iff
+
+/object createitem object/static/structure/tatooine/palette_supply_02.iff
+
+/object createitem object/static/structure/tatooine/tato_imprv_flagpole_s01.iff
+
+/object createitem object/static/structure/yavin/yavn_imprv_flagpole_s01.iff
+
+/object createitem object/static/vehicle/player_shuttle.iff
+
+/object createitem object/static/vehicle/static_lambda_shuttle.iff
+
+/object createitem object/static/vehicle/static_tie_bomber.iff
+
+/object createitem object/static/vehicle/static_tie_fighter.iff
+
+/object createitem object/tangible/bank/character_bank.iff
+
+/object createitem object/tangible/bug_jar/craftable_bug_habitat.iff
+
+/object createitem object/tangible/camp/camp_chair_s1.iff
+
+/object createitem object/tangible/camp/camp_chair_s2.iff
+
+/object createitem object/tangible/camp/camp_chair_s3.iff
+
+/object createitem object/tangible/camp/camp_control_panel.iff
+
+/object createitem object/tangible/camp/campfire_logs_ash.iff
+
+/object createitem object/tangible/camp/campfire_logs_fresh.iff
+
+/object createitem object/tangible/camp/camp_pavilion_s1.iff
+
+/object createitem object/tangible/component/armor/armor_layer_acid.iff
+
+/object createitem object/tangible/component/armor/armor_layer_blast.iff
+
+/object createitem object/tangible/component/armor/armor_layer_cold.iff
+
+/object createitem object/tangible/component/armor/armor_layer_electrical.iff
+
+/object createitem object/tangible/component/armor/armor_layer_energy.iff
+
+/object createitem object/tangible/component/armor/armor_layer_heat.iff
+
+/object createitem object/tangible/component/armor/armor_layer_kinetic.iff
+
+/object createitem object/tangible/component/armor/armor_layer_ris.iff
+
+/object createitem object/tangible/component/armor/armor_layer_stun.iff
+
+/object createitem object/tangible/component/armor/armor_segment_bone_acklay.iff
+
+/object createitem object/tangible/component/armor/armor_segment_bone_advanced.iff
+
+/object createitem object/tangible/component/armor/armor_segment_bone.iff
+
+/object createitem object/tangible/component/armor/armor_segment_chitin_advanced.iff
+
+/object createitem object/tangible/component/armor/armor_segment_chitin.iff
+
+/object createitem object/tangible/component/armor/armor_segment_composite_advanced.iff
+
+/object createitem object/tangible/component/armor/armor_segment_composite.iff
+
+/object createitem object/tangible/component/armor/armor_segment.iff
+
+/object createitem object/tangible/component/armor/armor_segment_kashyyykian_black_mtn_advanced.iff
+
+/object createitem object/tangible/component/armor/armor_segment_kashyyykian_black_mtn.iff
+
+/object createitem object/tangible/component/armor/armor_segment_kashyyykian_ceremonial_advanced.iff
+
+/object createitem object/tangible/component/armor/armor_segment_kashyyykian_ceremonial.iff
+
+/object createitem object/tangible/component/armor/armor_segment_kashyyykian_hunting_advanced.iff
+
+/object createitem object/tangible/component/armor/armor_segment_kashyyykian_hunting.iff
+
+/object createitem object/tangible/component/armor/armor_segment_padded_advanced.iff
+
+/object createitem object/tangible/component/armor/armor_segment_padded.iff
+
+/object createitem object/tangible/component/armor/armor_segment_ris_acklay.iff
+
+/object createitem object/tangible/component/armor/armor_segment_ris.iff
+
+/object createitem object/tangible/component/armor/armor_segment_ubese_advanced.iff
+
+/object createitem object/tangible/component/armor/armor_segment_ubese.iff
+
+/object createitem object/tangible/component/armor/armor_segment_zam_advanced.iff
+
+/object createitem object/tangible/component/armor/armor_segment_zam.iff
+
+/object createitem object/tangible/component/armor/deflector_shield_emitter_assembly.iff
+
+/object createitem object/tangible/component/armor/deflector_shield_generator_energy_ray.iff
+
+/object createitem object/tangible/component/armor/deflector_shield_generator_particle.iff
+
+/object createitem object/tangible/component/armor/deflector_shield_projector_plate.iff
+
+/object createitem object/tangible/component/armor/shield_generator_personal_b.iff
+
+/object createitem object/tangible/component/armor/shield_generator_personal_c.iff
+
+/object createitem object/tangible/component/armor/shield_generator_personal.iff
+
+/object createitem object/tangible/component/armor/shield_generator_personal_imperial_test.iff
+
+/object createitem object/tangible/component/bio/bio_component_clothing_casual_entertainer_2.iff
+
+/object createitem object/tangible/component/bio/bio_component_clothing_casual_entertainer.iff
+
+/object createitem object/tangible/component/bio/bio_component_clothing_casual_medic_2.iff
+
+/object createitem object/tangible/component/bio/bio_component_clothing_casual_medic.iff
+
+/object createitem object/tangible/component/bio/bio_component_clothing_casual_taming_2.iff
+
+/object createitem object/tangible/component/bio/bio_component_clothing_casual_taming.iff
+
+/object createitem object/tangible/component/bio/bio_component_clothing_field_bleeding_2.iff
+
+/object createitem object/tangible/component/bio/bio_component_clothing_field_bleeding.iff
+
+/object createitem object/tangible/component/bio/bio_component_clothing_field_camo_2.iff
+
+/object createitem object/tangible/component/bio/bio_component_clothing_field_camo.iff
+
+/object createitem object/tangible/component/bio/bio_component_clothing_field_cover_2.iff
+
+/object createitem object/tangible/component/bio/bio_component_clothing_field_cover.iff
+
+/object createitem object/tangible/component/bio/bio_component_clothing_field_defense_2.iff
+
+/object createitem object/tangible/component/bio/bio_component_clothing_field_defense.iff
+
+/object createitem object/tangible/component/bio/bio_component_clothing_field_intimidate_2.iff
+
+/object createitem object/tangible/component/bio/bio_component_clothing_field_intimidate.iff
+
+/object createitem object/tangible/component/bio/bio_component_food_heavy_filling.iff
+
+/object createitem object/tangible/component/bio/bio_component_food_heavy_flavor.iff
+
+/object createitem object/tangible/component/bio/bio_component_food_heavy_nutrition.iff
+
+/object createitem object/tangible/component/bio/bio_component_food_heavy_quantity.iff
+
+/object createitem object/tangible/component/bio/bio_component_food_light_filling.iff
+
+/object createitem object/tangible/component/bio/bio_component_food_light_flavor.iff
+
+/object createitem object/tangible/component/bio/bio_component_food_light_nutrition.iff
+
+/object createitem object/tangible/component/bio/bio_component_food_light_quantity.iff
+
+/object createitem object/tangible/component/bio/bio_component_food_medium_filling.iff
+
+/object createitem object/tangible/component/bio/bio_component_food_medium_flavor.iff
+
+/object createitem object/tangible/component/bio/bio_component_food_medium_nutrition.iff
+
+/object createitem object/tangible/component/bio/bio_component_food_medium_quantity.iff
+
+/object createitem object/tangible/component/chemistry/biologic_effect_controller_advanced.iff
+
+/object createitem object/tangible/component/chemistry/biologic_effect_controller.iff
+
+/object createitem object/tangible/component/chemistry/dispersal_mechanism_advanced.iff
+
+/object createitem object/tangible/component/chemistry/dispersal_mechanism.iff
+
+/object createitem object/tangible/component/chemistry/infection_amplifier_advanced.iff
+
+/object createitem object/tangible/component/chemistry/infection_amplifier.iff
+
+/object createitem object/tangible/component/chemistry/liquid_delivery_suspension_advanced.iff
+
+/object createitem object/tangible/component/chemistry/liquid_delivery_suspension.iff
+
+/object createitem object/tangible/component/chemistry/release_mechanism_duration_advanced.iff
+
+/object createitem object/tangible/component/chemistry/release_mechanism_duration.iff
+
+/object createitem object/tangible/component/chemistry/resilience_compound_advanced.iff
+
+/object createitem object/tangible/component/chemistry/resilience_compound.iff
+
+/object createitem object/tangible/component/chemistry/solid_delivery_shell_advanced.iff
+
+/object createitem object/tangible/component/chemistry/solid_delivery_shell.iff
+
+/object createitem object/tangible/component/clothing/cargo_pocket.iff
+
+/object createitem object/tangible/component/clothing/fiberplast_panel.iff
+
+/object createitem object/tangible/component/clothing/jewelry_setting.iff
+
+/object createitem object/tangible/component/clothing/metal_fasteners.iff
+
+/object createitem object/tangible/component/clothing/padding_segment.iff
+
+/object createitem object/tangible/component/clothing/reinforced_fiber_panels.iff
+
+/object createitem object/tangible/component/clothing/shoe_sole.iff
+
+/object createitem object/tangible/component/clothing/synthetic_cloth.iff
+
+/object createitem object/tangible/component/clothing/trim.iff
+
+/object createitem object/tangible/component/dna/dna_template_generic.iff
+
+/object createitem object/tangible/component/droid/advanced_droid_frame.iff
+
+/object createitem object/tangible/component/droid/armor_module_1.iff
+
+/object createitem object/tangible/component/droid/armor_module_2.iff
+
+/object createitem object/tangible/component/droid/armor_module_3.iff
+
+/object createitem object/tangible/component/droid/armor_module_4.iff
+
+/object createitem object/tangible/component/droid/armor_module_5.iff
+
+/object createitem object/tangible/component/droid/armor_module_6.iff
+
+/object createitem object/tangible/component/droid/auto_repair_module.iff
+
+/object createitem object/tangible/component/droid/binary_load_lifter_droid_chassis.iff
+
+/object createitem object/tangible/component/droid/combat_module.iff
+
+/object createitem object/tangible/component/droid/combat_socket_bank.iff
+
+/object createitem object/tangible/component/droid/crafting_module_clothing.iff
+
+/object createitem object/tangible/component/droid/crafting_module_food.iff
+
+/object createitem object/tangible/component/droid/crafting_module_space.iff
+
+/object createitem object/tangible/component/droid/crafting_module_structure.iff
+
+/object createitem object/tangible/component/droid/crafting_module_weapon.iff
+
+/object createitem object/tangible/component/droid/data_storage_module_1.iff
+
+/object createitem object/tangible/component/droid/data_storage_module_2.iff
+
+/object createitem object/tangible/component/droid/data_storage_module_3.iff
+
+/object createitem object/tangible/component/droid/data_storage_module_4.iff
+
+/object createitem object/tangible/component/droid/data_storage_module_5.iff
+
+/object createitem object/tangible/component/droid/data_storage_module_6.iff
+
+/object createitem object/tangible/component/droid/detonation_module.iff
+
+/object createitem object/tangible/component/droid/droid_brain_advanced.iff
+
+/object createitem object/tangible/component/droid/droid_brain.iff
+
+/object createitem object/tangible/component/droid/droid_interplanetary_survey.iff
+
+/object createitem object/tangible/component/droid/droid_motive_system_advanced.iff
+
+/object createitem object/tangible/component/droid/droid_motive_system.iff
+
+/object createitem object/tangible/component/droid/droid_storage_compartment.iff
+
+/object createitem object/tangible/component/droid/harvest_module.iff
+
+/object createitem object/tangible/component/droid/item_storage_module_1.iff
+
+/object createitem object/tangible/component/droid/item_storage_module_2.iff
+
+/object createitem object/tangible/component/droid/item_storage_module_3.iff
+
+/object createitem object/tangible/component/droid/item_storage_module_4.iff
+
+/object createitem object/tangible/component/droid/item_storage_module_5.iff
+
+/object createitem object/tangible/component/droid/item_storage_module_6.iff
+
+/object createitem object/tangible/component/droid/le_repair_droid_chassis.iff
+
+/object createitem object/tangible/component/droid/manipulator_arm.iff
+
+/object createitem object/tangible/component/droid/manipulator_arm_package_set.iff
+
+/object createitem object/tangible/component/droid/medic_module_1.iff
+
+/object createitem object/tangible/component/droid/medic_module_2.iff
+
+/object createitem object/tangible/component/droid/medic_module_3.iff
+
+/object createitem object/tangible/component/droid/medic_module_4.iff
+
+/object createitem object/tangible/component/droid/medic_module_5.iff
+
+/object createitem object/tangible/component/droid/medic_module_6.iff
+
+/object createitem object/tangible/component/droid/merchant_barker.iff
+
+/object createitem object/tangible/component/droid/p0_droid_chassis.iff
+
+/object createitem object/tangible/component/droid/performer_effects_aa.iff
+
+/object createitem object/tangible/component/droid/performer_effects_a.iff
+
+/object createitem object/tangible/component/droid/performer_effects_b.iff
+
+/object createitem object/tangible/component/droid/performer_effects_c.iff
+
+/object createitem object/tangible/component/droid/performer_effects_d.iff
+
+/object createitem object/tangible/component/droid/performer_effects_e.iff
+
+/object createitem object/tangible/component/droid/personality_module_geek.iff
+
+/object createitem object/tangible/component/droid/personality_module_prissy.iff
+
+/object createitem object/tangible/component/droid/personality_module_sarcastic.iff
+
+/object createitem object/tangible/component/droid/personality_module_slang.iff
+
+/object createitem object/tangible/component/droid/personality_module_stupid.iff
+
+/object createitem object/tangible/component/droid/personality_module_worshipful.iff
+
+/object createitem object/tangible/component/droid/playback_module.iff
+
+/object createitem object/tangible/component/droid/probot_droid_chassis.iff
+
+/object createitem object/tangible/component/droid/r2_droid_chassis.iff
+
+/object createitem object/tangible/component/droid/r3_droid_chassis.iff
+
+/object createitem object/tangible/component/droid/r4_droid_chassis.iff
+
+/object createitem object/tangible/component/droid/repair/capacitor_high_discharge.iff
+
+/object createitem object/tangible/component/droid/repair/capacitor_low_discharge.iff
+
+/object createitem object/tangible/component/droid/repair/diagnostic_circuit_advanced.iff
+
+/object createitem object/tangible/component/droid/repair/diagnostic_circuit.iff
+
+/object createitem object/tangible/component/droid/repair_module.iff
+
+/object createitem object/tangible/component/droid/repair/power_supply_redundant_advanced.iff
+
+/object createitem object/tangible/component/droid/repair/power_supply_redundant.iff
+
+/object createitem object/tangible/component/droid/repair/repair_unit_casing_advanced.iff
+
+/object createitem object/tangible/component/droid/repair/repair_unit_casing.iff
+
+/object createitem object/tangible/component/droid/repair/unit_delivery_cartridge_advanced.iff
+
+/object createitem object/tangible/component/droid/repair/unit_delivery_cartridge.iff
+
+/object createitem object/tangible/component/droid/sensor_package_droid.iff
+
+/object createitem object/tangible/component/droid/socket_bank.iff
+
+/object createitem object/tangible/component/droid/stimpack_dispensor.iff
+
+/object createitem object/tangible/component/droid/struct_maint_module_1.iff
+
+/object createitem object/tangible/component/droid/struct_maint_module_2.iff
+
+/object createitem object/tangible/component/droid/struct_maint_module_3.iff
+
+/object createitem object/tangible/component/droid/surgical_droid_chassis.iff
+
+/object createitem object/tangible/component/droid/trap_module.iff
+
+/object createitem object/tangible/component/food/container_barrel.iff
+
+/object createitem object/tangible/component/food/container_cask.iff
+
+/object createitem object/tangible/component/food/container_large_glass.iff
+
+/object createitem object/tangible/component/food/container_small_glass.iff
+
+/object createitem object/tangible/component/food/ingredient_ball_of_dough.iff
+
+/object createitem object/tangible/component/food/ingredient_carbosyrup.iff
+
+/object createitem object/tangible/component/instrument/dual_wave_synthesizer.iff
+
+/object createitem object/tangible/component/item/electronic_control_unit.iff
+
+/object createitem object/tangible/component/item/electronic_energy_distributor.iff
+
+/object createitem object/tangible/component/item/electronic_power_conditioner.iff
+
+/object createitem object/tangible/component/item/electronics_gp_module.iff
+
+/object createitem object/tangible/component/item/electronics_memory_module.iff
+
+/object createitem object/tangible/component/item/micro_sensor_suite.iff
+
+/object createitem object/tangible/component/munition/warhead_chemical.iff
+
+/object createitem object/tangible/component/munition/warhead_fusing_mechanism.iff
+
+/object createitem object/tangible/component/munition/warhead_heavy.iff
+
+/object createitem object/tangible/component/munition/warhead_light.iff
+
+/object createitem object/tangible/component/munition/warhead_medium.iff
+
+/object createitem object/tangible/component/munition/warhead_stabilizer.iff
+
+/object createitem object/tangible/component/structure/fluidic_drilling_pumping_unit.iff
+
+/object createitem object/tangible/component/structure/generator_turbine.iff
+
+/object createitem object/tangible/component/structure/harvesting_mechanism.iff
+
+/object createitem object/tangible/component/structure/heavy_harvesting_mechanism.iff
+
+/object createitem object/tangible/component/structure/light_ore_mining_unit.iff
+
+/object createitem object/tangible/component/structure/light_power_core_unit.iff
+
+/object createitem object/tangible/component/structure/manufacturing_mechanism.iff
+
+/object createitem object/tangible/component/structure/ore_mining_unit.iff
+
+/object createitem object/tangible/component/structure/power_core_unit.iff
+
+/object createitem object/tangible/component/structure/structural_module.iff
+
+/object createitem object/tangible/component/structure/structure_small_storage_section.iff
+
+/object createitem object/tangible/component/structure/structure_storage_section.iff
+
+/object createitem object/tangible/component/structure/turbo_fluidic_drilling_pumping_unit.iff
+
+/object createitem object/tangible/component/structure/wall_module.iff
+
+/object createitem object/tangible/component/weapon/blaster_pistol_barrel_advanced.iff
+
+/object createitem object/tangible/component/weapon/blaster_pistol_barrel.iff
+
+/object createitem object/tangible/component/weapon/blaster_power_handler_advanced.iff
+
+/object createitem object/tangible/component/weapon/blaster_power_handler.iff
+
+/object createitem object/tangible/component/weapon/blaster_rifle_barrel_advanced.iff
+
+/object createitem object/tangible/component/weapon/blaster_rifle_barrel.iff
+
+/object createitem object/tangible/component/weapon/chemical_dispersion_mechanism_advanced.iff
+
+/object createitem object/tangible/component/weapon/chemical_dispersion_mechanism.iff
+
+/object createitem object/tangible/component/weapon/geonosian_reinforcement_core.iff
+
+/object createitem object/tangible/component/weapon/geonosian_sword_core.iff
+
+/object createitem object/tangible/component/weapon/lightsaber/lightsaber_refined_crystal_pack.iff
+
+/object createitem object/tangible/component/weapon/projectile_feed_mechanism_advanced.iff
+
+/object createitem object/tangible/component/weapon/projectile_feed_mechanism.iff
+
+/object createitem object/tangible/component/weapon/projectile_pistol_barrel_advanced.iff
+
+/object createitem object/tangible/component/weapon/projectile_pistol_barrel.iff
+
+/object createitem object/tangible/component/weapon/projectile_rifle_barrel_advanced.iff
+
+/object createitem object/tangible/component/weapon/projectile_rifle_barrel.iff
+
+/object createitem object/tangible/component/weapon/reinforcement_core_advanced.iff
+
+/object createitem object/tangible/component/weapon/reinforcement_core.iff
+
+/object createitem object/tangible/component/weapon/scope_weapon_advanced.iff
+
+/object createitem object/tangible/component/weapon/scope_weapon.iff
+
+/object createitem object/tangible/component/weapon/stock_advanced.iff
+
+/object createitem object/tangible/component/weapon/stock.iff
+
+/object createitem object/tangible/component/weapon/sword_core_advanced.iff
+
+/object createitem object/tangible/component/weapon/sword_core.iff
+
+/object createitem object/tangible/component/weapon/vibro_unit_advanced.iff
+
+/object createitem object/tangible/component/weapon/vibro_unit.iff
+
+/object createitem object/tangible/crafting/station/armor_repair.iff
+
+/object createitem object/tangible/crafting/station/clothing_repair.iff
+
+/object createitem object/tangible/crafting/station/clothing_station.iff
+
+/object createitem object/tangible/crafting/station/clothing_tool.iff
+
+/object createitem object/tangible/crafting/station/food_station.iff
+
+/object createitem object/tangible/crafting/station/food_tool.iff
+
+/object createitem object/tangible/crafting/station/generic_tool.iff
+
+/object createitem object/tangible/crafting/station/jedi_tool.iff
+
+/object createitem object/tangible/crafting/station/public_food_station.iff
+
+/object createitem object/tangible/crafting/station/public_weapon_station.iff
+
+/object createitem object/tangible/crafting/station/space_station.iff
+
+/object createitem object/tangible/crafting/station/space_tool.iff
+
+/object createitem object/tangible/crafting/station/structure_station.iff
+
+/object createitem object/tangible/crafting/station/structure_tool.iff
+
+/object createitem object/tangible/crafting/station/weapon_repair.iff
+
+/object createitem object/tangible/crafting/station/weapon_station.iff
+
+/object createitem object/tangible/crafting/station/weapon_tool.iff
+
+/object createitem object/tangible/datapad/character_datapad.iff
+
+/object createitem object/tangible/deed/city_deed/bank_corellia_deed.iff
+
+/object createitem object/tangible/deed/city_deed/bank_naboo_deed.iff
+
+/object createitem object/tangible/deed/city_deed/bank_tatooine_deed.iff
+
+/object createitem object/tangible/deed/city_deed/cantina_corellia_deed.iff
+
+/object createitem object/tangible/deed/city_deed/cantina_naboo_deed.iff
+
+/object createitem object/tangible/deed/city_deed/cantina_tatooine_deed.iff
+
+/object createitem object/tangible/deed/city_deed/cityhall_corellia_deed.iff
+
+/object createitem object/tangible/deed/city_deed/cityhall_naboo_deed.iff
+
+/object createitem object/tangible/deed/city_deed/cityhall_tatooine_deed.iff
+
+/object createitem object/tangible/deed/city_deed/cloning_corellia_deed.iff
+
+/object createitem object/tangible/deed/city_deed/cloning_naboo_deed.iff
+
+/object createitem object/tangible/deed/city_deed/cloning_tatooine_deed.iff
+
+/object createitem object/tangible/deed/city_deed/garage_corellia_deed.iff
+
+/object createitem object/tangible/deed/city_deed/garage_naboo_deed.iff
+
+/object createitem object/tangible/deed/city_deed/garage_tatooine_deed.iff
+
+/object createitem object/tangible/deed/city_deed/garden_corellia_lrg_01_deed.iff
+
+/object createitem object/tangible/deed/city_deed/garden_corellia_med_01_deed.iff
+
+/object createitem object/tangible/deed/city_deed/garden_corellia_sml_01_deed.iff
+
+/object createitem object/tangible/deed/city_deed/garden_dantooine_lrg_01_deed.iff
+
+/object createitem object/tangible/deed/city_deed/garden_dathomir_lrg_01_deed.iff
+
+/object createitem object/tangible/deed/city_deed/garden_endor_lrg_01_deed.iff
+
+/object createitem object/tangible/deed/city_deed/hospital_corellia_deed.iff
+
+/object createitem object/tangible/deed/city_deed/hospital_naboo_deed.iff
+
+/object createitem object/tangible/deed/city_deed/hospital_tatooine_deed.iff
+
+/object createitem object/tangible/deed/city_deed/shuttleport_corellia_deed.iff
+
+/object createitem object/tangible/deed/city_deed/shuttleport_naboo_deed.iff
+
+/object createitem object/tangible/deed/city_deed/shuttleport_tatooine_deed.iff
+
+/object createitem object/tangible/deed/city_deed/theater_corellia_deed.iff
+
+/object createitem object/tangible/deed/city_deed/theater_naboo_deed.iff
+
+/object createitem object/tangible/deed/city_deed/theater_tatooine_deed.iff
+
+/object createitem object/tangible/deed/factory_deed/factory_clothing_deed.iff
+
+/object createitem object/tangible/deed/factory_deed/factory_food_deed.iff
+
+/object createitem object/tangible/deed/factory_deed/factory_item_deed.iff
+
+/object createitem object/tangible/deed/factory_deed/factory_structure_deed.iff
+
+/object createitem object/tangible/deed/generator_deed/generator_fusion_deed.iff
+
+/object createitem object/tangible/deed/generator_deed/generator_solar_deed.iff
+
+/object createitem object/tangible/deed/generator_deed/generator_wind_deed.iff
+
+/object createitem object/tangible/deed/guild_deed/corellia_guild_deed.iff
+
+/object createitem object/tangible/deed/guild_deed/generic_guild_deed.iff
+
+/object createitem object/tangible/deed/guild_deed/naboo_guild_deed.iff
+
+/object createitem object/tangible/deed/guild_deed/tatooine_guild_style_02_deed.iff
+
+/object createitem object/tangible/deed/harvester_deed/harvester_flora_deed_heavy.iff
+
+/object createitem object/tangible/deed/harvester_deed/harvester_flora_deed.iff
+
+/object createitem object/tangible/deed/harvester_deed/harvester_flora_deed_medium.iff
+
+/object createitem object/tangible/deed/harvester_deed/harvester_gas_deed_heavy.iff
+
+/object createitem object/tangible/deed/harvester_deed/harvester_gas_deed.iff
+
+/object createitem object/tangible/deed/harvester_deed/harvester_gas_deed_medium.iff
+
+/object createitem object/tangible/deed/harvester_deed/harvester_liquid_deed_heavy.iff
+
+/object createitem object/tangible/deed/harvester_deed/harvester_liquid_deed.iff
+
+/object createitem object/tangible/deed/harvester_deed/harvester_liquid_deed_medium.iff
+
+/object createitem object/tangible/deed/harvester_deed/harvester_moisture_deed_heavy.iff
+
+/object createitem object/tangible/deed/harvester_deed/harvester_moisture_deed.iff
+
+/object createitem object/tangible/deed/harvester_deed/harvester_moisture_deed_medium.iff
+
+/object createitem object/tangible/deed/harvester_deed/harvester_ore_heavy_deed.iff
+
+/object createitem object/tangible/deed/harvester_deed/harvester_ore_s1_deed.iff
+
+/object createitem object/tangible/deed/harvester_deed/harvester_ore_s2_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/angler_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/bageraset_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/bantha_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/bearded_jax_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/blurrg_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/boar_wolf_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/bocatt_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/bol_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/bolle_bol_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/bolma_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/bordok_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/brackaset_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/carrion_spat_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/choku_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/cu_pa_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/dalyrake_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_3p0_advanced_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_3p0_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_binary_load_lifter_advanced_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_binary_load_lifter_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_dz70_advanced_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_dz70_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_le_repair_advanced_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_le_repair_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_mse_advanced_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_mse_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_power_advanced_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_power_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_probot_advanced_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_probot_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_r2_advanced_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_r2_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_r3_advanced_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_r3_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_r4_advanced_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_r4_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_r5_advanced_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_r5_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_surgical_advanced_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_surgical_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_treadwell_advanced_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/deed_treadwell_basic.iff
+
+/object createitem object/tangible/deed/pet_deed/dewback_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/dune_lizard_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/durni_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/eopie_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/falumpaset_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/fambaa_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/gnort_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/graul_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/gronda_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/gualama_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/guf_drolg_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/gurnaset_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/gurrcat_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/gurreck_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/hermit_spider_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/huf_dun_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/huurton_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/ikopi_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/kaadu_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/kahmurra_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/kima_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/kimogila_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/kliknik_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/krahbu_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/kusak_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/kwi_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/langlatch_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/malkloc_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/mawgax_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/merek_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/mott_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/narglatch_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/piket_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/pugoriss_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/rancor_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/roba_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/ronto_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/sand_panther_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/sharnaff_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/shear_mite_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/slice_hound_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/snorbal_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/squall_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/swirl_prong_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/thune_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/torton_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/tybis_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/veermok_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/verne_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/vesp_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/vir_vur_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/woolamander_deed.iff
+
+/object createitem object/tangible/deed/pet_deed/zucca_boar_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/corellia_house_large_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/corellia_house_large_style_02_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/corellia_house_medium_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/corellia_house_small_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/corellia_house_small_floor_02_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/corellia_house_small_style_02_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/corellia_house_small_style_02_floor_02_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/generic_house_large_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/generic_house_large_style_02_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/generic_house_medium_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/generic_house_medium_style_02_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/generic_house_small_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/generic_house_small_floor_02_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/generic_house_small_style_02_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/generic_house_small_style_02_floor_02_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/merchant_tent_style_01_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/naboo_house_large_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/naboo_house_medium_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/naboo_house_small_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/naboo_house_small_style_02_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/tatooine_house_large_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/tatooine_house_medium_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/tatooine_house_small_deed.iff
+
+/object createitem object/tangible/deed/player_house_deed/tatooine_house_small_style_02_deed.iff
+
+/object createitem object/tangible/deed/vehicle_deed/landspeeder_av21_deed.iff
+
+/object createitem object/tangible/deed/vehicle_deed/landspeeder_x34_deed.iff
+
+/object createitem object/tangible/deed/vehicle_deed/speederbike_deed.iff
+
+/object createitem object/tangible/deed/vehicle_deed/speederbike_swoop_deed.iff
+
+/object createitem object/tangible/dice/eqp_chance_cube.iff
+
+/object createitem object/tangible/dice/eqp_configurable_group_dice.iff
+
+/object createitem object/tangible/dice/eqp_one_hundred_sided_dice_set.iff
+
+/object createitem object/tangible/dice/eqp_six_sided_dice_set.iff
+
+/object createitem object/tangible/dice/eqp_ten_sided_dice_set.iff
+
+/object createitem object/tangible/dice/eqp_twelve_sided_dice_set.iff
+
+/object createitem object/tangible/dice/eqp_twenty_sided_dice_set.iff
+
+/object createitem object/tangible/droid_battery/battery.iff
+
+/object createitem object/tangible/droid/droid_space_memory_module_1.iff
+
+/object createitem object/tangible/droid/navicomputer_1.iff
+
+/object createitem object/tangible/droid/navicomputer_2.iff
+
+/object createitem object/tangible/droid/navicomputer_3.iff
+
+/object createitem object/tangible/droid/navicomputer_4.iff
+
+/object createitem object/tangible/droid/navicomputer_5.iff
+
+/object createitem object/tangible/droid/navicomputer_6.iff
+
+/object createitem object/tangible/encoded_disk/dead_eye_decoder.iff
+
+/object createitem object/tangible/firework/firework_s01.iff
+
+/object createitem object/tangible/firework/firework_s02.iff
+
+/object createitem object/tangible/firework/firework_s03.iff
+
+/object createitem object/tangible/firework/firework_s04.iff
+
+/object createitem object/tangible/firework/firework_s05.iff
+
+/object createitem object/tangible/firework/firework_s10.iff
+
+/object createitem object/tangible/firework/firework_s11.iff
+
+/object createitem object/tangible/firework/firework_s18.iff
+
+/object createitem object/tangible/firework/show.iff
+
+/object createitem object/tangible/fishing/fishing_pole.iff
+
+/object createitem object/tangible/food/crafted/additive/additive_heavy.iff
+
+/object createitem object/tangible/food/crafted/additive/additive_light.iff
+
+/object createitem object/tangible/food/crafted/additive/additive_medium.iff
+
+/object createitem object/tangible/food/crafted/dessert_air_cake.iff
+
+/object createitem object/tangible/food/crafted/dessert_almond_kwevvu_crisp_munchies.iff
+
+/object createitem object/tangible/food/crafted/dessert_bantha_butter.iff
+
+/object createitem object/tangible/food/crafted/dessert_blap_biscuit.iff
+
+/object createitem object/tangible/food/crafted/dessert_blob_candy.iff
+
+/object createitem object/tangible/food/crafted/dessert_bofa_treat.iff
+
+/object createitem object/tangible/food/crafted/dessert_cavaellin_creams.iff
+
+/object createitem object/tangible/food/crafted/dessert_chandad.iff
+
+/object createitem object/tangible/food/crafted/dessert_citros_snow_cake.iff
+
+/object createitem object/tangible/food/crafted/dessert_deneelian_fizz_pudding.iff
+
+/object createitem object/tangible/food/crafted/dessert_dweezel.iff
+
+/object createitem object/tangible/food/crafted/dessert_felbar.iff
+
+/object createitem object/tangible/food/crafted/dessert_gorrnar.iff
+
+/object createitem object/tangible/food/crafted/dessert_kiwik_clusjo_swirl.iff
+
+/object createitem object/tangible/food/crafted/dessert_parwan_nutricake.iff
+
+/object createitem object/tangible/food/crafted/dessert_pastebread.iff
+
+/object createitem object/tangible/food/crafted/dessert_pikatta_pie.iff
+
+/object createitem object/tangible/food/crafted/dessert_pkneb.iff
+
+/object createitem object/tangible/food/crafted/dessert_pyollian_cake.iff
+
+/object createitem object/tangible/food/crafted/dessert_smugglers_delight.iff
+
+/object createitem object/tangible/food/crafted/dessert_sweesonberry_rolls.iff
+
+/object createitem object/tangible/food/crafted/dessert_sweet_cake_mix.iff
+
+/object createitem object/tangible/food/crafted/dessert_vagnerian_canape.iff
+
+/object createitem object/tangible/food/crafted/dessert_won_won.iff
+
+/object createitem object/tangible/food/crafted/dish_ahrisa.iff
+
+/object createitem object/tangible/food/crafted/dish_bivoli_tempari.iff
+
+/object createitem object/tangible/food/crafted/dish_blood_chowder.iff
+
+/object createitem object/tangible/food/crafted/dish_cho_nor_hoola.iff
+
+/object createitem object/tangible/food/crafted/dish_crispic.iff
+
+/object createitem object/tangible/food/crafted/dish_dustcrepe.iff
+
+/object createitem object/tangible/food/crafted/dish_exo_protein_wafers.iff
+
+/object createitem object/tangible/food/crafted/dish_gruuvan_shaal.iff
+
+/object createitem object/tangible/food/crafted/dish_havla.iff
+
+/object createitem object/tangible/food/crafted/dish_kanali_wafers.iff
+
+/object createitem object/tangible/food/crafted/dish_karkan_ribenes.iff
+
+/object createitem object/tangible/food/crafted/dish_ormachek.iff
+
+/object createitem object/tangible/food/crafted/dish_protato.iff
+
+/object createitem object/tangible/food/crafted/dish_rakririan_burnout_sauce.iff
+
+/object createitem object/tangible/food/crafted/dish_rations.iff
+
+/object createitem object/tangible/food/crafted/dish_scrimpi.iff
+
+/object createitem object/tangible/food/crafted/dish_soypro.iff
+
+/object createitem object/tangible/food/crafted/dish_synthsteak.iff
+
+/object createitem object/tangible/food/crafted/dish_teltier_noodles.iff
+
+/object createitem object/tangible/food/crafted/dish_terratta.iff
+
+/object createitem object/tangible/food/crafted/dish_thakitillo.iff
+
+/object createitem object/tangible/food/crafted/dish_travel_biscuits.iff
+
+/object createitem object/tangible/food/crafted/dish_trimpian.iff
+
+/object createitem object/tangible/food/crafted/dish_vegeparsine.iff
+
+/object createitem object/tangible/food/crafted/dish_veghash.iff
+
+/object createitem object/tangible/food/crafted/dish_vercupti_of_agazza_boleruuee.iff
+
+/object createitem object/tangible/food/crafted/drink_accarragm.iff
+
+/object createitem object/tangible/food/crafted/drink_aitha.iff
+
+/object createitem object/tangible/food/crafted/drink_alcohol.iff
+
+/object createitem object/tangible/food/crafted/drink_bespin_port.iff
+
+/object createitem object/tangible/food/crafted/drink_blue_milk.iff
+
+/object createitem object/tangible/food/crafted/drink_breath_of_heaven.iff
+
+/object createitem object/tangible/food/crafted/drink_caf.iff
+
+/object createitem object/tangible/food/crafted/drink_corellian_ale.iff
+
+/object createitem object/tangible/food/crafted/drink_corellian_brandy.iff
+
+/object createitem object/tangible/food/crafted/drink_deuterium_pyro.iff
+
+/object createitem object/tangible/food/crafted/drink_durindfire.iff
+
+/object createitem object/tangible/food/crafted/drink_elshandruu_pica_thundercloud.iff
+
+/object createitem object/tangible/food/crafted/drink_flameout.iff
+
+/object createitem object/tangible/food/crafted/drink_garrmorl.iff
+
+/object createitem object/tangible/food/crafted/drink_gralinyn_juice.iff
+
+/object createitem object/tangible/food/crafted/drink_ithorian_mist.iff
+
+/object createitem object/tangible/food/crafted/drink_jaar.iff
+
+/object createitem object/tangible/food/crafted/drink_jawa_beer.iff
+
+/object createitem object/tangible/food/crafted/drink_mandalorian_wine.iff
+
+/object createitem object/tangible/food/crafted/drink_ruby_bliel.iff
+
+/object createitem object/tangible/food/crafted/drink_spiced_tea.iff
+
+/object createitem object/tangible/food/crafted/drink_starshine_surprise.iff
+
+/object createitem object/tangible/food/crafted/drink_tilla_tiil.iff
+
+/object createitem object/tangible/food/crafted/drink_tssolok.iff
+
+/object createitem object/tangible/food/crafted/drink_vasarian_brandy.iff
+
+/object createitem object/tangible/food/crafted/drink_vayerbok.iff
+
+/object createitem object/tangible/food/crafted/drink_veronian_berry_wine.iff
+
+/object createitem object/tangible/food/spice/spice_booster_blue.iff
+
+/object createitem object/tangible/food/spice/spice_crash_n_burn.iff
+
+/object createitem object/tangible/food/spice/spice_droid_lube.iff
+
+/object createitem object/tangible/food/spice/spice_giggledust.iff
+
+/object createitem object/tangible/food/spice/spice_grey_gabaki.iff
+
+/object createitem object/tangible/food/spice/spice_gunjack.iff
+
+/object createitem object/tangible/food/spice/spice_muon_gold.iff
+
+/object createitem object/tangible/food/spice/spice_neutron_pixey.iff
+
+/object createitem object/tangible/food/spice/spice_pyrepenol.iff
+
+/object createitem object/tangible/food/spice/spice_scramjet.iff
+
+/object createitem object/tangible/food/spice/spice_sedative_h4b.iff
+
+/object createitem object/tangible/food/spice/spice_shadowpaw.iff
+
+/object createitem object/tangible/food/spice/spice_sweetblossom.iff
+
+/object createitem object/tangible/food/spice/spice_thruster_head.iff
+
+/object createitem object/tangible/food/spice/spice_yarrock.iff
+
+/object createitem object/tangible/furniture/all/frn_all_bed_lg_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_bed_sm_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_chair_kitchen_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_chair_meatal_wheeled_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_chair_metal_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_chair_recliner_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_chair_upholstered_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_chair_wooden_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_chair_wooden_s2.iff
+
+/object createitem object/tangible/furniture/all/frn_all_couch_divan_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_couch_futon_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_couch_lg_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_couch_lg_s2.iff
+
+/object createitem object/tangible/furniture/all/frn_all_couch_love_seat_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_couch_ottoman_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_couch_sm_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_data_terminal_free_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_data_terminal_wall_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_desk_radar_topology_screen.iff
+
+/object createitem object/tangible/furniture/all/frn_all_lamp_desk_s01.iff
+
+/object createitem object/tangible/furniture/all/frn_all_lamp_free_s01.iff
+
+/object createitem object/tangible/furniture/all/frn_all_lamp_tatt_s01.iff
+
+/object createitem object/tangible/furniture/all/frn_all_lamp_tbl_s01.iff
+
+/object createitem object/tangible/furniture/all/frn_all_light_lamp_candlestick_free_s01.iff
+
+/object createitem object/tangible/furniture/all/frn_all_light_lamp_candlestick_free_s02.iff
+
+/object createitem object/tangible/furniture/all/frn_all_light_lamp_candlestick_tbl_s01.iff
+
+/object createitem object/tangible/furniture/all/frn_all_light_lamp_candlestick_tbl_s02.iff
+
+/object createitem object/tangible/furniture/all/frn_all_light_lamp_candlestick_tbl_s03.iff
+
+/object createitem object/tangible/furniture/all/frn_all_light_lamp_desk_s01.iff
+
+/object createitem object/tangible/furniture/all/frn_all_light_lamp_desk_s02.iff
+
+/object createitem object/tangible/furniture/all/frn_all_light_lamp_free_s01.iff
+
+/object createitem object/tangible/furniture/all/frn_all_light_lamp_free_s02.iff
+
+/object createitem object/tangible/furniture/all/frn_all_light_lamp_free_s03.iff
+
+/object createitem object/tangible/furniture/all/frn_all_light_lamp_free_s04.iff
+
+/object createitem object/tangible/furniture/all/frn_all_light_lamp_table_s01.iff
+
+/object createitem object/tangible/furniture/all/frn_all_light_lamp_table_s02.iff
+
+/object createitem object/tangible/furniture/all/frn_all_light_lamp_table_s03.iff
+
+/object createitem object/tangible/furniture/all/frn_all_light_lamp_tatt_s01.iff
+
+/object createitem object/tangible/furniture/all/frn_all_plant_potted_lg_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_potted_plants_sml_s01.iff
+
+/object createitem object/tangible/furniture/all/frn_all_professor_desk.iff
+
+/object createitem object/tangible/furniture/all/frn_all_technical_console_s01.iff
+
+/object createitem object/tangible/furniture/all/frn_all_technical_console_s02.iff
+
+/object createitem object/tangible/furniture/all/frn_all_throwpillow_med_s01.iff
+
+/object createitem object/tangible/furniture/all/frn_all_tiki_torch_s1.iff
+
+/object createitem object/tangible/furniture/all/frn_all_toolchest_lg_s01.iff
+
+/object createitem object/tangible/furniture/all/frn_all_toolchest_med_s01.iff
+
+/object createitem object/tangible/furniture/all/frn_all_tree_potted_s1.iff
+
+/object createitem object/tangible/furniture/cheap/armoire_s01.iff
+
+/object createitem object/tangible/furniture/cheap/bookcase_s01.iff
+
+/object createitem object/tangible/furniture/cheap/chair_s01.iff
+
+/object createitem object/tangible/furniture/cheap/chest_s01.iff
+
+/object createitem object/tangible/furniture/cheap/coffee_table_s01.iff
+
+/object createitem object/tangible/furniture/cheap/couch_s01.iff
+
+/object createitem object/tangible/furniture/cheap/end_table_s01.iff
+
+/object createitem object/tangible/furniture/cheap/love_seat_s01.iff
+
+/object createitem object/tangible/furniture/city/fountain_generic.iff
+
+/object createitem object/tangible/furniture/city/statue_gungan_head.iff
+
+/object createitem object/tangible/furniture/city/streetlamp_large_01.iff
+
+/object createitem object/tangible/furniture/decorative/basket_closed.iff
+
+/object createitem object/tangible/furniture/decorative/bottle_fat.iff
+
+/object createitem object/tangible/furniture/decorative/bottle_pear.iff
+
+/object createitem object/tangible/furniture/decorative/bottle_tall.iff
+
+/object createitem object/tangible/furniture/decorative/bubble_tank.iff
+
+/object createitem object/tangible/furniture/decorative/carved_bowl.iff
+
+/object createitem object/tangible/furniture/decorative/kitchen_utensils.iff
+
+/object createitem object/tangible/furniture/decorative/plain_bowl.iff
+
+/object createitem object/tangible/furniture/decorative/portable_stove.iff
+
+/object createitem object/tangible/furniture/decorative/radio.iff
+
+/object createitem object/tangible/furniture/decorative/slave_brazier.iff
+
+/object createitem object/tangible/furniture/decorative/spear_rack.iff
+
+/object createitem object/tangible/furniture/decorative/streetlamp.iff
+
+/object createitem object/tangible/furniture/decorative/tanning_hide_s01.iff
+
+/object createitem object/tangible/furniture/decorative/tanning_hide_s02.iff
+
+/object createitem object/tangible/furniture/decorative/tatooine_tapestry.iff
+
+/object createitem object/tangible/furniture/elegant/armoire_elegant_s01.iff
+
+/object createitem object/tangible/furniture/elegant/bookcase_s01.iff
+
+/object createitem object/tangible/furniture/elegant/cabinet_s01.iff
+
+/object createitem object/tangible/furniture/elegant/chair_s01.iff
+
+/object createitem object/tangible/furniture/elegant/chest_s01.iff
+
+/object createitem object/tangible/furniture/elegant/coffee_table_s01.iff
+
+/object createitem object/tangible/furniture/elegant/couch_s01.iff
+
+/object createitem object/tangible/furniture/elegant/end_table_s01.iff
+
+/object createitem object/tangible/furniture/elegant/love_seat_s01.iff
+
+/object createitem object/tangible/furniture/modern/armoire_modern_style_01.iff
+
+/object createitem object/tangible/furniture/modern/bookcase_modern_style_01.iff
+
+/object createitem object/tangible/furniture/modern/cabinet_modern_style_01.iff
+
+/object createitem object/tangible/furniture/modern/chair_modern_style_01.iff
+
+/object createitem object/tangible/furniture/modern/chest_modern_style_01.iff
+
+/object createitem object/tangible/furniture/modern/coffee_table_modern_style_01.iff
+
+/object createitem object/tangible/furniture/modern/couch_modern_style_01.iff
+
+/object createitem object/tangible/furniture/modern/dining_table_modern_style_01.iff
+
+/object createitem object/tangible/furniture/modern/end_table_large_modern_style_01.iff
+
+/object createitem object/tangible/furniture/modern/end_table_small_modern_style_01.iff
+
+/object createitem object/tangible/furniture/modern/love_seat_modern_style_01.iff
+
+/object createitem object/tangible/furniture/modern/sofa_chair_modern_style_01.iff
+
+/object createitem object/tangible/furniture/modern/table_modern_style_01.iff
+
+/object createitem object/tangible/furniture/tatooine/frn_tato_chair_cafe_style_01.iff
+
+/object createitem object/tangible/furniture/tatooine/frn_tato_table_small_style_01.iff
+
+/object createitem object/tangible/furniture/tatooine/frn_tato_tbl_cafe_table_style_01.iff
+
+/object createitem object/tangible/furniture/tatooine/frn_tatt_cantina_droid_detector.iff
+
+/object createitem object/tangible/furniture/tatooine/frn_tatt_chair_cantina_seat.iff
+
+/object createitem object/tangible/gambling/table/table_base.iff
+
+/object createitem object/tangible/harvesting/shellfish_harvester.iff
+
+/object createitem object/tangible/hq_destructible/override_terminal.iff
+
+/object createitem object/tangible/hq_destructible/power_regulator.iff
+
+/object createitem object/tangible/hq_destructible/security_terminal.iff
+
+/object createitem object/tangible/hq_destructible/uplink_terminal.iff
+
+/object createitem object/tangible/instrument/bandfill.iff
+
+/object createitem object/tangible/instrument/fanfar.iff
+
+/object createitem object/tangible/instrument/fizz.iff
+
+/object createitem object/tangible/instrument/flute_droopy.iff
+
+/object createitem object/tangible/instrument/instrument_organ_figrin_dan.iff
+
+/object createitem object/tangible/instrument/instrument_organ_max_rebo.iff
+
+/object createitem object/tangible/instrument/kloo_horn.iff
+
+/object createitem object/tangible/instrument/mandoviol.iff
+
+/object createitem object/tangible/instrument/nalargon.iff
+
+/object createitem object/tangible/instrument/ommni_box.iff
+
+/object createitem object/tangible/instrument/slitherhorn.iff
+
+/object createitem object/tangible/instrument/traz.iff
+
+/object createitem object/tangible/inventory/character_inventory.iff
+
+/object createitem object/tangible/inventory/lightsaber_inventory_1.iff
+
+/object createitem object/tangible/inventory/lightsaber_inventory_2.iff
+
+/object createitem object/tangible/inventory/lightsaber_inventory_3.iff
+
+/object createitem object/tangible/inventory/lightsaber_inventory_4.iff
+
+/object createitem object/tangible/inventory/lightsaber_inventory_training.iff
+
+/object createitem object/tangible/item/droid_customization.iff
+
+/object createitem object/tangible/item/quest/force_sensitive/fs_medic_puzzle_heal_pack.iff
+
+/object createitem object/tangible/item/vehicle_customization.iff
+
+/object createitem object/tangible/loot/simple_kit/motor_small_red.iff
+
+/object createitem object/tangible/loot/simple_kit/tumble_blender.iff
+
+/object createitem object/tangible/medicine/crafted/crafted_stimpack_sm_s1_a.iff
+
+/object createitem object/tangible/medicine/crafted/crafted_stimpack_sm_s1_b.iff
+
+/object createitem object/tangible/medicine/crafted/crafted_stimpack_sm_s1_c.iff
+
+/object createitem object/tangible/medicine/crafted/crafted_stimpack_sm_s1_d.iff
+
+/object createitem object/tangible/medicine/crafted/crafted_stimpack_sm_s1_e.iff
+
+/object createitem object/tangible/medicine/crafted/medic_fire_blanket.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_blinded_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_cure_disease_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_cure_disease_area_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_cure_disease_area_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_cure_disease_area_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_cure_disease_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_cure_disease_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_cure_poison_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_cure_poison_area_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_cure_poison_area_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_cure_poison_area_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_cure_poison_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_cure_poison_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_action_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_action_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_action_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_action_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_action_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_action_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_constitution_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_constitution_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_constitution_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_focus_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_focus_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_focus_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_health_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_health_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_health_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_mind_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_mind_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_mind_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_quickness_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_quickness_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_quickness_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_stamina_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_stamina_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_stamina_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_strength_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_strength_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_strength_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_willpower_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_willpower_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_area_willpower_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_constitution_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_constitution_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_constitution_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_focus_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_focus_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_focus_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_health_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_health_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_health_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_mind_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_mind_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_mind_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_quickness_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_quickness_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_quickness_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_stamina_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_stamina_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_stamina_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_strength_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_strength_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_strength_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_willpower_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_willpower_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_disease_willpower_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_dizzy_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_action_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_action_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_action_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_action_d.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_constitution_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_constitution_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_constitution_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_constitution_d.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_disease_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_disease_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_disease_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_health_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_health_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_health_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_health_d.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_poison_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_poison_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_poison_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_quickness_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_quickness_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_quickness_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_quickness_d.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_stamina_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_stamina_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_stamina_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_stamina_d.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_strength_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_strength_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_strength_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_enhance_strength_d.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_grenade_area_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_grenade_area_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_grenade_area_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_grenade_damage_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_grenade_damage_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_grenade_damage_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_grenade_damage_d.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_grenade_damage_e.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_intimidated_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_action_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_action_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_action_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_area_action_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_area_action_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_area_action_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_area_health_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_area_health_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_area_health_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_area_mind_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_area_mind_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_area_mind_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_health_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_health_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_health_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_mind_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_mind_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_poison_mind_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_revive.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_stunned_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_action_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_action_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_action_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_action_d.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_action_e.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_constitution_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_constitution_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_constitution_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_constitution_d.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_constitution_e.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_health_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_health_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_health_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_health_d.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_health_e.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_quickness_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_quickness_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_quickness_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_quickness_d.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_quickness_e.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_stamina_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_stamina_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_stamina_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_stamina_d.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_stamina_e.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_strength_a.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_strength_b.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_strength_c.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_strength_d.iff
+
+/object createitem object/tangible/medicine/crafted/medpack_wound_strength_e.iff
+
+/object createitem object/tangible/medicine/pet/droid_damage_kit_a.iff
+
+/object createitem object/tangible/medicine/pet/droid_damage_kit_b.iff
+
+/object createitem object/tangible/medicine/pet/droid_damage_kit_c.iff
+
+/object createitem object/tangible/medicine/pet/droid_damage_kit_d.iff
+
+/object createitem object/tangible/medicine/pet/droid_wound_kit_a.iff
+
+/object createitem object/tangible/medicine/pet/droid_wound_kit_b.iff
+
+/object createitem object/tangible/medicine/pet/droid_wound_kit_c.iff
+
+/object createitem object/tangible/medicine/pet/droid_wound_kit_d.iff
+
+/object createitem object/tangible/medicine/pet/pet_stimpack_a.iff
+
+/object createitem object/tangible/medicine/pet/pet_stimpack_b.iff
+
+/object createitem object/tangible/medicine/pet/pet_stimpack_c.iff
+
+/object createitem object/tangible/medicine/pet/pet_stimpack_d.iff
+
+/object createitem object/tangible/medicine/pet/pet_vitapack_a.iff
+
+/object createitem object/tangible/medicine/pet/pet_vitapack_b.iff
+
+/object createitem object/tangible/medicine/pet/pet_vitapack_c.iff
+
+/object createitem object/tangible/microphone/microphone.iff
+
+/object createitem object/tangible/mission_bag/mission_bag.iff
+
+/object createitem object/tangible/mission/mission_bounty_droid_probot.iff
+
+/object createitem object/tangible/mission/mission_bounty_droid_seeker.iff
+
+/object createitem object/tangible/mission/quest_item/attunement_grid.iff
+
+/object createitem object/tangible/mission/quest_item/current_alternator.iff
+
+/object createitem object/tangible/mission/quest_item/feedback_controller.iff
+
+/object createitem object/tangible/mission/quest_item/output_governor.iff
+
+/object createitem object/tangible/mission/quest_item/power_regulator.iff
+
+/object createitem object/tangible/painting/painting_bestine_blueleaf_temple.iff
+
+/object createitem object/tangible/painting/painting_bestine_blumbush.iff
+
+/object createitem object/tangible/painting/painting_bestine_boffa.iff
+
+/object createitem object/tangible/painting/painting_bestine_golden_flower_01.iff
+
+/object createitem object/tangible/painting/painting_bestine_golden_flower_02.iff
+
+/object createitem object/tangible/painting/painting_bestine_golden_flower_03.iff
+
+/object createitem object/tangible/painting/painting_bestine_house.iff
+
+/object createitem object/tangible/painting/painting_bestine_krayt_skeleton.iff
+
+/object createitem object/tangible/painting/painting_bestine_lucky_despot.iff
+
+/object createitem object/tangible/painting/painting_bestine_mattberry.iff
+
+/object createitem object/tangible/painting/painting_bestine_moncal_eye_01.iff
+
+/object createitem object/tangible/painting/painting_bestine_moncal_eye_02.iff
+
+/object createitem object/tangible/painting/painting_bestine_rainbow_berry_bush.iff
+
+/object createitem object/tangible/painting/painting_bestine_raventhorn.iff
+
+/object createitem object/tangible/painting/painting_bestine_ronka.iff
+
+/object createitem object/tangible/parrot_cage/parrot_cage.iff
+
+/object createitem object/tangible/poi/object/droid_body.iff
+
+/object createitem object/tangible/poi/object/droid_head.iff
+
+/object createitem object/tangible/powerup/weapon/melee_generic.iff
+
+/object createitem object/tangible/powerup/weapon/mine_explosive.iff
+
+/object createitem object/tangible/powerup/weapon/ranged_barrel.iff
+
+/object createitem object/tangible/powerup/weapon/ranged_grip.iff
+
+/object createitem object/tangible/powerup/weapon/ranged_muzzle.iff
+
+/object createitem object/tangible/powerup/weapon/ranged_power.iff
+
+/object createitem object/tangible/powerup/weapon/ranged_scope.iff
+
+/object createitem object/tangible/powerup/weapon/ranged_stock.iff
+
+/object createitem object/tangible/powerup/weapon/thrown_explosive.iff
+
+/object createitem object/tangible/powerup/weapon/thrown_wiring.iff
+
+/object createitem object/tangible/recycler/chemical_recycler.iff
+
+/object createitem object/tangible/recycler/creature_recycler.iff
+
+/object createitem object/tangible/recycler/flora_recycler.iff
+
+/object createitem object/tangible/recycler/metal_recycler.iff
+
+/object createitem object/tangible/recycler/ore_recycler.iff
+
+/object createitem object/tangible/scout/camokit/camokit_corellia.iff
+
+/object createitem object/tangible/scout/camokit/camokit_dantooine.iff
+
+/object createitem object/tangible/scout/camokit/camokit_dathomir.iff
+
+/object createitem object/tangible/scout/camokit/camokit_endor.iff
+
+/object createitem object/tangible/scout/camokit/camokit_lok.iff
+
+/object createitem object/tangible/scout/camokit/camokit_naboo.iff
+
+/object createitem object/tangible/scout/camokit/camokit_rori.iff
+
+/object createitem object/tangible/scout/camokit/camokit_talus.iff
+
+/object createitem object/tangible/scout/camokit/camokit_tatooine.iff
+
+/object createitem object/tangible/scout/camokit/camokit_yavin.iff
+
+/object createitem object/tangible/scout/camp/camp_basic.iff
+
+/object createitem object/tangible/scout/camp/camp_elite.iff
+
+/object createitem object/tangible/scout/camp/camp_improved.iff
+
+/object createitem object/tangible/scout/camp/camp_luxury.iff
+
+/object createitem object/tangible/scout/camp/camp_multi.iff
+
+/object createitem object/tangible/scout/camp/camp_quality.iff
+
+/object createitem object/tangible/scout/trap/trap_drowsy_dart.iff
+
+/object createitem object/tangible/scout/trap/trap_enraging_spur.iff
+
+/object createitem object/tangible/scout/trap/trap_flash_bomb.iff
+
+/object createitem object/tangible/scout/trap/trap_melee_def_1.iff
+
+/object createitem object/tangible/scout/trap/trap_melee_ranged_def_1.iff
+
+/object createitem object/tangible/scout/trap/trap_noise_maker.iff
+
+/object createitem object/tangible/scout/trap/trap_ranged_def_1.iff
+
+/object createitem object/tangible/scout/trap/trap_sonic_pulse.iff
+
+/object createitem object/tangible/scout/trap/trap_state_def_1.iff
+
+/object createitem object/tangible/scout/trap/trap_tranq_dart.iff
+
+/object createitem object/tangible/scout/trap/trap_webber.iff
+
+/object createitem object/tangible/ship/components/chassis/awing_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/blacksun_heavy_s01_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/blacksun_heavy_s02_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/blacksun_heavy_s03_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/blacksun_heavy_s04_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/blacksun_light_s01_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/blacksun_light_s02_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/blacksun_light_s03_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/blacksun_light_s04_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/blacksun_medium_s01_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/blacksun_medium_s02_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/blacksun_medium_s03_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/blacksun_medium_s04_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/bwing_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/decimator_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/hutt_heavy_s01_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/hutt_heavy_s02_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/hutt_light_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/hutt_light_s02_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/hutt_medium_s01_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/hutt_medium_s02_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/hutt_turret_ship_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/tieadvanced_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/tieaggressor_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/tiebomber_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/tiefighter_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/tie_in_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/tieinterceptor_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/tie_light_duty_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/tieoppressor_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/xwing_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/ykl37r_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/yt1300_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/ywing_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/ywing_longprobe_chassis_token.iff
+
+/object createitem object/tangible/ship/components/chassis/z95_chassis_token.iff
+
+/object createitem object/tangible/ship/crafted/armor/adv_durasteel_plating.iff
+
+/object createitem object/tangible/ship/crafted/armor/armor_reinforcement_panel_mk1.iff
+
+/object createitem object/tangible/ship/crafted/armor/armor_reinforcement_panel_mk2.iff
+
+/object createitem object/tangible/ship/crafted/armor/armor_reinforcement_panel_mk3.iff
+
+/object createitem object/tangible/ship/crafted/armor/armor_reinforcement_panel_mk4.iff
+
+/object createitem object/tangible/ship/crafted/armor/armor_reinforcement_panel_mk5.iff
+
+/object createitem object/tangible/ship/crafted/armor/durasteel_plating.iff
+
+/object createitem object/tangible/ship/crafted/armor/experimental_armor.iff
+
+/object createitem object/tangible/ship/crafted/armor/heavy_durasteel_plating.iff
+
+/object createitem object/tangible/ship/crafted/armor/light_durasteel_plating.iff
+
+/object createitem object/tangible/ship/crafted/armor/mass_reduction_kit_mk1.iff
+
+/object createitem object/tangible/ship/crafted/armor/mass_reduction_kit_mk2.iff
+
+/object createitem object/tangible/ship/crafted/armor/mass_reduction_kit_mk3.iff
+
+/object createitem object/tangible/ship/crafted/armor/mass_reduction_kit_mk4.iff
+
+/object createitem object/tangible/ship/crafted/armor/mass_reduction_kit_mk5.iff
+
+/object createitem object/tangible/ship/crafted/booster/booster_mk1.iff
+
+/object createitem object/tangible/ship/crafted/booster/booster_mk2.iff
+
+/object createitem object/tangible/ship/crafted/booster/booster_mk3.iff
+
+/object createitem object/tangible/ship/crafted/booster/booster_mk4.iff
+
+/object createitem object/tangible/ship/crafted/booster/booster_mk5.iff
+
+/object createitem object/tangible/ship/crafted/booster/booster_overdriver_mk1.iff
+
+/object createitem object/tangible/ship/crafted/booster/booster_overdriver_mk2.iff
+
+/object createitem object/tangible/ship/crafted/booster/booster_overdriver_mk3.iff
+
+/object createitem object/tangible/ship/crafted/booster/booster_overdriver_mk4.iff
+
+/object createitem object/tangible/ship/crafted/booster/booster_overdriver_mk5.iff
+
+/object createitem object/tangible/ship/crafted/booster/extended_life_fuel_cell_mk1.iff
+
+/object createitem object/tangible/ship/crafted/booster/extended_life_fuel_cell_mk2.iff
+
+/object createitem object/tangible/ship/crafted/booster/extended_life_fuel_cell_mk3.iff
+
+/object createitem object/tangible/ship/crafted/booster/extended_life_fuel_cell_mk4.iff
+
+/object createitem object/tangible/ship/crafted/booster/extended_life_fuel_cell_mk5.iff
+
+/object createitem object/tangible/ship/crafted/booster/fast_charge_fuel_cell_mk1.iff
+
+/object createitem object/tangible/ship/crafted/booster/fast_charge_fuel_cell_mk2.iff
+
+/object createitem object/tangible/ship/crafted/booster/fast_charge_fuel_cell_mk3.iff
+
+/object createitem object/tangible/ship/crafted/booster/fast_charge_fuel_cell_mk4.iff
+
+/object createitem object/tangible/ship/crafted/booster/fast_charge_fuel_cell_mk5.iff
+
+/object createitem object/tangible/ship/crafted/booster/heavy_fuel_cell_mk1.iff
+
+/object createitem object/tangible/ship/crafted/booster/heavy_fuel_cell_mk2.iff
+
+/object createitem object/tangible/ship/crafted/booster/heavy_fuel_cell_mk3.iff
+
+/object createitem object/tangible/ship/crafted/booster/heavy_fuel_cell_mk4.iff
+
+/object createitem object/tangible/ship/crafted/booster/heavy_fuel_cell_mk5.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/capacitor_mk1.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/capacitor_mk2.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/capacitor_mk3.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/capacitor_mk4.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/capacitor_mk5.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/energy_saver_battery_mk1.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/energy_saver_battery_mk2.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/energy_saver_battery_mk3.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/energy_saver_battery_mk4.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/energy_saver_battery_mk5.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/extended_life_battery_mk1.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/extended_life_battery_mk2.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/extended_life_battery_mk3.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/extended_life_battery_mk4.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/extended_life_battery_mk5.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/heavy_battery_mk1.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/heavy_battery_mk2.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/heavy_battery_mk3.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/heavy_battery_mk4.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/heavy_battery_mk5.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/quick_recharge_battery_mk1.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/quick_recharge_battery_mk2.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/quick_recharge_battery_mk3.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/quick_recharge_battery_mk4.iff
+
+/object createitem object/tangible/ship/crafted/capacitor/quick_recharge_battery_mk5.iff
+
+/object createitem object/tangible/ship/crafted/chassis/texture_kit_s01.iff
+
+/object createitem object/tangible/ship/crafted/chassis/texture_kit_s02.iff
+
+/object createitem object/tangible/ship/crafted/chassis/texture_kit_s03.iff
+
+/object createitem object/tangible/ship/crafted/chassis/texture_kit_s04.iff
+
+/object createitem object/tangible/ship/crafted/chassis/texture_kit_s05.iff
+
+/object createitem object/tangible/ship/crafted/chassis/texture_kit_s06.iff
+
+/object createitem object/tangible/ship/crafted/chassis/xwing_customization_kit.iff
+
+/object createitem object/tangible/ship/crafted/droid_interface/ddi_mk1.iff
+
+/object createitem object/tangible/ship/crafted/droid_interface/ddi_mk2.iff
+
+/object createitem object/tangible/ship/crafted/droid_interface/ddi_mk3.iff
+
+/object createitem object/tangible/ship/crafted/droid_interface/ddi_mk4.iff
+
+/object createitem object/tangible/ship/crafted/droid_interface/ddi_mk5.iff
+
+/object createitem object/tangible/ship/crafted/droid_interface/droid_brain_upgrade_mk1.iff
+
+/object createitem object/tangible/ship/crafted/droid_interface/droid_brain_upgrade_mk2.iff
+
+/object createitem object/tangible/ship/crafted/droid_interface/droid_brain_upgrade_mk3.iff
+
+/object createitem object/tangible/ship/crafted/droid_interface/droid_brain_upgrade_mk4.iff
+
+/object createitem object/tangible/ship/crafted/droid_interface/droid_brain_upgrade_mk5.iff
+
+/object createitem object/tangible/ship/crafted/droid_interface/maintenance_reduction_kit_mk1.iff
+
+/object createitem object/tangible/ship/crafted/droid_interface/maintenance_reduction_kit_mk2.iff
+
+/object createitem object/tangible/ship/crafted/droid_interface/maintenance_reduction_kit_mk3.iff
+
+/object createitem object/tangible/ship/crafted/droid_interface/maintenance_reduction_kit_mk4.iff
+
+/object createitem object/tangible/ship/crafted/droid_interface/maintenance_reduction_kit_mk5.iff
+
+/object createitem object/tangible/ship/crafted/engine/engine_limiter_mk1.iff
+
+/object createitem object/tangible/ship/crafted/engine/engine_limiter_mk2.iff
+
+/object createitem object/tangible/ship/crafted/engine/engine_limiter_mk3.iff
+
+/object createitem object/tangible/ship/crafted/engine/engine_limiter_mk4.iff
+
+/object createitem object/tangible/ship/crafted/engine/engine_limiter_mk5.iff
+
+/object createitem object/tangible/ship/crafted/engine/engine_overdriver_mk1.iff
+
+/object createitem object/tangible/ship/crafted/engine/engine_overdriver_mk2.iff
+
+/object createitem object/tangible/ship/crafted/engine/engine_overdriver_mk3.iff
+
+/object createitem object/tangible/ship/crafted/engine/engine_overdriver_mk4.iff
+
+/object createitem object/tangible/ship/crafted/engine/engine_overdriver_mk5.iff
+
+/object createitem object/tangible/ship/crafted/engine/eng_mk1.iff
+
+/object createitem object/tangible/ship/crafted/engine/eng_mk2.iff
+
+/object createitem object/tangible/ship/crafted/engine/eng_mk3.iff
+
+/object createitem object/tangible/ship/crafted/engine/eng_mk4.iff
+
+/object createitem object/tangible/ship/crafted/engine/eng_mk5.iff
+
+/object createitem object/tangible/ship/crafted/reactor/fusion_reactor_mk1.iff
+
+/object createitem object/tangible/ship/crafted/reactor/fusion_reactor_mk2.iff
+
+/object createitem object/tangible/ship/crafted/reactor/fusion_reactor_mk3.iff
+
+/object createitem object/tangible/ship/crafted/reactor/fusion_reactor_mk4.iff
+
+/object createitem object/tangible/ship/crafted/reactor/fusion_reactor_mk5.iff
+
+/object createitem object/tangible/ship/crafted/reactor/reactor_limiter_mk1.iff
+
+/object createitem object/tangible/ship/crafted/reactor/reactor_limiter_mk2.iff
+
+/object createitem object/tangible/ship/crafted/reactor/reactor_limiter_mk3.iff
+
+/object createitem object/tangible/ship/crafted/reactor/reactor_limiter_mk4.iff
+
+/object createitem object/tangible/ship/crafted/reactor/reactor_limiter_mk5.iff
+
+/object createitem object/tangible/ship/crafted/reactor/reactor_overcharger_mk1.iff
+
+/object createitem object/tangible/ship/crafted/reactor/reactor_overcharger_mk2.iff
+
+/object createitem object/tangible/ship/crafted/reactor/reactor_overcharger_mk3.iff
+
+/object createitem object/tangible/ship/crafted/reactor/reactor_overcharger_mk4.iff
+
+/object createitem object/tangible/ship/crafted/reactor/reactor_overcharger_mk5.iff
+
+/object createitem object/tangible/ship/crafted/repair/repair_kit_armor.iff
+
+/object createitem object/tangible/ship/crafted/repair/repair_kit_booster.iff
+
+/object createitem object/tangible/ship/crafted/repair/repair_kit_chassis.iff
+
+/object createitem object/tangible/ship/crafted/repair/repair_kit_droid_interface.iff
+
+/object createitem object/tangible/ship/crafted/repair/repair_kit_engine.iff
+
+/object createitem object/tangible/ship/crafted/repair/repair_kit_plasma_conduit.iff
+
+/object createitem object/tangible/ship/crafted/repair/repair_kit_reactor.iff
+
+/object createitem object/tangible/ship/crafted/repair/repair_kit_shield_generator.iff
+
+/object createitem object/tangible/ship/crafted/repair/repair_kit_ship.iff
+
+/object createitem object/tangible/ship/crafted/repair/repair_kit_weapon_capacitor.iff
+
+/object createitem object/tangible/ship/crafted/repair/repair_kit_weapon.iff
+
+/object createitem object/tangible/ship/crafted/reverse_engineering/analysis_tool.iff
+
+/object createitem object/tangible/ship/crafted/shields/adv_deflector_shields.iff
+
+/object createitem object/tangible/ship/crafted/shields/deflector_shields.iff
+
+/object createitem object/tangible/ship/crafted/shields/exp_deflector_shields.iff
+
+/object createitem object/tangible/ship/crafted/shields/heavy_deflector_shields.iff
+
+/object createitem object/tangible/ship/crafted/shields/light_deflector_shields.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_energy_saver_kit_mk1.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_energy_saver_kit_mk2.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_energy_saver_kit_mk3.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_energy_saver_kit_mk4.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_energy_saver_kit_mk5.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_intensifier_mk1.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_intensifier_mk2.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_intensifier_mk3.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_intensifier_mk4.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_intensifier_mk5.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_limiter_mk1.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_limiter_mk2.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_limiter_mk3.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_limiter_mk4.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_limiter_mk5.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_overcharger_mk1.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_overcharger_mk2.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_overcharger_mk3.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_overcharger_mk4.iff
+
+/object createitem object/tangible/ship/crafted/shields/shield_overcharger_mk5.iff
+
+/object createitem object/tangible/ship/crafted/weapon/armor_effectiveness_intensifier_mk1.iff
+
+/object createitem object/tangible/ship/crafted/weapon/armor_effectiveness_intensifier_mk2.iff
+
+/object createitem object/tangible/ship/crafted/weapon/armor_effectiveness_intensifier_mk3.iff
+
+/object createitem object/tangible/ship/crafted/weapon/armor_effectiveness_intensifier_mk4.iff
+
+/object createitem object/tangible/ship/crafted/weapon/armor_effectiveness_intensifier_mk5.iff
+
+/object createitem object/tangible/ship/crafted/weapon/max_damage_intensifier_mk1.iff
+
+/object createitem object/tangible/ship/crafted/weapon/max_damage_intensifier_mk2.iff
+
+/object createitem object/tangible/ship/crafted/weapon/max_damage_intensifier_mk3.iff
+
+/object createitem object/tangible/ship/crafted/weapon/max_damage_intensifier_mk4.iff
+
+/object createitem object/tangible/ship/crafted/weapon/max_damage_intensifier_mk5.iff
+
+/object createitem object/tangible/ship/crafted/weapon/min_damage_intensifier_mk1.iff
+
+/object createitem object/tangible/ship/crafted/weapon/min_damage_intensifier_mk2.iff
+
+/object createitem object/tangible/ship/crafted/weapon/min_damage_intensifier_mk3.iff
+
+/object createitem object/tangible/ship/crafted/weapon/min_damage_intensifier_mk4.iff
+
+/object createitem object/tangible/ship/crafted/weapon/min_damage_intensifier_mk5.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/countermeasure_chaff_launcher.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/countermeasure_chaff_pack.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/countermeasure_confuser_launcher.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/countermeasure_confuser_pack.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/countermeasure_decoy_launcher.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/countermeasure_decoy_pack.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/countermeasure_em_launcher.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/countermeasure_em_pack.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/countermeasure_microchaff_launcher.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/countermeasure_microchaff_pack.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_concussion_missile_mk1.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_concussion_missile_mk2.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_concussion_missile_mk3.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_imagerec_missile_mk1.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_imagerec_missile_mk2.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_launcher_concussion_mk1.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_launcher_concussion_mk2.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_launcher_concussion_mk3.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_launcher_imagerec_mk1.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_launcher_imagerec_mk2.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_launcher_proton_mk1.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_launcher_proton_mk2.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_launcher_proton_mk3.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_launcher_proton_mk4.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_launcher_seismic_mk1.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_launcher_seismic_mk2.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_launcher_seismic_mk3.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_launcher_spacebomb_mk1.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_launcher_spacebomb_mk2.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_proton_missile_mk1.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_proton_missile_mk2.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_proton_missile_mk3.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_proton_missile_mk4.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_seismic_missile_mk1.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_seismic_missile_mk2.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_seismic_missile_mk3.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_spacebomb_missile_mk1.iff
+
+/object createitem object/tangible/ship/crafted/weapon/missile/wpn_spacebomb_missile_mk2.iff
+
+/object createitem object/tangible/ship/crafted/weapon/quick_shot_upgrade_mk1.iff
+
+/object createitem object/tangible/ship/crafted/weapon/quick_shot_upgrade_mk2.iff
+
+/object createitem object/tangible/ship/crafted/weapon/quick_shot_upgrade_mk3.iff
+
+/object createitem object/tangible/ship/crafted/weapon/quick_shot_upgrade_mk4.iff
+
+/object createitem object/tangible/ship/crafted/weapon/quick_shot_upgrade_mk5.iff
+
+/object createitem object/tangible/ship/crafted/weapon/shield_effectiveness_intensifier_mk1.iff
+
+/object createitem object/tangible/ship/crafted/weapon/shield_effectiveness_intensifier_mk2.iff
+
+/object createitem object/tangible/ship/crafted/weapon/shield_effectiveness_intensifier_mk3.iff
+
+/object createitem object/tangible/ship/crafted/weapon/shield_effectiveness_intensifier_mk4.iff
+
+/object createitem object/tangible/ship/crafted/weapon/shield_effectiveness_intensifier_mk5.iff
+
+/object createitem object/tangible/ship/crafted/weapon/speed_limiter_upgrade_mk1.iff
+
+/object createitem object/tangible/ship/crafted/weapon/speed_limiter_upgrade_mk2.iff
+
+/object createitem object/tangible/ship/crafted/weapon/speed_limiter_upgrade_mk3.iff
+
+/object createitem object/tangible/ship/crafted/weapon/speed_limiter_upgrade_mk4.iff
+
+/object createitem object/tangible/ship/crafted/weapon/speed_limiter_upgrade_mk5.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_advanced_blaster_green.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_advanced_blaster.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_advanced_disruptor.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_advanced_ioncannon.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_experimental_blaster_green.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_experimental_blaster.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_experimental_disruptor.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_experimental_ioncannon.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_heavy_blaster_green.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_heavy_blaster.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_heavy_disruptor.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_heavy_ioncannon.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_light_blaster_green.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_light_blaster.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_light_disruptor.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_light_ioncannon.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_medium_blaster_green.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_medium_blaster.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_medium_disruptor.iff
+
+/object createitem object/tangible/ship/crafted/weapon/wpn_medium_ioncannon.iff
+
+/object createitem object/tangible/sign/player/house_address_corellia.iff
+
+/object createitem object/tangible/sign/player/house_address.iff
+
+/object createitem object/tangible/sign/player/house_address_naboo.iff
+
+/object createitem object/tangible/sign/player/house_address_tatooine.iff
+
+/object createitem object/tangible/sign/player/shop_sign_s01.iff
+
+/object createitem object/tangible/sign/player/shop_sign_s02.iff
+
+/object createitem object/tangible/sign/player/shop_sign_s03.iff
+
+/object createitem object/tangible/sign/player/shop_sign_s04.iff
+
+/object createitem object/tangible/slicing/slicing_armor_upgrade_kit.iff
+
+/object createitem object/tangible/slicing/slicing_flow_analyzer.iff
+
+/object createitem object/tangible/slicing/slicing_laser_knife.iff
+
+/object createitem object/tangible/slicing/slicing_molecular_clamp.iff
+
+/object createitem object/tangible/slicing/slicing_weapon_upgrade_kit.iff
+
+/object createitem object/tangible/speaker/speaker.iff
+
+/object createitem object/tangible/survey_tool/survey_tool_gas.iff
+
+/object createitem object/tangible/survey_tool/survey_tool_liquid.iff
+
+/object createitem object/tangible/survey_tool/survey_tool_lumber.iff
+
+/object createitem object/tangible/survey_tool/survey_tool_mineral.iff
+
+/object createitem object/tangible/survey_tool/survey_tool_moisture.iff
+
+/object createitem object/tangible/survey_tool/survey_tool_solar.iff
+
+/object createitem object/tangible/survey_tool/survey_tool_wind.iff
+
+/object createitem object/tangible/terminal/terminal_ballot_box.iff
+
+/object createitem object/tangible/terminal/terminal_bank.iff
+
+## Note: bluefrog - the blue frogs you see in game
+
+/object createitem object/tangible/terminal/terminal_character_builder.iff
+
+/object createitem object/tangible/terminal/terminal_city.iff
+
+/object createitem object/tangible/terminal/terminal_city_vote.iff
+
+/object createitem object/tangible/terminal/terminal_cloning.iff
+
+/object createitem object/tangible/terminal/terminal_elevator_down.iff
+
+/object createitem object/tangible/terminal/terminal_elevator_up.iff
+
+/object createitem object/tangible/terminal/terminal_guild.iff
+
+/object createitem object/tangible/terminal/terminal_hq_imperial.iff
+
+/object createitem object/tangible/terminal/terminal_hq_rebel.iff
+
+/object createitem object/tangible/terminal/terminal_hq_turret_control.iff
+
+/object createitem object/tangible/terminal/terminal_insurance.iff
+
+/object createitem object/tangible/terminal/terminal_mission.iff
+
+/object createitem object/tangible/terminal/terminal_mission_imperial.iff
+
+/object createitem object/tangible/terminal/terminal_mission_rebel.iff
+
+/object createitem object/tangible/terminal/terminal_player_structure.iff
+
+/object createitem object/tangible/terminal/terminal_player_structure_nosnap_mini.iff
+
+/object createitem object/tangible/terminal/terminal_travel.iff
+
+/object createitem object/tangible/travel/ticket_collector/ticket_collector.iff
+
+/object createitem object/tangible/wearables/apron/apron_chef_s01.iff
+
+/object createitem object/tangible/wearables/apron/apron_porcellus.iff
+
+/object createitem object/tangible/wearables/armor/bone/armor_bone_s01_bicep_l.iff
+
+/object createitem object/tangible/wearables/armor/bone/armor_bone_s01_bicep_r.iff
+
+/object createitem object/tangible/wearables/armor/bone/armor_bone_s01_boots.iff
+
+/object createitem object/tangible/wearables/armor/bone/armor_bone_s01_bracer_l.iff
+
+/object createitem object/tangible/wearables/armor/bone/armor_bone_s01_bracer_r.iff
+
+/object createitem object/tangible/wearables/armor/bone/armor_bone_s01_chest_plate.iff
+
+/object createitem object/tangible/wearables/armor/bone/armor_bone_s01_gloves.iff
+
+/object createitem object/tangible/wearables/armor/bone/armor_bone_s01_helmet.iff
+
+/object createitem object/tangible/wearables/armor/bone/armor_bone_s01_leggings.iff
+
+/object createitem object/tangible/wearables/armor/chitin/armor_chitin_s01_bicep_l.iff
+
+/object createitem object/tangible/wearables/armor/chitin/armor_chitin_s01_bicep_r.iff
+
+/object createitem object/tangible/wearables/armor/chitin/armor_chitin_s01_boots.iff
+
+/object createitem object/tangible/wearables/armor/chitin/armor_chitin_s01_bracer_l.iff
+
+/object createitem object/tangible/wearables/armor/chitin/armor_chitin_s01_bracer_r.iff
+
+/object createitem object/tangible/wearables/armor/chitin/armor_chitin_s01_chest_plate.iff
+
+/object createitem object/tangible/wearables/armor/chitin/armor_chitin_s01_gloves.iff
+
+/object createitem object/tangible/wearables/armor/chitin/armor_chitin_s01_helmet.iff
+
+/object createitem object/tangible/wearables/armor/chitin/armor_chitin_s01_leggings.iff
+
+/object createitem object/tangible/wearables/armor/composite/armor_composite_bicep_l.iff
+
+/object createitem object/tangible/wearables/armor/composite/armor_composite_bicep_r.iff
+
+/object createitem object/tangible/wearables/armor/composite/armor_composite_boots.iff
+
+/object createitem object/tangible/wearables/armor/composite/armor_composite_bracer_l.iff
+
+/object createitem object/tangible/wearables/armor/composite/armor_composite_bracer_r.iff
+
+/object createitem object/tangible/wearables/armor/composite/armor_composite_chest_plate.iff
+
+/object createitem object/tangible/wearables/armor/composite/armor_composite_gloves.iff
+
+/object createitem object/tangible/wearables/armor/composite/armor_composite_helmet.iff
+
+/object createitem object/tangible/wearables/armor/composite/armor_composite_leggings.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_defender/ith_armor_s01_bicep_l.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_defender/ith_armor_s01_bicep_r.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_defender/ith_armor_s01_boots.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_defender/ith_armor_s01_bracer_l.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_defender/ith_armor_s01_bracer_r.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_defender/ith_armor_s01_chest_plate.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_defender/ith_armor_s01_gloves.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_defender/ith_armor_s01_helmet.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_defender/ith_armor_s01_leggings.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_guardian/ith_armor_s02_bicep_l.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_guardian/ith_armor_s02_bicep_r.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_guardian/ith_armor_s02_boots.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_guardian/ith_armor_s02_bracer_l.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_guardian/ith_armor_s02_bracer_r.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_guardian/ith_armor_s02_chest_plate.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_guardian/ith_armor_s02_gloves.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_guardian/ith_armor_s02_helmet.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_guardian/ith_armor_s02_leggings.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_sentinel/ith_armor_s03_bicep_l.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_sentinel/ith_armor_s03_bicep_r.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_sentinel/ith_armor_s03_boots.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_sentinel/ith_armor_s03_bracer_l.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_sentinel/ith_armor_s03_bracer_r.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_sentinel/ith_armor_s03_chest_plate.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_sentinel/ith_armor_s03_gloves.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_sentinel/ith_armor_s03_helmet.iff
+
+/object createitem object/tangible/wearables/armor/ithorian_sentinel/ith_armor_s03_leggings.iff
+
+/object createitem object/tangible/wearables/armor/kashyyykian_black_mtn/armor_kashyyykian_black_mtn_bracer_l.iff
+
+/object createitem object/tangible/wearables/armor/kashyyykian_black_mtn/armor_kashyyykian_black_mtn_bracer_r.iff
+
+/object createitem object/tangible/wearables/armor/kashyyykian_black_mtn/armor_kashyyykian_black_mtn_chest_plate.iff
+
+/object createitem object/tangible/wearables/armor/kashyyykian_black_mtn/armor_kashyyykian_black_mtn_leggings.iff
+
+/object createitem object/tangible/wearables/armor/kashyyykian_ceremonial/armor_kashyyykian_ceremonial_bracer_l.iff
+
+/object createitem object/tangible/wearables/armor/kashyyykian_ceremonial/armor_kashyyykian_ceremonial_bracer_r.iff
+
+/object createitem object/tangible/wearables/armor/kashyyykian_ceremonial/armor_kashyyykian_ceremonial_chest_plate.iff
+
+/object createitem object/tangible/wearables/armor/kashyyykian_ceremonial/armor_kashyyykian_ceremonial_leggings.iff
+
+/object createitem object/tangible/wearables/armor/kashyyykian_hunting/armor_kashyyykian_hunting_bracer_l.iff
+
+/object createitem object/tangible/wearables/armor/kashyyykian_hunting/armor_kashyyykian_hunting_bracer_r.iff
+
+/object createitem object/tangible/wearables/armor/kashyyykian_hunting/armor_kashyyykian_hunting_chest_plate.iff
+
+/object createitem object/tangible/wearables/armor/kashyyykian_hunting/armor_kashyyykian_hunting_leggings.iff
+
+/object createitem object/tangible/wearables/armor/padded/armor_padded_s01_belt.iff
+
+/object createitem object/tangible/wearables/armor/padded/armor_padded_s01_bicep_l.iff
+
+/object createitem object/tangible/wearables/armor/padded/armor_padded_s01_bicep_r.iff
+
+/object createitem object/tangible/wearables/armor/padded/armor_padded_s01_boots.iff
+
+/object createitem object/tangible/wearables/armor/padded/armor_padded_s01_bracer_l.iff
+
+/object createitem object/tangible/wearables/armor/padded/armor_padded_s01_bracer_r.iff
+
+/object createitem object/tangible/wearables/armor/padded/armor_padded_s01_chest_plate.iff
+
+/object createitem object/tangible/wearables/armor/padded/armor_padded_s01_gloves.iff
+
+/object createitem object/tangible/wearables/armor/padded/armor_padded_s01_helmet.iff
+
+/object createitem object/tangible/wearables/armor/padded/armor_padded_s01_leggings.iff
+
+/object createitem object/tangible/wearables/armor/ris/armor_ris_bicep_l.iff
+
+/object createitem object/tangible/wearables/armor/ris/armor_ris_bicep_r.iff
+
+/object createitem object/tangible/wearables/armor/ris/armor_ris_boots.iff
+
+/object createitem object/tangible/wearables/armor/ris/armor_ris_bracer_l.iff
+
+/object createitem object/tangible/wearables/armor/ris/armor_ris_bracer_r.iff
+
+/object createitem object/tangible/wearables/armor/ris/armor_ris_chest_plate.iff
+
+/object createitem object/tangible/wearables/armor/ris/armor_ris_gloves.iff
+
+/object createitem object/tangible/wearables/armor/ris/armor_ris_helmet.iff
+
+/object createitem object/tangible/wearables/armor/ris/armor_ris_leggings.iff
+
+/object createitem object/tangible/wearables/armor/tantel/armor_tantel_skreej_boots.iff
+
+/object createitem object/tangible/wearables/armor/tantel/armor_tantel_skreej_chest_plate.iff
+
+/object createitem object/tangible/wearables/armor/tantel/armor_tantel_skreej_helmet.iff
+
+/object createitem object/tangible/wearables/armor/ubese/armor_ubese_bandolier.iff
+
+/object createitem object/tangible/wearables/armor/ubese/armor_ubese_boots.iff
+
+/object createitem object/tangible/wearables/armor/ubese/armor_ubese_bracer_l.iff
+
+/object createitem object/tangible/wearables/armor/ubese/armor_ubese_bracer_r.iff
+
+/object createitem object/tangible/wearables/armor/ubese/armor_ubese_gloves.iff
+
+/object createitem object/tangible/wearables/armor/ubese/armor_ubese_helmet.iff
+
+/object createitem object/tangible/wearables/armor/ubese/armor_ubese_jacket.iff
+
+/object createitem object/tangible/wearables/armor/ubese/armor_ubese_pants.iff
+
+/object createitem object/tangible/wearables/armor/ubese/armor_ubese_shirt.iff
+
+/object createitem object/tangible/wearables/armor/zam/armor_zam_wesell_belt.iff
+
+/object createitem object/tangible/wearables/armor/zam/armor_zam_wesell_boots.iff
+
+/object createitem object/tangible/wearables/armor/zam/armor_zam_wesell_chest_plate.iff
+
+/object createitem object/tangible/wearables/armor/zam/armor_zam_wesell_gloves.iff
+
+/object createitem object/tangible/wearables/armor/zam/armor_zam_wesell_helmet.iff
+
+/object createitem object/tangible/wearables/armor/zam/armor_zam_wesell_pants.iff
+
+/object createitem object/tangible/wearables/backpack/backpack_s01.iff
+
+/object createitem object/tangible/wearables/backpack/backpack_s03.iff
+
+/object createitem object/tangible/wearables/backpack/backpack_s03_quest.iff
+
+/object createitem object/tangible/wearables/backpack/backpack_s04.iff
+
+/object createitem object/tangible/wearables/backpack/backpack_s05.iff
+
+/object createitem object/tangible/wearables/backpack/backpack_s06.iff
+
+/object createitem object/tangible/wearables/backpack/backpack_s06_quest.iff
+
+/object createitem object/tangible/wearables/bandolier/bandolier_s02.iff
+
+/object createitem object/tangible/wearables/bandolier/bandolier_s02_quest.iff
+
+/object createitem object/tangible/wearables/bandolier/bandolier_s03.iff
+
+/object createitem object/tangible/wearables/bandolier/bandolier_s04.iff
+
+/object createitem object/tangible/wearables/bandolier/bandolier_s04_quest.iff
+
+/object createitem object/tangible/wearables/bandolier/bandolier_s05.iff
+
+/object createitem object/tangible/wearables/bandolier/bandolier_s06.iff
+
+/object createitem object/tangible/wearables/bandolier/bandolier_s07.iff
+
+/object createitem object/tangible/wearables/bandolier/bandolier_s08.iff
+
+/object createitem object/tangible/wearables/belt/belt_s01.iff
+
+/object createitem object/tangible/wearables/belt/belt_s02.iff
+
+/object createitem object/tangible/wearables/belt/belt_s03.iff
+
+/object createitem object/tangible/wearables/belt/belt_s04.iff
+
+/object createitem object/tangible/wearables/belt/belt_s05.iff
+
+/object createitem object/tangible/wearables/belt/belt_s05_quest.iff
+
+/object createitem object/tangible/wearables/belt/belt_s07.iff
+
+/object createitem object/tangible/wearables/belt/belt_s09.iff
+
+/object createitem object/tangible/wearables/belt/belt_s11.iff
+
+/object createitem object/tangible/wearables/belt/belt_s12.iff
+
+/object createitem object/tangible/wearables/belt/belt_s13.iff
+
+/object createitem object/tangible/wearables/belt/belt_s14.iff
+
+/object createitem object/tangible/wearables/belt/belt_s15.iff
+
+/object createitem object/tangible/wearables/belt/belt_s16.iff
+
+/object createitem object/tangible/wearables/belt/belt_s17.iff
+
+/object createitem object/tangible/wearables/belt/belt_s18.iff
+
+/object createitem object/tangible/wearables/belt/belt_s19.iff
+
+/object createitem object/tangible/wearables/belt/belt_s20.iff
+
+/object createitem object/tangible/wearables/bikini/bikini_leggings_s01.iff
+
+/object createitem object/tangible/wearables/bikini/bikini_s01.iff
+
+/object createitem object/tangible/wearables/bikini/bikini_s02.iff
+
+/object createitem object/tangible/wearables/bikini/bikini_s03.iff
+
+/object createitem object/tangible/wearables/bikini/bikini_s04.iff
+
+/object createitem object/tangible/wearables/bodysuit/bodysuit_s01.iff
+
+/object createitem object/tangible/wearables/bodysuit/bodysuit_s06.iff
+
+/object createitem object/tangible/wearables/bodysuit/bodysuit_s08.iff
+
+/object createitem object/tangible/wearables/bodysuit/bodysuit_s12.iff
+
+/object createitem object/tangible/wearables/bodysuit/bodysuit_s13.iff
+
+/object createitem object/tangible/wearables/bodysuit/bodysuit_s14.iff
+
+/object createitem object/tangible/wearables/bodysuit/bodysuit_s15.iff
+
+/object createitem object/tangible/wearables/bodysuit/bodysuit_s16.iff
+
+/object createitem object/tangible/wearables/boots/boots_s03.iff
+
+/object createitem object/tangible/wearables/boots/boots_s04.iff
+
+/object createitem object/tangible/wearables/boots/boots_s05.iff
+
+/object createitem object/tangible/wearables/boots/boots_s12.iff
+
+/object createitem object/tangible/wearables/boots/boots_s14.iff
+
+/object createitem object/tangible/wearables/boots/boots_s15.iff
+
+/object createitem object/tangible/wearables/boots/boots_s19.iff
+
+/object createitem object/tangible/wearables/boots/boots_s21.iff
+
+/object createitem object/tangible/wearables/boots/boots_s34.iff
+
+/object createitem object/tangible/wearables/bracelet/bracelet_s02_l.iff
+
+/object createitem object/tangible/wearables/bracelet/bracelet_s03_r.iff
+
+/object createitem object/tangible/wearables/bracelet/bracelet_s04_l.iff
+
+/object createitem object/tangible/wearables/bracelet/bracelet_s05_r.iff
+
+/object createitem object/tangible/wearables/bracelet/bracelet_s06_l.iff
+
+/object createitem object/tangible/wearables/bustier/bustier_s01.iff
+
+/object createitem object/tangible/wearables/bustier/bustier_s02.iff
+
+/object createitem object/tangible/wearables/bustier/bustier_s03.iff
+
+/object createitem object/tangible/wearables/dress/dress_s05.iff
+
+/object createitem object/tangible/wearables/dress/dress_s06.iff
+
+/object createitem object/tangible/wearables/dress/dress_s07.iff
+
+/object createitem object/tangible/wearables/dress/dress_s08.iff
+
+/object createitem object/tangible/wearables/dress/dress_s08_quest.iff
+
+/object createitem object/tangible/wearables/dress/dress_s09.iff
+
+/object createitem object/tangible/wearables/dress/dress_s10.iff
+
+/object createitem object/tangible/wearables/dress/dress_s11.iff
+
+/object createitem object/tangible/wearables/dress/dress_s12.iff
+
+/object createitem object/tangible/wearables/dress/dress_s13.iff
+
+/object createitem object/tangible/wearables/dress/dress_s14.iff
+
+/object createitem object/tangible/wearables/dress/dress_s15.iff
+
+/object createitem object/tangible/wearables/dress/dress_s16.iff
+
+/object createitem object/tangible/wearables/dress/dress_s18.iff
+
+/object createitem object/tangible/wearables/dress/dress_s19.iff
+
+/object createitem object/tangible/wearables/dress/dress_s23.iff
+
+/object createitem object/tangible/wearables/dress/dress_s26.iff
+
+/object createitem object/tangible/wearables/dress/dress_s27.iff
+
+/object createitem object/tangible/wearables/dress/dress_s29.iff
+
+/object createitem object/tangible/wearables/dress/dress_s30.iff
+
+/object createitem object/tangible/wearables/dress/dress_s31.iff
+
+/object createitem object/tangible/wearables/dress/dress_s32.iff
+
+/object createitem object/tangible/wearables/dress/dress_s33.iff
+
+/object createitem object/tangible/wearables/dress/dress_s34.iff
+
+/object createitem object/tangible/wearables/dress/dress_s35.iff
+
+/object createitem object/tangible/wearables/gloves/gloves_s02.iff
+
+/object createitem object/tangible/wearables/gloves/gloves_s03.iff
+
+/object createitem object/tangible/wearables/gloves/gloves_s06.iff
+
+/object createitem object/tangible/wearables/gloves/gloves_s07.iff
+
+/object createitem object/tangible/wearables/gloves/gloves_s10.iff
+
+/object createitem object/tangible/wearables/gloves/gloves_s11.iff
+
+/object createitem object/tangible/wearables/gloves/gloves_s12.iff
+
+/object createitem object/tangible/wearables/gloves/gloves_s13.iff
+
+/object createitem object/tangible/wearables/gloves/gloves_s14.iff
+
+/object createitem object/tangible/wearables/hat/hat_chef_s01.iff
+
+/object createitem object/tangible/wearables/hat/hat_chef_s02.iff
+
+/object createitem object/tangible/wearables/hat/hat_s02.iff
+
+/object createitem object/tangible/wearables/hat/hat_s04.iff
+
+/object createitem object/tangible/wearables/hat/hat_s10.iff
+
+/object createitem object/tangible/wearables/hat/hat_s12.iff
+
+/object createitem object/tangible/wearables/hat/hat_s13.iff
+
+/object createitem object/tangible/wearables/hat/hat_s14.iff
+
+/object createitem object/tangible/wearables/hat/hat_twilek_s01.iff
+
+/object createitem object/tangible/wearables/hat/hat_twilek_s02.iff
+
+/object createitem object/tangible/wearables/hat/hat_twilek_s03.iff
+
+/object createitem object/tangible/wearables/hat/hat_twilek_s04.iff
+
+/object createitem object/tangible/wearables/hat/hat_twilek_s05.iff
+
+/object createitem object/tangible/wearables/ithorian/apron_chef_jacket_s01_ith.iff
+
+/object createitem object/tangible/wearables/ithorian/hat_chef_s01_ith.iff
+
+/object createitem object/tangible/wearables/ithorian/hat_chef_s02_ith.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_bodysuit_s01.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_bodysuit_s02.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_bodysuit_s03.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_bodysuit_s04.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_bodysuit_s05.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_bodysuit_s06.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_dress_s03.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_dress_short_s01.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_gloves_s02.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_hat_s01.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_hat_s02.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_hat_s03.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_hat_s04.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_jacket_s01.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_jacket_s02.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_jacket_s03.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_jacket_s04.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_jacket_s05.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_jacket_s06.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_jacket_s07.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_jacket_s08.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_jacket_s09.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_jacket_s10.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_jacket_s11.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_jacket_s12.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_jacket_s13.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_jacket_s14.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_jacket_s15.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_necklace_s01.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_necklace_s02.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_necklace_s03.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_necklace_s04.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_necklace_s05.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_necklace_s06.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_necklace_s07.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_necklace_s08.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_necklace_s09.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_necklace_s10.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_necklace_s11.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_necklace_s12.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s01.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s02.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s03.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s04.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s05.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s06.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s07.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s08.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s09.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s10.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s11.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s12.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s13.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s14.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s15.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s16.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s17.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s18.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s19.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s20.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_pants_s21.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_robe_s02.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_robe_s03.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_shirt_s01.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_shirt_s02.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_shirt_s03.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_shirt_s04.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_shirt_s05.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_shirt_s06.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_shirt_s07.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_shirt_s08.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_shirt_s09.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_shirt_s10.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_shirt_s11.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_shirt_s12.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_shirt_s13.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_shirt_s14.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_skirt_s01.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_skirt_s02.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_skirt_s03.iff
+
+/object createitem object/tangible/wearables/ithorian/ith_vest_s01.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s02.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s03.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s05.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s06.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s07.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s08.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s10.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s11.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s12.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s13.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s14.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s15.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s16.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s17.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s18.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s19.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s21.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s22.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s24.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s25.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s26.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s35.iff
+
+/object createitem object/tangible/wearables/jacket/jacket_s36.iff
+
+/object createitem object/tangible/wearables/necklace/necklace_s01.iff
+
+/object createitem object/tangible/wearables/necklace/necklace_s02.iff
+
+/object createitem object/tangible/wearables/necklace/necklace_s03.iff
+
+/object createitem object/tangible/wearables/necklace/necklace_s04.iff
+
+/object createitem object/tangible/wearables/necklace/necklace_s05.iff
+
+/object createitem object/tangible/wearables/necklace/necklace_s06.iff
+
+/object createitem object/tangible/wearables/necklace/necklace_s07.iff
+
+/object createitem object/tangible/wearables/necklace/necklace_s08.iff
+
+/object createitem object/tangible/wearables/necklace/necklace_s09.iff
+
+/object createitem object/tangible/wearables/necklace/necklace_s10.iff
+
+/object createitem object/tangible/wearables/necklace/necklace_s11.iff
+
+/object createitem object/tangible/wearables/necklace/necklace_s12.iff
+
+/object createitem object/tangible/wearables/pants/pants_s01.iff
+
+/object createitem object/tangible/wearables/pants/pants_s02.iff
+
+/object createitem object/tangible/wearables/pants/pants_s04.iff
+
+/object createitem object/tangible/wearables/pants/pants_s05.iff
+
+/object createitem object/tangible/wearables/pants/pants_s06.iff
+
+/object createitem object/tangible/wearables/pants/pants_s07.iff
+
+/object createitem object/tangible/wearables/pants/pants_s08.iff
+
+/object createitem object/tangible/wearables/pants/pants_s09.iff
+
+/object createitem object/tangible/wearables/pants/pants_s10.iff
+
+/object createitem object/tangible/wearables/pants/pants_s11.iff
+
+/object createitem object/tangible/wearables/pants/pants_s12.iff
+
+/object createitem object/tangible/wearables/pants/pants_s13.iff
+
+/object createitem object/tangible/wearables/pants/pants_s14.iff
+
+/object createitem object/tangible/wearables/pants/pants_s15.iff
+
+/object createitem object/tangible/wearables/pants/pants_s17.iff
+
+/object createitem object/tangible/wearables/pants/pants_s18.iff
+
+/object createitem object/tangible/wearables/pants/pants_s21.iff
+
+/object createitem object/tangible/wearables/pants/pants_s22.iff
+
+/object createitem object/tangible/wearables/pants/pants_s24.iff
+
+/object createitem object/tangible/wearables/pants/pants_s25.iff
+
+/object createitem object/tangible/wearables/pants/pants_s26.iff
+
+/object createitem object/tangible/wearables/pants/pants_s27.iff
+
+/object createitem object/tangible/wearables/pants/pants_s28.iff
+
+/object createitem object/tangible/wearables/pants/pants_s29.iff
+
+/object createitem object/tangible/wearables/pants/pants_s30.iff
+
+/object createitem object/tangible/wearables/pants/pants_s31.iff
+
+/object createitem object/tangible/wearables/pants/pants_s32.iff
+
+/object createitem object/tangible/wearables/pants/pants_s33.iff
+
+/object createitem object/tangible/wearables/ring/ring_s01.iff
+
+/object createitem object/tangible/wearables/ring/ring_s02.iff
+
+/object createitem object/tangible/wearables/robe/robe_s01.iff
+
+/object createitem object/tangible/wearables/robe/robe_s04.iff
+
+/object createitem object/tangible/wearables/robe/robe_s05_h1.iff
+
+/object createitem object/tangible/wearables/robe/robe_s05.iff
+
+/object createitem object/tangible/wearables/robe/robe_s12.iff
+
+/object createitem object/tangible/wearables/robe/robe_s18.iff
+
+/object createitem object/tangible/wearables/robe/robe_s27.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s03.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s04.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s05.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s07.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s08.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s09.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s10.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s11.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s12.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s13.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s14.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s15.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s16.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s24.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s26.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s27.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s28.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s30.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s32.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s34.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s38.iff
+
+/object createitem object/tangible/wearables/shirt/shirt_s42.iff
+
+/object createitem object/tangible/wearables/shoes/shoes_s01.iff
+
+/object createitem object/tangible/wearables/shoes/shoes_s02.iff
+
+/object createitem object/tangible/wearables/shoes/shoes_s03.iff
+
+/object createitem object/tangible/wearables/shoes/shoes_s07.iff
+
+/object createitem object/tangible/wearables/shoes/shoes_s08.iff
+
+/object createitem object/tangible/wearables/shoes/shoes_s09.iff
+
+/object createitem object/tangible/wearables/skirt/skirt_s03.iff
+
+/object createitem object/tangible/wearables/skirt/skirt_s04.iff
+
+/object createitem object/tangible/wearables/skirt/skirt_s05.iff
+
+/object createitem object/tangible/wearables/skirt/skirt_s06.iff
+
+/object createitem object/tangible/wearables/skirt/skirt_s07.iff
+
+/object createitem object/tangible/wearables/skirt/skirt_s09.iff
+
+/object createitem object/tangible/wearables/skirt/skirt_s10.iff
+
+/object createitem object/tangible/wearables/skirt/skirt_s11.iff
+
+/object createitem object/tangible/wearables/skirt/skirt_s12.iff
+
+/object createitem object/tangible/wearables/skirt/skirt_s13.iff
+
+/object createitem object/tangible/wearables/skirt/skirt_s14.iff
+
+/object createitem object/tangible/wearables/vest/vest_s01.iff
+
+/object createitem object/tangible/wearables/vest/vest_s02.iff
+
+/object createitem object/tangible/wearables/vest/vest_s03.iff
+
+/object createitem object/tangible/wearables/vest/vest_s04.iff
+
+/object createitem object/tangible/wearables/vest/vest_s05.iff
+
+/object createitem object/tangible/wearables/vest/vest_s06.iff
+
+/object createitem object/tangible/wearables/vest/vest_s09.iff
+
+/object createitem object/tangible/wearables/vest/vest_s10.iff
+
+/object createitem object/tangible/wearables/vest/vest_s11.iff
+
+/object createitem object/tangible/wearables/vest/vest_s15.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_gloves_s01.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_gloves_s02.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_gloves_s03.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_gloves_s04.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_hat_s01.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_hood_s01.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_hood_s02.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_hood_s03.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_shirt_s01.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_shirt_s02.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_shirt_s03.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_shirt_s04.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_shoulder_pad_s01.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_shoulder_pad_s02.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_skirt_s01.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_skirt_s02.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_skirt_s03.iff
+
+/object createitem object/tangible/wearables/wookiee/wke_skirt_s04.iff
+
+/object createitem object/weapon/melee/2h_sword/2h_sword_battleaxe.iff
+
+/object createitem object/weapon/melee/2h_sword/2h_sword_blacksun_hack.iff
+
+/object createitem object/weapon/melee/2h_sword/2h_sword_cleaver.iff
+
+/object createitem object/weapon/melee/2h_sword/2h_sword_katana.iff
+
+/object createitem object/weapon/melee/2h_sword/2h_sword_maul.iff
+
+/object createitem object/weapon/melee/2h_sword/2h_sword_scythe.iff
+
+/object createitem object/weapon/melee/2h_sword/crafted_saber/sword_lightsaber_two_handed_gen1.iff
+
+/object createitem object/weapon/melee/2h_sword/crafted_saber/sword_lightsaber_two_handed_gen2.iff
+
+/object createitem object/weapon/melee/2h_sword/crafted_saber/sword_lightsaber_two_handed_gen3.iff
+
+/object createitem object/weapon/melee/2h_sword/crafted_saber/sword_lightsaber_two_handed_gen4.iff
+
+/object createitem object/weapon/melee/axe/axe_heavy_duty.iff
+
+/object createitem object/weapon/melee/axe/axe_vibroaxe.iff
+
+/object createitem object/weapon/melee/baton/baton_gaderiffi.iff
+
+/object createitem object/weapon/melee/baton/baton_stun.iff
+
+/object createitem object/weapon/melee/knife/knife_dagger.iff
+
+/object createitem object/weapon/melee/knife/knife_survival.iff
+
+/object createitem object/weapon/melee/knife/knife_vibroblade.iff
+
+/object createitem object/weapon/melee/polearm/crafted_saber/sword_lightsaber_polearm_gen1.iff
+
+/object createitem object/weapon/melee/polearm/crafted_saber/sword_lightsaber_polearm_gen2.iff
+
+/object createitem object/weapon/melee/polearm/crafted_saber/sword_lightsaber_polearm_gen3.iff
+
+/object createitem object/weapon/melee/polearm/crafted_saber/sword_lightsaber_polearm_gen4.iff
+
+/object createitem object/weapon/melee/polearm/lance_controllerfp.iff
+
+/object createitem object/weapon/melee/polearm/lance_nightsister.iff
+
+/object createitem object/weapon/melee/polearm/lance_staff_metal.iff
+
+/object createitem object/weapon/melee/polearm/lance_staff_wood_s1.iff
+
+/object createitem object/weapon/melee/polearm/lance_staff_wood_s2.iff
+
+/object createitem object/weapon/melee/polearm/lance_vibrolance.iff
+
+/object createitem object/weapon/melee/polearm/polearm_vibro_axe.iff
+
+/object createitem object/weapon/melee/special/blacksun_razor.iff
+
+/object createitem object/weapon/melee/special/vibroknuckler.iff
+
+/object createitem object/weapon/melee/sword/crafted_saber/sword_lightsaber_one_handed_gen1.iff
+
+/object createitem object/weapon/melee/sword/crafted_saber/sword_lightsaber_one_handed_gen2.iff
+
+/object createitem object/weapon/melee/sword/crafted_saber/sword_lightsaber_one_handed_gen3.iff
+
+/object createitem object/weapon/melee/sword/crafted_saber/sword_lightsaber_one_handed_gen4.iff
+
+/object createitem object/weapon/melee/sword/crafted_saber/sword_lightsaber_training.iff
+
+/object createitem object/weapon/melee/sword/sword_01.iff
+
+/object createitem object/weapon/melee/sword/sword_02.iff
+
+/object createitem object/weapon/melee/sword/sword_blade_ryyk.iff
+
+/object createitem object/weapon/melee/unarmed/unarmed_default_player.iff
+
+/object createitem object/weapon/mine/wp_mine_anti_vehicle.iff
+
+/object createitem object/weapon/mine/wp_mine_drx55.iff
+
+/object createitem object/weapon/mine/wp_mine_xg.iff
+
+/object createitem object/weapon/ranged/carbine/carbine_cdef.iff
+
+/object createitem object/weapon/ranged/carbine/carbine_dh17.iff
+
+/object createitem object/weapon/ranged/carbine/carbine_dh17_snubnose.iff
+
+/object createitem object/weapon/ranged/carbine/carbine_dxr6.iff
+
+/object createitem object/weapon/ranged/carbine/carbine_e11.iff
+
+/object createitem object/weapon/ranged/carbine/carbine_e11_quest.iff
+
+/object createitem object/weapon/ranged/carbine/carbine_ee3.iff
+
+/object createitem object/weapon/ranged/carbine/carbine_elite.iff
+
+/object createitem object/weapon/ranged/carbine/carbine_laser.iff
+
+/object createitem object/weapon/ranged/grenade/grenade_cryoban.iff
+
+/object createitem object/weapon/ranged/grenade/grenade_fragmentation.iff
+
+/object createitem object/weapon/ranged/grenade/grenade_fragmentation_light.iff
+
+/object createitem object/weapon/ranged/grenade/grenade_glop.iff
+
+/object createitem object/weapon/ranged/grenade/grenade_imperial_detonator.iff
+
+/object createitem object/weapon/ranged/grenade/grenade_proton.iff
+
+/object createitem object/weapon/ranged/grenade/grenade_thermal_detonator.iff
+
+/object createitem object/weapon/ranged/heavy/heavy_acid_beam.iff
+
+/object createitem object/weapon/ranged/heavy/heavy_lightning_beam.iff
+
+/object createitem object/weapon/ranged/heavy/heavy_particle_beam.iff
+
+/object createitem object/weapon/ranged/heavy/heavy_rocket_launcher.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_cdef.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_d18.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_de_10.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_dh17.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_dl44.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_dl44_metal.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_dx2.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_fwg5.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_fwg5_quest.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_geonosian_sonic_blaster_loot.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_launcher.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_power5.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_republic_blaster.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_republic_blaster_quest.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_scatter.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_scout_blaster.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_srcombat.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_striker.iff
+
+/object createitem object/weapon/ranged/pistol/pistol_tangle.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_acid_beam.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_beam.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_berserker.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_bowcaster.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_cdef.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_dlt20a.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_dlt20.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_e11.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_flame_thrower.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_jawa_ion.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_laser.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_lightning.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_sg82.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_spraystick.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_t21.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_tenloss_dxr6_disruptor_loot.iff
+
+/object createitem object/weapon/ranged/rifle/rifle_tusken.iff

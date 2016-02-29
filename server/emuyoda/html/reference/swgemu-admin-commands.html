@@ -1,0 +1,1637 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>SWGEmu - Admin Command Reference</title>
+    <style type="text/css" media="all" rel="stylesheet" id="branded_css">
+        html {
+	background-color: white;
+}
+
+#header-w {
+	background: #232323 url(http://www.swgemu.com/images/swgemu_logo_yellow.png) no-repeat center left;
+	min-height: 150px;
+}
+
+#footer {
+	border: 0;
+	background-color: #232323;
+}
+
+.b-wrapper
+{
+	margin: 0 auto;
+	margin-bottom: 0;
+}
+
+.push-app {
+	display: none;
+}
+
+#footer-w .addthis_toolbox {
+	top: 10px;
+}
+
+#footer-w .tutorial-and-bookmark
+{
+	display: none;
+}
+
+.wiki-tool .wiki-content-col #wiki-content-body code {
+	font-size: 0.9em;
+	font-family: monospace;
+	white-space: pre;
+	padding: 10px;
+	display: block;
+	margin: 10px 0;
+}
+
+#footer-w .tutorial-and-bookmark {
+	padding: 10px;
+	margin: 0;
+	background-color: #ddd;
+	border-top: 2px solid #ccc;
+}
+
+.wiki-tool #wiki-left-sidebar #wiki-pages-list ul li a:link,
+.wiki-tool #wiki-left-sidebar #wiki-pages-list ul li a:active,
+.wiki-tool #wiki-left-sidebar #wiki-pages-list ul li a:visited {
+	border: 1px solid transparent;
+}
+
+.wiki-tool #wiki-left-sidebar #wiki-pages-list ul li a:hover,
+.wiki-tool #wiki-left-sidebar #wiki-pages-list ul li a.highlightedNodeItem {
+	border: 1px solid #ccc;
+}
+
+a.tooltip {
+	z-index: 99;
+}
+
+#content.wiki-tool {
+	max-width: 100%;
+}
+
+#more_menu {
+	background-color: #888;
+	color: #eee;
+	font-weight: 700;
+	border: 1px solid #999;
+	border-top: 0;
+	margin-top: -1px;
+	margin-left: -1px;
+}
+
+#more_menu div.more_tabs_menu_item {
+	background-color: #888;
+	color: #eee;
+	font-weight: 700;
+	border: 0;
+}
+
+#more_menu div.more_tabs_menu_item:hover {
+	background-color: #aaa;
+	color: #fff;
+}
+
+#more_menu div.more_tabs_menu_item a:link,
+#more_menu div.more_tabs_menu_item a:visited {
+	color: #eee;
+}
+
+#more_menu div.more_tabs_menu_item a:link:hover,
+#more_menu div.more_tabs_menu_item a:visited:hover {
+	color: #fff;
+}
+
+#header {
+	margin: 0;
+}
+
+#header-links {
+	color: #ccc;
+}
+
+#header-links a:link,
+#header-links a:visited {
+	color: #ddd;
+	font-weight: 700;
+}
+
+#header-links a:link:hover,
+#header-links a:visited:hover {
+	color: #fd1;
+}
+
+#user-box {
+	background-color: #1c1c1c;
+	padding: 5px 20px;
+	border: 1px solid #333;
+	margin: 0;
+	color: #ccc;
+}
+
+#header-w span#space-role {
+	font-size: 1.0em;
+	padding: 2px 20px;
+	color: #ccc;
+}
+
+#custom-footer {
+	text-align: center;
+	background-color: #3d3d3d;
+	padding: 10px;
+	border-top: 1px solid #454545;
+	border-bottom: 1px solid #454545;
+	color: #ccc;
+	font-weight: 700;
+}
+
+#custom-footer a {
+	color: #ddd;
+}
+
+#custom-footer a:hover {
+	color: #fd1;
+}
+
+#footer-w {
+	background-color: #fff;
+	height: auto;
+	padding: 0;
+}
+
+.wiki-tool #wiki-left-sidebar {
+	position: relative;
+	float: left;
+}
+
+
+#header-w h1.header-w {
+	display: none;
+}
+
+#main-menu-w {
+	background-color: #3d3d3d;
+	padding-top: 10px;
+	border-top: 1px solid #454545;
+	border-bottom: 2px solid #fd1;
+}
+
+#main-menu-w #main-menu li a {
+	background-color: #888;
+	color: #eee;
+	border: 1px solid #999;
+	border-bottom: 0;
+}
+
+#main-menu-w #main-menu li a:hover {
+	background-color: #aaa;
+	color: #fff;
+}
+
+#main-menu-w #main-menu li.current a {
+	background-color: #fd1;
+	color: #750;
+	border-color: #fe3;
+}
+
+ul#main-menu li.search-field input.main-search {
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	padding: 2px 3px 2px 24px;
+	background-color: #eee;
+}
+
+#content {
+	margin: 0;
+	border-top: 1px solid #ca0;
+	padding: 10px;
+	background-color: #fff;
+	padding-bottom: 0;
+}
+
+ul#projectStatus {
+	position: relative;
+}
+
+ul#projectStatus li {
+	padding-left: 6.0em;
+	position: relative;
+	line-height: 1.5em;
+}
+
+ul#projectStatus ul {
+	display: block;
+	margin-left: -4.0em;
+}
+
+div.progress_meter {
+	border: 1px solid #aaa;
+	height: 0.8em;
+	width: 5.0em;
+	margin-top: -0.4em;
+	position: absolute;
+	top: 0.75em;
+	left: 0;
+}
+
+div.progress_meter div {
+	background-color: #33ff88;
+	height: 0.8em;
+}
+
+.wiki-tool .wiki-content-col #wiki-content-body ul#projectStatus h4 {
+	margin: 0;
+	color: #000;
+}
+
+.wiki-tool .wiki-content-col #wiki-content-body h4 {
+	color: #555;
+}
+
+div.commands abbr {
+	font-weight: 700;
+	color: #38c;
+	cursor: pointer;
+}
+
+div.commands abbr:hover {
+	background-color: #ffc;
+	color: #4af;
+}
+
+div.commands div.command {
+	border: 1px solid #ddd;
+	background-color: #eee;
+	margin: 10px;
+	padding: 0 10px;
+}
+
+.wiki-tool .wiki-content-col #wiki-content-body div.commands div.command h4 {
+	margin: 10px 0;
+}
+      </style>
+    
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  </head>
+
+  <body class="locale_en " data-locale="en">
+    <div id="wiki-content-body">
+      <div id="wiki-page-title-wrap">
+        <h2>
+          SWGEMU Admin Command Reference
+        </h2>
+      </div>
+
+      <div class='user-rich-text user-link'>
+          <h3 id="table_of_contents">Table of Contents</h3><ul>
+<li><a class="wiki_link" title="ActivateQuest" href="#activatequest">ActivateQuest</a></li>
+<li><a class="wiki_link" title="AddAllowedPlayer" href="#addallowedplayer">AddAllowedPlayer</a></li>
+<li><a class="wiki_link" title="AddBannedPlayer" href="#addbannedplayer">AddBannedPlayer</a></li>
+<li><a class="wiki_link" title="AdjustLotCount" href="#adjustlotcount">AdjustLotCount</a></li>
+<li><a class="wiki_link" title="AiIgnore" href="#aiignore">AiIgnore</a></li>
+<li><a class="wiki_link" title="Broadcast" href="#broadcast">Broadcast</a></li>
+<li><a class="wiki_link" title="BroadcastArea" href="#broadcastarea">BroadcastArea</a></li>
+<li><a class="wiki_link" title="BroadcastGalaxy" href="#broadcastgalaxy">BroadcastGalaxy</a></li>
+<li><a class="wiki_link" title="BroadcastPlanet" href="#broadcastplanet">BroadcastPlanet</a></li>
+<li><a class="wiki_link" title="CityInfo" href="#cityinfo">CityInfo</a></li>
+<li><a class="wiki_link" title="ClearCompletedQuest" href="#clearcompletedquest">ClearCompletedQuest</a></li>
+<li><a class="wiki_link" title="ClearVeteranReward" href="#clearveteranreward">ClearVeteranReward</a></li>
+<li><a class="wiki_link" title="Combat" href="#combat">Combat</a></li>
+<li><a class="wiki_link" title="CompleteQuest" href="#completequest">CompleteQuest</a></li>
+<li><a class="wiki_link" title="Craft" href="#craft">Craft</a></li>
+<li><a class="wiki_link" title="CreateCreature" href="#createcreature">CreateCreature</a></li>
+<li><a class="wiki_link" title="CreateMissionElement" href="#createmissionelement">CreateMissionElement</a></li>
+<li><a class="wiki_link" title="CreateNPC" href="#createnpc">CreateNPC</a></li>
+<li><a class="wiki_link" title="CreateSpawningElement" href="#createspawningelement">CreateSpawningElement</a></li>
+<li><a class="wiki_link" title="CreateSpawningElementWithDifficulty " href="#createspawningelementwithdifficulty">CreateSpawningElementWithDifficulty </a></li>
+<li><a class="wiki_link" title="Credits" href="#credits">Credits</a></li>
+<li><a class="wiki_link" title="Database" href="#database">Database</a></li>
+<li><a class="wiki_link" title="DeactivateQuest" href="#deactivatequest">DeactivateQuest</a></li>
+<li><a class="wiki_link" title="Destroy" href="#destroy">Destroy</a></li>
+<li><a class="wiki_link" title="DumpTargetInformation" href="#dumptargetinformation">DumpTargetInformation</a></li>
+<li><a class="wiki_link" title="DumpZoneInformation" href="#dumpzoneinformation">DumpZoneInformation</a></li>
+<li><a class="wiki_link" title="EditAppearance" href="#editappearance">EditAppearance</a></li>
+<li><a class="wiki_link" title="EditBank" href="#editbank">EditBank</a></li>
+<li><a class="wiki_link" title="EditBankAccount" href="#editbankaccount">EditBankAccount</a></li>
+<li><a class="wiki_link" title="EditStats" href="#editstats">EditStats</a></li>
+<li><a class="wiki_link" title="EmptyMailTarget" href="#emptymailtarget">EmptyMailTarget</a></li>
+<li><a class="wiki_link" title="FindObject" href="#findobject">FindObject</a></li>
+<li><a class="wiki_link" title="FindPlayer" href="#findplayer">FindPlayer</a></li>
+<li><a class="wiki_link" title="ForceCommand" href="#forcecommand">ForceCommand</a></li>
+<li><a class="wiki_link" title="FreezePlayer" href="#freezeplayer">FreezePlayer</a></li>
+<li><a class="wiki_link" title="GenerateCraftedItem" href="#generatecrafteditem">GenerateCraftedItem</a></li>
+<li><a class="wiki_link" title="GetAccountInfo" href="#getaccountinfo">GetAccountInfo</a></li>
+<li><a class="wiki_link" title="GetGameTime" href="#getgametime">GetGameTime</a></li>
+<li><a class="wiki_link" title="GetObjVars" href="#getobjvars">GetObjVars</a></li>
+<li><a class="wiki_link" title="GetPlayerId" href="#getplayerid">GetPlayerId</a></li>
+<li><a class="wiki_link" title="GetRank" href="#getrank">GetRank</a></li>
+<li><a class="wiki_link" title="GetSpawnDelays" href="#getspawndelays">GetSpawnDelays</a></li>
+<li><a class="wiki_link" title="GetStationName" href="#getstationname">GetStationName</a></li>
+<li><a class="wiki_link" title="GetVeteranRewardTimeCs" href="#getveteranrewardtimecs">GetVeteranRewardTimeCs</a></li>
+<li><a class="wiki_link" title="GmForceCommand" href="#gmforcecommand">GmForceCommand</a></li>
+<li><a class="wiki_link" title="GmCreateClassResource" href="#gmcreateclassresource">GmCreateClassResource</a></li>
+<li><a class="wiki_link" title="GmCreateSpecificResource" href="#gmcreatespecificresource">GmCreateSpecificResource</a></li>
+<li><a class="wiki_link" title="GmForceRank" href="#gmforcerank">GmForceRank</a></li>
+<li><a class="wiki_link" title="GmFsVillage" href="#gmfsvillage">GmFsVillage</a></li>
+<li><a class="wiki_link" title="GmJediState" href="#gmjedistate">GmJediState</a></li>
+<li><a class="wiki_link" title="GmRevive" href="#gmrevive">GmRevive</a></li>
+<li><a class="wiki_link" title="Goto" href="#goto">Goto</a></li>
+<li><a class="wiki_link" title="GrantBadge" href="#grantbadge">GrantBadge</a></li>
+<li><a class="wiki_link" title="GrantPadawanTrialsEligibility" href="#grantpadawantrialseligibility">GrantPadawanTrialsEligibility</a></li>
+<li><a class="wiki_link" title="GrantSkill" href="#grantskill">GrantSkill</a></li>
+<li><a class="wiki_link" title="GrantTitle" href="#granttitle">GrantTitle</a></li>
+<li><a class="wiki_link" title="Harmful" href="#harmful">Harmful</a></li>
+<li><a class="wiki_link" title="Harmless" href="#harmless">Harmless</a></li>
+<li><a class="wiki_link" title="HasVeteranReward" href="#hasveteranreward">HasVeteranReward</a></li>
+<li><a class="wiki_link" title="InitializeComponent" href="#initializecomponent">InitializeComponent</a></li>
+<li><a class="wiki_link" title="Invulnerable" href="#invulnerable">Invulnerable</a></li>
+<li><a class="wiki_link" title="Kick" href="#kick">Kick</a></li>
+<li><a class="wiki_link" title="Kill" href="#kill">Kill</a></li>
+<li><a class="wiki_link" title="KillPlayer" href="#killplayer">KillPlayer</a></li>
+<li><a class="wiki_link" title="Lag" href="#lag">Lag</a></li>
+<li><a class="wiki_link" title="ListActiveQuests" href="#listactivequests">ListActiveQuests</a></li>
+<li><a class="wiki_link" title="ListCompletedQuests" href="#listcompletedquests">ListCompletedQuests</a></li>
+<li><a class="wiki_link" title="ListGuilds" href="#listguilds">ListGuilds</a></li>
+<li><a class="wiki_link" title="Manufacture" href="#manufacture">Manufacture</a></li>
+<li><a class="wiki_link" title="MaxCombatAbility" href="#maxcombatability">MaxCombatAbility</a></li>
+<li><a class="wiki_link" title="MaxStats" href="#maxstats">MaxStats</a></li>
+<li><a class="wiki_link" title="Money" href="#money">Money</a></li>
+<li><a class="wiki_link" title="Npc" href="#npc">Npc</a></li>
+<li><a class="wiki_link" title="Object" href="#object">Object</a></li>
+<li><a class="wiki_link" title="Objvar" href="#objvar">Objvar</a></li>
+<li><a class="wiki_link" title="OverrideActiveMonths" href="#overrideactivemonths">OverrideActiveMonths</a></li>
+<li><a class="wiki_link" title="OverridePadawanTrialsEligibility" href="#overridepadawantrialseligibility">OverridePadawanTrialsEligibility</a></li>
+<li><a class="wiki_link" title="Planetwarp" href="#planetwarp">Planetwarp</a></li>
+<li><a class="wiki_link" title="PlanetwarpTarget" href="#planetwarptarget">PlanetwarpTarget</a></li>
+<li><a class="wiki_link" title="ReconnectToTransferServer" href="#reconnecttotransferserver">ReconnectToTransferServer</a></li>
+<li><a class="wiki_link" title="Remote" href="#remote">Remote</a></li>
+<li><a class="wiki_link" title="RemoveAllowedPlayer" href="#removeallowedplayer">RemoveAllowedPlayer</a></li>
+<li><a class="wiki_link" title="RemoveBannedPlayer" href="#removebannedplayer">RemoveBannedPlayer</a></li>
+<li><a class="wiki_link" title="ResendLoginMessageToAll" href="#resendloginmessagetoall">ResendLoginMessageToAll</a></li>
+<li><a class="wiki_link" title="ResetJedi" href="#resetjedi">ResetJedi</a></li>
+<li><a class="wiki_link" title="Resource" href="#resource">Resource</a></li>
+<li><a class="wiki_link" title="ResourceSetName" href="#resourcesetname">ResourceSetName</a></li>
+<li><a class="wiki_link" title="RevokeBadge" href="#revokebadge">RevokeBadge</a></li>
+<li><a class="wiki_link" title="RevokeSkill" href="#revokeskill">RevokeSkill</a></li>
+<li><a class="wiki_link" title="Script" href="#script">Script</a></li>
+<li><a class="wiki_link" title="SearchCorpse" href="#searchcorpse">SearchCorpse</a></li>
+<li><a class="wiki_link" title="SecretSpawnSpam" href="#secretspawnspam">SecretSpawnSpam</a></li>
+<li><a class="wiki_link" title="Server" href="#server">Server</a></li>
+<li><a class="wiki_link" title="SetExperience" href="#setexperience">SetExperience</a></li>
+<li><a class="wiki_link" title="SetFaction" href="#setfaction">SetFaction</a></li>
+<li><a class="wiki_link" title="SetFactionStanding " href="#setfactionstanding">SetFactionStanding </a></li>
+<li><a class="wiki_link" title="SetFirstName" href="#setfirstname">SetFirstName</a></li>
+<li><a class="wiki_link" title="SetHue" href="#sethue">SetHue</a></li>
+<li><a class="wiki_link" title="SetLastName" href="#setlastname">SetLastName</a></li>
+<li><a class="wiki_link" title="SetLoginMessage" href="#setloginmessage">SetLoginMessage</a></li>
+<li><a class="wiki_link" title="SetLoginTitle" href="#setlogintitle">SetLoginTitle</a></li>
+<li><a class="wiki_link" title="SetMaximumSpawnTime" href="#setmaximumspawntime">SetMaximumSpawnTime</a></li>
+<li><a class="wiki_link" title="SetMinimumSpawnTime" href="#setminimumspawntime">SetMinimumSpawnTime</a></li>
+<li><a class="wiki_link" title="SetName" href="#setname">SetName</a></li>
+<li><a class="wiki_link" title="SetPlanetLimit" href="#setplanetlimit">SetPlanetLimit</a></li>
+<li><a class="wiki_link" title="SetPlayerAppearance" href="#setplayerappearance">SetPlayerAppearance</a></li>
+<li><a class="wiki_link" title="SetPlayerState" href="#setplayerstate">SetPlayerState</a></li>
+<li><a class="wiki_link" title="SetPublicState" href="#setpublicstate">SetPublicState</a></li>
+<li><a class="wiki_link" title="SetRank" href="#setrank">SetRank</a></li>
+<li><a class="wiki_link" title="SetSpeed" href="#setspeed">SetSpeed</a></li>
+<li><a class="wiki_link" title="SetTEF" href="#settef">SetTEF</a></li>
+<li><a class="wiki_link" title="SetVeteranReward" href="#setveteranreward">SetVeteranReward</a></li>
+<li><a class="wiki_link" title="ShowFactionInformation" href="#showfactioninformation">ShowFactionInformation</a></li>
+<li><a class="wiki_link" title="ShowSpawnRegion" href="#showspawnregion">ShowSpawnRegion</a></li>
+<li><a class="wiki_link" title="Skill" href="#skill">Skill</a></li>
+<li><a class="wiki_link" title="Snoop" href="#snoop">Snoop</a></li>
+<li><a class="wiki_link" title="SpawnStatus" href="#spawnstatus">SpawnStatus</a></li>
+<li><a class="wiki_link" title="StartCitySpawner" href="#startcityspawner">StartCitySpawner</a></li>
+<li><a class="wiki_link" title="StartSpawner" href="#startspawner">StartSpawner</a></li>
+<li><a class="wiki_link" title="StartTargetSpawner" href="#starttargetspawner">StartTargetSpawner</a></li>
+<li><a class="wiki_link" title="StartTraceLogging" href="#starttracelogging">StartTraceLogging</a></li>
+<li><a class="wiki_link" title="StopCitySpawner" href="#stopcityspawner">StopCitySpawner</a></li>
+<li><a class="wiki_link" title="StopSpawner" href="#stopspawner">StopSpawner</a></li>
+<li><a class="wiki_link" title="StopTargetSpawner" href="#stoptargetspawner">StopTargetSpawner</a></li>
+<li><a class="wiki_link" title="StopTraceLogging" href="#stoptracelogging">StopTraceLogging</a></li>
+<li><a class="wiki_link" title="Teleport" href="#teleport">Teleport</a></li>
+<li><a class="wiki_link" title="TeleportTarget" href="#teleporttarget">TeleportTarget</a></li>
+<li><a class="wiki_link" title="TeleportTo" href="#teleportto">TeleportTo</a></li>
+<li><a class="wiki_link" title="UnCityBan " href="#uncityban">UnCityBan </a></li>
+<li><a class="wiki_link" title="UnfreezePlayer" href="#unfreezeplayer">UnfreezePlayer</a></li>
+<li><a class="wiki_link" title="Unsnoop" href="#unsnoop">Unsnoop</a></li>
+<li><a class="wiki_link" title="WipeItems" href="#wipeitems">WipeItems</a></li>
+</ul><div class="commands">
+<h3 id="activatequest"><a href="#">ActivateQuest</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/activateQuest</p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/activateQuest</p>
+</div>
+<h3 id="addallowedplayer"><a href="#">AddAllowedPlayer</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/addAllowedPlayer</p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/addAllowedPlayer</p>
+</div>
+<h3 id="addbannedplayer"><a href="#">AddBannedPlayer</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/addBannedPlayer <abbr title="[String][Required] The name of the player who is to get ban.">&lt;name&gt;</abbr><abbr title="[][] The ban's duration in minutes.">&lt;duration&gt;</abbr><abbr title="[String] The reason of the ban.">&lt;reason&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Bans the specified player's account without disconnecting the player from the server. </p>
+<h4 id="example">Example</h4>
+<p>/addBannedPlayer cRush 123 spamming</p>
+</div>
+<h3 id="adjustlotcount"><a href="#">AdjustLotCount</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/adjustLotCount <abbr title="[String][Required] The name of  the creature to adjust lot count.">&lt;targetName&gt;</abbr><abbr title="[Int][Required] The number of lots to grant.">&lt;additionalLots&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Adjusts the targeted player's lot count by the value specified. This value may be negative, so be careful!</p>
+<h4 id="example">Example</h4>
+<p>/adjustLotCount cRush 23;</p>
+</div>
+<h3 id="aiignore"><a href="#">AiIgnore</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/aiIgnore <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/aiIgnore</p>
+</div>
+<h3 id="broadcast">Broadcast</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/broadcast <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/broadcast</p>
+</div>
+<h3 id="broadcastarea"><a href="#">BroadcastArea</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/broadcastArea {range} {message} - <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Broadcasts a system message within the range specified.</p>
+<h4 id="example">Example</h4>
+<p>/broadcastArea</p>
+</div>
+<h3 id="broadcastgalaxy"><a href="#">BroadcastGalaxy</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/broadcastGalaxy <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>{message} - Broadcasts a system message to all players currently logged on the server.</p>
+<h4 id="example">Example</h4>
+<p>/broadcastGalaxy</p>
+</div>
+<h3 id="broadcastplanet"><a href="#">BroadcastPlanet</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/broadcastPlanet {planet} {message} <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Broadcasts a system message to all players on the planet specified.</p>
+<h4 id="example">Example</h4>
+<p>/broadcastPlanet</p>
+</div>
+<h3 id="cityinfo"><a href="#">CityInfo</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/cityInfo [cityFilter]<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Displays the city status report for the current city without needing to use the city management terminal. 
+    Optionally searches for a city by name, based on a filter. 
+    This filter uses the same rules as the /listGuilds command.</p>
+<h4 id="example">Example</h4>
+<p>/cityInfo</p>
+</div>
+<h3 id="clearcompletedquest"><a href="#">ClearCompletedQuest</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/clearCompletedQuest screenplaystate <abbr title="[][] ">&lt;screeplaystatename&gt; &lt;state&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Complete a quest by setting the screenplay state of the target.</p>
+<h4 id="example">Example</h4>
+<p>/clearCompletedQuest</p>
+</div>
+<h3 id="clearveteranreward"><a href="#">ClearVeteranReward</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/clearVeteranReward {veteranReward}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Resets a used veteran reward, so that it may be selected again. This is the path to the script for the veteran reward.</p>
+<h4 id="example">Example</h4>
+<p>/clearVeteranReward</p>
+</div>
+<h3 id="combat">Combat</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/combat <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Debug command used for combat testing. Arguments to be determined, but should accept many.</p>
+<h4 id="example">Example</h4>
+<p>/combat</p>
+</div>
+<h3 id="completequest"><a href="#">CompleteQuest</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/completeQuest screenplaystate <abbr title="[][] ">&lt;screeplaystatename&gt; &lt;state&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Marks a quest as completed by setting the screenplay state of the target.</p>
+<h4 id="example">Example</h4>
+<p>/completeQuest</p>
+</div>
+<h3 id="craft">Craft</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/craft <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Debug command used for crafting testing. Arguments to be determined, but should accept many.</p>
+<h4 id="example">Example</h4>
+<p>/craft</p>
+</div>
+<h3 id="createcreature"><a href="#">CreateCreature</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/createCreature  {creatureScript} [{x} {z} {y}] [planet] [cellid]<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Creates the creature specified at the player's current location, or at a location specified.</p>
+<h4 id="example">Example</h4>
+<p>/createCreature</p>
+</div>
+<h3 id="createmissionelement"><a href="#">CreateMissionElement</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/createMissionElement <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/createMissionElement</p>
+</div>
+<h3 id="createnpc"><a href="#">CreateNPC</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/createNPC {npcScript} [{x} {z} {y}] [planet] [cellid]<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Creates the NPC specified at the player's current location, or at a location specified.</p>
+<h4 id="example">Example</h4>
+<p>/createNPC</p>
+</div>
+<h3 id="createspawningelement"><a href="#">CreateSpawningElement</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/createSpawningElement  {spawnerScript} [on|off]<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Creates a spawning element based on a predefined script at the player's current location.
+    Optional parameter to automatically start the spawner object defaults to off.</p>
+<h4 id="example">Example</h4>
+<p>/createSpawningElement</p>
+</div>
+<h3 id="createspawningelementwithdifficulty"><a href="#">CreateSpawningElementWithDifficulty</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/createSpawningElementWithDifficulty {spawnerScript} {difficulty} [on|off]<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Creates a spawning element based on a predefined script, with a defined difficulty level at the player's current location.
+    Optional parameter to automatically start the spawner object defaults to off.</p>
+<h4 id="example">Example</h4>
+<p>/createSpawningElementWithDifficulty</p>
+</div>
+<h3 id="credits">Credits</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/credits <abbr title="[String][Required] The name of the creature to add or substract credits to.">&lt;targetName&gt;</abbr><abbr title="[String][Required] Used to decide to give or remove credits to the target">&lt;add/substract&gt;</abbr><abbr title="[Int][Required] Amount of credits to transfer">&lt;amount&gt;</abbr><abbr title="[String][Required] Decides if credits are transfered to target's bank or cash">&lt;bank/cash&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Credits or withraw specified amount of credits from the target bank or cash account.</p>
+<h4 id="example">Example</h4>
+<p>/credits Vader add 1500 bank</p>
+</div>
+<h3 id="database">Database</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/database {query}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Debug command used to send a raw query to the server database. 
+    Arguments to be determined, but most likely accepts RAW SQL queries, or some type of query language to interface with the database.</p>
+<h4 id="example">Example</h4>
+<p>/database</p>
+</div>
+<h3 id="deactivatequest"><a href="#">DeactivateQuest</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/deactivateQuest <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/deactivateQuest</p>
+</div>
+<h3 id="destroy">Destroy</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/destroy [destroyChildren]<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Debug command used to do a hard destroy on an object.
+    Calls internal cpp command <a href="#">SceneObject</a>::destroyObjectFromDatabase(bool destroyChildren).
+    Argument destroyChildren defaults to true.</p>
+<h4 id="example">Example</h4>
+<p>/destroy</p>
+</div>
+<h3 id="dumptargetinformation"><a href="#">DumpTargetInformation</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/dumpTargetInformation <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Dumps debug information about the targeted object, and emails a copy of the information to the player using the command.</p>
+<h4 id="example">Example</h4>
+<p>/dumpTargetInformation</p>
+</div>
+<h3 id="dumpzoneinformation"><a href="#">DumpZoneInformation</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/dumpZoneInformation [zoneId]<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Dumps debug information about the current zone, and emails a copy of the information to the player using the command.</p>
+<h4 id="example">Example</h4>
+<p>/dumpZoneInformation</p>
+</div>
+<h3 id="editappearance"><a href="#">EditAppearance</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/editAppearance <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Allows the player to enter into an image design mode with the current target, without the need for target consent.</p>
+<h4 id="example">Example</h4>
+<p>/editAppearance</p>
+</div>
+<h3 id="editbank"><a href="#">EditBank</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/editBank <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Allows the player to open the bank deposit box of the current target, and manipulate items within as if it were their own.</p>
+<h4 id="example">Example</h4>
+<p>/editBank</p>
+</div>
+<h3 id="editbankaccount"><a href="#">EditBankAccount</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/editBankAccount <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Allows the player withdraw and/or deposit credits to the current target's bank account as if it were their own.</p>
+<h4 id="example">Example</h4>
+<p>/editBankAccount</p>
+</div>
+<h3 id="editstats"><a href="#">EditStats</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/editStats <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Allows the player to adjust the stats of the target, setting Maximum and Current values.</p>
+<h4 id="example">Example</h4>
+<p>/editStats</p>
+</div>
+<h3 id="emptymailtarget"><a href="#">EmptyMailTarget</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/emptyMailTarget <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Deletes all mail from the server belonging to the targeted player.</p>
+<h4 id="example">Example</h4>
+<p>/emptyMailTarget</p>
+</div>
+<h3 id="findobject"><a href="#">FindObject</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/findObject  {objectId} - <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Reports back the location, direction, and other pertinent information about the object specified by the objectId.</p>
+<h4 id="example">Example</h4>
+<p>/findObject</p>
+</div>
+<h3 id="findplayer"><a href="#">FindPlayer</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/findPlayer  {playerName}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Reports back the location, direction, and other pertinent information about the player specified by playerName.</p>
+<h4 id="example">Example</h4>
+<p>/findPlayer</p>
+</div>
+<h3 id="forcecommand"><a href="#">ForceCommand</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/forceCommand  {commandName} [arguments] - <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Debug command used to execute commands on the target, or self even if the target does not have sufficient abilities to perform the command.</p>
+<h4 id="example">Example</h4>
+<p>/forceCommand</p>
+</div>
+<h3 id="freezeplayer"><a href="#">FreezePlayer</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/freezePlayer [playerName] {reason} <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Freezes the targeted, or named, player, not allowing them to move, or speak in public chat channels until unfrozen.</p>
+<h4 id="example">Example</h4>
+<p>/freezePlayer</p>
+</div>
+<h3 id="generatecrafteditem"><a href="#">GenerateCraftedItem</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/generateCraftedItem <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/generateCraftedItem</p>
+</div>
+<h3 id="getaccountinfo"><a href="#">GetAccountInfo</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/getAccountInfo [accountName]<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Looks up the account information for the current target, or the specified account username.
+    Use /findPlayer to gain access to the account information of a specific player by name.</p>
+<h4 id="example">Example</h4>
+<p>/getAccountInfo</p>
+</div>
+<h3 id="getgametime"><a href="#">GetGameTime</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/getGameTime <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Looks up how many hours the current target has actively played.</p>
+<h4 id="example">Example</h4>
+<p>/getGameTime</p>
+</div>
+<h3 id="getobjvars"><a href="#">GetObjVars</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/getObjVars <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Debug command. Dumps a list of all object variables on the target object, and their specified values.</p>
+<h4 id="example">Example</h4>
+<p>/getObjVars</p>
+</div>
+<h3 id="getplayerid"><a href="#">GetPlayerId</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/getPlayerId  [playerName]<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Returns the targeted, or optionally named, player's objectId via system message.</p>
+<h4 id="example">Example</h4>
+<p>/getPlayerId</p>
+</div>
+<h3 id="getrank"><a href="#">GetRank</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/getRank <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/getRank</p>
+</div>
+<h3 id="getspawndelays"><a href="#">GetSpawnDelays</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/getSpawnDelays <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Returns the amount of time in between spawning waves on the targeted <a href="#">SpawningElement</a>.</p>
+<h4 id="example">Example</h4>
+<p>/getSpawnDelays</p>
+</div>
+<h3 id="getstationname"><a href="#">GetStationName</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/getStationName  [accountName]<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Returns the station name associated with the targeted player, or optionally specified account username.</p>
+<h4 id="example">Example</h4>
+<p>/getStationName</p>
+</div>
+<h3 id="getveteranrewardtimecs"><a href="#">GetVeteranRewardTimeCs</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/getVeteranRewardTimeCs <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/getVeteranRewardTimeCs</p>
+</div>
+<h3 id="gmforcecommand"><a href="#">GmForceCommand</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/gmForceCommand <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>alias of /forceCommand perhaps with a lesser accessibility level.</p>
+<h4 id="example">Example</h4>
+<p>/gmForceCommand</p>
+</div>
+<h3 id="gmcreateclassresource"><a href="#">GmCreateClassResource</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/gmCreateClassResource  {resourceClass}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Creates a new resource based on the specified class.</p>
+<h4 id="example">Example</h4>
+<p>/gmCreateClassResource</p>
+</div>
+<h3 id="gmcreatespecificresource"><a href="#">GmCreateSpecificResource</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/gmCreateSpecificResource  {specifiedResource} {amount}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Creates a resource container of a specific resource.</p>
+<h4 id="example">Example</h4>
+<p>/gmCreateSpecificResource</p>
+</div>
+<h3 id="gmforcerank"><a href="#">GmForceRank</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/gmForceRank <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/gmForceRank</p>
+</div>
+<h3 id="gmfsvillage"><a href="#">GmFsVillage</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/gmFsVillage <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/gmFsVillage</p>
+</div>
+<h3 id="gmjedistate"><a href="#">GmJediState</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/gmJediState <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/gmJediState</p>
+</div>
+<h3 id="gmrevive"><a href="#">GmRevive</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/gmRevive  [healthPercentage]- <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Allows a <a href="#">GameMaster</a> to revive a target, optionally restoring a percentage of health, wounds, and battle fatigue. Percentage defaults to 100%.</p>
+<h4 id="example">Example</h4>
+<p>/gmRevive</p>
+</div>
+<h3 id="goto">Goto</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/goto <abbr title="[String][Optional] Show waypoints with the searchTerm in their names.">&lt;searchTerm&gt;</abbr> or <abbr title="[String][Optional] Show all waypoints.">&lt;?&gt;</abbr> </p>
+<h4 id="description">Description</h4>
+<p>Warps the player to a waypoint from their datapad, or allows the player to select a location from a listbox of choices.</p>
+<p>If only one waypoint is matched the player is instantly sent to that waypoint.</p>
+<h4 id="example">Example</h4>
+<p>/goto HOME</p>
+</div>
+<h3 id="grantbadge"><a href="#">GrantBadge</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/grantBadge  {badgeID}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Grants the specified badge to the targeted player.</p>
+<h4 id="example">Example</h4>
+<p>/grantBadge</p>
+</div>
+<h3 id="grantpadawantrialseligibility"><a href="#">GrantPadawanTrialsEligibility</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/grantPadawanTrialsEligibility <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/grantPadawanTrialsEligibility</p>
+</div>
+<h3 id="grantskill"><a href="#">GrantSkill</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/grantSkill {skillBox}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Awards the specified skill box to the targeted player, awarding any prerequisites.</p>
+<h4 id="example">Example</h4>
+<p>/grantSkill</p>
+</div>
+<h3 id="granttitle"><a href="#">GrantTitle</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/grantTitle  {title}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Awards the specified title to the targeted player.</p>
+<h4 id="example">Example</h4>
+<p>/grantTitle</p>
+</div>
+<h3 id="harmful">Harmful</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/harmful <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Enables the target to enter combat mode.</p>
+<h4 id="example">Example</h4>
+<p>/harmful</p>
+</div>
+<h3 id="harmless">Harmless</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/harmless <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Disables the target from entering combat mode. Notice, they can still be attacked.</p>
+<h4 id="example">Example</h4>
+<p>/harmless</p>
+</div>
+<h3 id="hasveteranreward"><a href="#">HasVeteranReward</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/hasVeteranReward {veteranReward}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Checks to see if the targeted player has used the specified veteran reward option.</p>
+<h4 id="example">Example</h4>
+<p>/hasVeteranReward</p>
+</div>
+<h3 id="initializecomponent"><a href="#">InitializeComponent</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/initializeComponent <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/initializeComponent</p>
+</div>
+<h3 id="invulnerable">Invulnerable</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/invulnerable <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Makes the target invulnerable to all attacks. Notice, they can still attack back.</p>
+<h4 id="example">Example</h4>
+<p>/invulnerable</p>
+</div>
+<h3 id="kick">Kick</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/kick  [playerName] {duration} {reason}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Kicks the player, and all connected clients on the same account, from the server, banning their account for the specified duration in minutes. If duration is -1, then the player is banned indefinitely. See /removeBannedPlayer to remove a banned player.</p>
+<h4 id="example">Example</h4>
+<p>/kick</p>
+</div>
+<h3 id="kill">Kill</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/kill  {reason}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Kills the targeted object. This command cannot be used to kill players. /killPlayer must be used for this functionality.</p>
+<h4 id="example">Example</h4>
+<p>/kill</p>
+</div>
+<h3 id="killplayer"><a href="#">KillPlayer</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/killPlayer  [playerName] {reason}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Kills the targeted, or optionally named, player.</p>
+<h4 id="example">Example</h4>
+<p>/killPlayer</p>
+</div>
+<h3 id="lag">Lag</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/lag  {delay}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Debug command that simulates lag with the specified ms delay.</p>
+<h4 id="example">Example</h4>
+<p>/lag</p>
+</div>
+<h3 id="listactivequests"><a href="#">ListActiveQuests</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/listActiveQuests <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/listActiveQuests</p>
+</div>
+<h3 id="listcompletedquests"><a href="#">ListCompletedQuests</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/listCompletedQuests <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/listCompletedQuests</p>
+</div>
+<h3 id="listguilds"><a href="#">ListGuilds</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/listGuilds [guildFilter]<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Lists all guilds on the server that match the specified guild filter. The guild filter is a search term based on name and/or guild tag.</p>
+<h4 id="example">Example</h4>
+<p>/listGuilds</p>
+</div>
+<h3 id="manufacture">Manufacture</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/manufacture <abbr title="[][] ">{draftSchematic}&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Debug command used to produce manufactured items.</p>
+<h4 id="example">Example</h4>
+<p>/manufacture</p>
+</div>
+<h3 id="maxcombatability"><a href="#">MaxCombatAbility</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/maxCombatAbility <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/maxCombatAbility</p>
+</div>
+<h3 id="maxstats"><a href="#">MaxStats</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/maxStats <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/maxStats</p>
+</div>
+<h3 id="money">Money</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/money <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/money</p>
+</div>
+<h3 id="npc">Npc</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/npc <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/npc</p>
+</div>
+<h3 id="object">Object</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/object <i>createitem</i> &lt;<i>objectTemplatePath</i>&gt; [&lt;<i>quantity</i>&gt;]</p>
+<p>/object <i>createresource</i> &lt;<i>resourceName</i>&gt; [&lt;<i>quantity</i>&gt;]</p>
+<p>/object <i>createloot</i> &lt;<i>loottemplate</i>&gt; [&lt;<i>level</i>&gt;]</p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/object createitem object/tangible/container/general/cargo_pocket.iff 5</p>
+<p>/object createitem createitem object/tangible/furniture/jedi/frn_all_table_dark_01.iff</p>
+<p>Tangible items in bin/scripts/object/tangible/.. can be spawned substitute .lue to .iff or open the lua file and look for the second argument to addTemplate()</p>
+<p>/object createresource carbioq</p>
+<p>/object createloot nightsister_common 1195000</p>
+<p>Loot groups are in: bin/scripts/loot/groups</p>
+</div>
+<h3 id="objvar">Objvar</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/objvar <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/objvar</p>
+</div>
+<h3 id="overrideactivemonths"><a href="#">OverrideActiveMonths</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/overrideActiveMonths {months}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Overrides the targeted players active months, setting it to the new value specified.</p>
+<h4 id="example">Example</h4>
+<p>/overrideActiveMonths</p>
+</div>
+<h3 id="overridepadawantrialseligibility"><a href="#">OverridePadawanTrialsEligibility</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/overridePadawanTrialsEligibility [true|false]<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Overrides the targeted players eligibility to participate in the padawan trials. The argument is optional, and defaults to true.</p>
+<h4 id="example">Example</h4>
+<p>/overridePadawanTrialsEligibility</p>
+</div>
+<h3 id="planetwarp">Planetwarp</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/planetwarp <abbr title="[][] ">{planet}&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Warps to the specified planet.</p>
+<h4 id="example">Example</h4>
+<p>/planetwarp</p>
+</div>
+<h3 id="planetwarptarget"><a href="#">PlanetwarpTarget</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/planetwarpTarget [playerName] {planet}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Warps the targeted, or optionally specified, player to the planet indicated.</p>
+<h4 id="example">Example</h4>
+<p>/planetwarpTarget</p>
+</div>
+<h3 id="reconnecttotransferserver"><a href="#">ReconnectToTransferServer</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/reconnectToTransferServer <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/reconnectToTransferServer</p>
+</div>
+<h3 id="remote">Remote</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/remote <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Debug command. TBD.</p>
+<h4 id="example">Example</h4>
+<p>/remote</p>
+</div>
+<h3 id="removeallowedplayer"><a href="#">RemoveAllowedPlayer</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/removeAllowedPlayer <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/removeAllowedPlayer</p>
+</div>
+<h3 id="removebannedplayer"><a href="#">RemoveBannedPlayer</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/removeBannedPlayer {accountName} {reason}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Removes a ban on a player's account. Notice, this takes an account name as a parameter.</p>
+<h4 id="example">Example</h4>
+<p>/removeBannedPlayer</p>
+</div>
+<h3 id="resendloginmessagetoall"><a href="#">ResendLoginMessageToAll</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/resendLoginMessageToAll <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Re-broadcasts the login message that is initially sent at player login.</p>
+<h4 id="example">Example</h4>
+<p>/resendLoginMessageToAll</p>
+</div>
+<h3 id="resetjedi"><a href="#">ResetJedi</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/resetJedi <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/resetJedi</p>
+</div>
+<h3 id="resource">Resource</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/resource [option] [params]</p>
+<p>option:</p>
+<ul>
+<li>list [planet] - Lists resources on a specific planet</li>
+<li>info [spawn] - Lists info about a specific resource</li>
+<li>health - Run healthcheck on resource pools</li>
+<li>dump - Dump resources to scripts/managers/resource_manager_spawns.lua</li>
+<li>despawn [spawn] - Cause resource to despawn</li>
+</ul>
+<h4 id="description">Description</h4>
+<p>Resource spawner commands.</p>
+<h4 id="example">Example</h4>
+<p>/resource dump</p>
+</div>
+<h3 id="resourcesetname"><a href="#">ResourceSetName</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/resourceSetName <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/resourceSetName</p>
+</div>
+<h3 id="revokebadge"><a href="#">RevokeBadge</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/revokeBadge <abbr title="[][] ">{badgeId}&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Revokes a badge from the targeted player.</p>
+<h4 id="example">Example</h4>
+<p>/revokeBadge</p>
+</div>
+<h3 id="revokeskill"><a href="#">RevokeSkill</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/revokeSkill <abbr title="[][] ">{skillBox}&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Revokes a skill from the targeted player.</p>
+<h4 id="example">Example</h4>
+<p>/revokeSkill</p>
+</div>
+<h3 id="script">Script</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/script <abbr title="[][] ">{scriptPath} [arguments]&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Debug command to execute a server side script.</p>
+<h4 id="example">Example</h4>
+<p>/script</p>
+</div>
+<h3 id="searchcorpse"><a href="#">SearchCorpse</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/searchCorpse <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/searchCorpse</p>
+</div>
+<h3 id="secretspawnspam"><a href="#">SecretSpawnSpam</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/secretSpawnSpam <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/secretSpawnSpam</p>
+</div>
+<h3 id="server">Server</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/server <abbr title="[][] ">{command}&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Debug command to interface with the server's command line from in-game.</p>
+<h4 id="example">Example</h4>
+<p>/server</p>
+</div>
+<h3 id="setexperience"><a href="#">SetExperience</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setExperience <abbr title="[][] ">{experienceName} {amount}&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Sets the type of experience to the specified amount on the targeted player.</p>
+<h4 id="example">Example</h4>
+<p>/setExperience</p>
+</div>
+<h3 id="setfaction"><a href="#">SetFaction</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setFaction <abbr title="[][] ">{faction} [overt|covert|onleave]  &lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Sets the targeted object's faction to neutral, rebel, or imperial as specified. Optionally, may specify the faction state as overt, covert, or onleave.</p>
+<h4 id="example">Example</h4>
+<p>/setFaction</p>
+</div>
+<h3 id="setfactionstanding"><a href="#">SetFactionStanding</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setFactionStanding <abbr title="[][] ">{faction} {amount}&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Sets the amount of faction points for the specified faction  this faction can range from any known faction (i.e. Janta, Kunga, Mook, etc.).</p>
+<h4 id="example">Example</h4>
+<p>/setFactionStanding</p>
+</div>
+<h3 id="setfirstname"><a href="#">SetFirstName</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setFirstName<abbr title="[][] "> {firstName}&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Attempts to set the target's first name. If the target is a player, it must pass naming filter checks.</p>
+<h4 id="example">Example</h4>
+<p>/setFirstName</p>
+</div>
+<h3 id="sethue"><a href="#">SetHue</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setHue <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/setHue</p>
+</div>
+<h3 id="setlastname"><a href="#">SetLastName</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setLastName {lastName}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Sets the last name of the targeted object.</p>
+<h4 id="example">Example</h4>
+<p>/setLastName</p>
+</div>
+<h3 id="setloginmessage"><a href="#">SetLoginMessage</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setLoginMessage <abbr title="[][] ">{message}&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Sets the login message that is displayed when a player logs on to the server for the first time that session.</p>
+<h4 id="example">Example</h4>
+<p>/setLoginMessage</p>
+</div>
+<h3 id="setlogintitle"><a href="#">SetLoginTitle</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setLoginTitle <abbr title="[][] ">{title}&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Sets the login title that is displayed with the login message when a player logs on to the server for the first time that session.</p>
+<h4 id="example">Example</h4>
+<p>/setLoginTitle</p>
+</div>
+<h3 id="setmaximumspawntime"><a href="#">SetMaximumSpawnTime</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setMaximumSpawnTime {miliseconds}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Sets the maximum spawn time on the <a href="#">SpawningElement</a> in miliseconds.</p>
+<h4 id="example">Example</h4>
+<p>/setMaximumSpawnTime</p>
+</div>
+<h3 id="setminimumspawntime"><a href="#">SetMinimumSpawnTime</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setMinimumSpawnTime <abbr title="[][] ">{miliseconds}&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Sets the minimum spawn time on the <a href="#">SpawningElement</a> in miliseconds.</p>
+<h4 id="example">Example</h4>
+<p>/setMinimumSpawnTime</p>
+</div>
+<h3 id="setname"><a href="#">SetName</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setName {name}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Sets the name of the targeted object. If used on a player, this effectively changes the first and last name of the player.</p>
+<h4 id="example">Example</h4>
+<p>/setName</p>
+</div>
+<h3 id="setplanetlimit"><a href="#">SetPlanetLimit</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setPlanetLimit <abbr title="[][] ">{amount}&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Sets the maximum allowed players to be on this planet. When this limit is reached, travel to this planet is prohibited, and players attempted to logon to this planet are blocked.</p>
+<h4 id="example">Example</h4>
+<p>/setPlanetLimit</p>
+</div>
+<h3 id="setplayerappearance"><a href="#">SetPlayerAppearance</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setPlayerAppearance <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/setPlayerAppearance</p>
+</div>
+<h3 id="setplayerstate"><a href="#">SetPlayerState</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setPlayerState <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/setPlayerState</p>
+</div>
+<h3 id="setpublicstate"><a href="#">SetPublicState</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setPublicState <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/setPublicState</p>
+</div>
+<h3 id="setrank"><a href="#">SetRank</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setRank <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/setRank</p>
+</div>
+<h3 id="setspeed"><a href="#">SetSpeed</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setSpeed {speedModifier} [{duration}]<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Sets your movement speed for the duration. Duration defaults to 30 minutes.</p>
+<h4 id="example">Example</h4>
+<p>/setSpeed</p>
+</div>
+<h3 id="settef"><a href="#">SetTEF</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setTEF <abbr title="[][] ">[duration]  &lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Sets the target to be TEF'd to everyone. Specifying -1 for duration will give this target a permanent TEF until incapacitated, or killed.</p>
+<h4 id="example">Example</h4>
+<p>/setTEF</p>
+</div>
+<h3 id="setveteranreward"><a href="#">SetVeteranReward</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/setVeteranReward <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/setVeteranReward</p>
+</div>
+<h3 id="showfactioninformation"><a href="#">ShowFactionInformation</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/showFactionInformation <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Displays information about the faction of the targeted object.</p>
+<h4 id="example">Example</h4>
+<p>/showFactionInformation</p>
+</div>
+<h3 id="showspawnregion"><a href="#">ShowSpawnRegion</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/showSpawnRegion <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Some type of debug command that either lists the range of the spawning region, and it's center point, or visibly displays some type of boundary.</p>
+<h4 id="example">Example</h4>
+<p>/showSpawnRegion</p>
+</div>
+<h3 id="skill">Skill</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/skill <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Debug command. TBD.</p>
+<h4 id="example">Example</h4>
+<p>/skill</p>
+</div>
+<h3 id="snoop">Snoop</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/snoop <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Allows the player to look at the contents of a targeted object's inventory, and all containers within.</p>
+<h4 id="example">Example</h4>
+<p>/snoop</p>
+</div>
+<h3 id="spawnstatus"><a href="#">SpawnStatus</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/spawnStatus <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/spawnStatus</p>
+</div>
+<h3 id="startcityspawner"><a href="#">StartCitySpawner</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/startCitySpawner <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/startCitySpawner</p>
+</div>
+<h3 id="startspawner"><a href="#">StartSpawner</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/startSpawner {namedSpawningElement}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Starts a named <a href="#">SpawningElement</a>'s spawn cycle.</p>
+<h4 id="example">Example</h4>
+<p>/startSpawner</p>
+</div>
+<h3 id="starttargetspawner"><a href="#">StartTargetSpawner</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/startTargetSpawner <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Starts the targeted <a href="#">SpawningElement</a>'s spawn cycle.</p>
+<h4 id="example">Example</h4>
+<p>/startTargetSpawner</p>
+</div>
+<h3 id="starttracelogging"><a href="#">StartTraceLogging</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/startTraceLogging <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/startTraceLogging</p>
+</div>
+<h3 id="stopcityspawner"><a href="#">StopCitySpawner</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/stopCitySpawner <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/stopCitySpawner</p>
+</div>
+<h3 id="stopspawner"><a href="#">StopSpawner</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/stopSpawner <abbr title="[][] ">{namedSpawningElement}&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Stops the named <a href="#">SpawningElement</a>'s spawn cycle.</p>
+<h4 id="example">Example</h4>
+<p>/stopSpawner</p>
+</div>
+<h3 id="stoptargetspawner"><a href="#">StopTargetSpawner</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/stopTargetSpawner <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Stops the targeted <a href="#">SpawningElement</a>'s spawn cycle.</p>
+<h4 id="example">Example</h4>
+<p>/stopTargetSpawner</p>
+</div>
+<h3 id="stoptracelogging"><a href="#">StopTraceLogging</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/stopTraceLogging <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p></p>
+<h4 id="example">Example</h4>
+<p>/stopTraceLogging</p>
+</div>
+<h3 id="teleport">Teleport</h3>
+<div class="command">
+<h4 id="syntax"> Syntax</h4>
+<p>/teleport <abbr title="[String][Required] The name of a loaded terrain zone. i.e. corellia">&lt;planet&gt;</abbr><abbr title="[Float][Required] The x coordinate to teleport the target.">&lt;x&gt;</abbr><abbr title="[Float][Required] The y coordinate to teleport the target.">&lt;y&gt;</abbr>]</p>
+<h4 id="description">Description</h4>
+<p>Teleports the invoker to the specified location.</p>
+<h4 id="example">Example</h4>
+<p>/teleport corellia 1337 -1337</p>
+</div>
+<h3 id="teleporttarget"><a href="#">TeleportTarget</a></h3>
+<div class="command">
+<h4 id="syntax"> Syntax</h4>
+<p>/teleportTarget <abbr title="[String][Required] The name of the creature that is to be teleported.">&lt;targetName&gt;</abbr> [<abbr title="[String] The name of a loaded terrain zone. i.e. corellia">&lt;planet&gt;</abbr><abbr title="[Float] The x coordinate to teleport the target.">&lt;x&gt;</abbr><abbr title="[Float] The y coordinate to teleport the target.">&lt;y&gt;</abbr>] [<abbr title="[Float] The z coordinate to teleport the target.">&lt;z&gt;</abbr><abbr title="[Long] The parentID coordinate to teleport the target.">&lt;parentID&gt;</abbr>]</p>
+<h4 id="description">Description</h4>
+<p>Teleports the target to the specified location.</p>
+<h4 id="example">Example</h4>
+<p>/teleportTarget cRush tatooine -5000.5 -3924 4.423 248239094824</p>
+</div>
+<h3 id="teleportto"><a href="#">TeleportTo</a></h3>
+<div class="command">
+<h4 id="syntax"> Syntax</h4>
+<p>/teleportTo <abbr title="[String][Required] The name of a player to be teleported to.">&lt;targetName&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Teleports the invoker to the specified player.</p>
+<h4 id="example">Example</h4>
+<p>/teleportTo cRush</p>
+</div>
+<h3 id="uncityban"><a href="#">UnCityBan</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/unCityBan <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Removes a city ban in the current city on the targeted player.</p>
+<h4 id="example">Example</h4>
+<p>/unCityBan</p>
+</div>
+<h3 id="unfreezeplayer"><a href="#">UnfreezePlayer</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/unfreezePlayer {reason}<abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Unfreezes the targeted player, allowing them to move freely, and chat in global channels once more</p>
+<h4 id="example">Example</h4>
+<p>/unfreezePlayer</p>
+</div>
+<h3 id="unsnoop">Unsnoop</h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/unsnoop <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p> Stops snooping the targeted player's inventory...</p>
+<h4 id="example">Example</h4>
+<p>/unsnoop</p>
+</div>
+<h3 id="wipeitems"><a href="#">WipeItems</a></h3>
+<div class="command">
+<h4 id="syntax">Syntax</h4>
+<p>/wipeItems <abbr title="[][] ">&lt;&gt;</abbr></p>
+<h4 id="description">Description</h4>
+<p>Wipes all items in the targeted player's inventory. </p>
+<h4 id="example">Example</h4>
+<p>/wipeItems</p>
+</div>
+</div>
+      </div>
+
+    </div>
+  </div><!-- /wiki-content-body -->

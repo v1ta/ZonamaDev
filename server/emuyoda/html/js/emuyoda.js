@@ -123,6 +123,12 @@ emuYodaApp.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 	controller  : 'controlController',
 	data        : { requireLogin: true },
     })
+    .state('tools', {
+	url         : '/tools',
+	templateUrl : 'pages/tools.html',
+	controller  : 'toolsController',
+	data        : { requireLogin: false },
+    })
     .state('about', {
 	url         : '/about',
 	templateUrl : 'pages/about.html',
@@ -247,6 +253,14 @@ emuYodaApp.controller('connectController', function($scope, yodaApiService) {
     }).catch(function() {
 	$scope.error = "/api/status call failed";
     });
+});
+
+emuYodaApp.controller('toolsController', function($scope, $http, $sce, yodaApiService) {
+    $scope.referenceContent = "";
+    $scope.referenceURI = "";
+    $scope.displayReference = function(uri) {
+	$scope.referenceURI = $sce.trustAsResourceUrl(uri);
+    }
 });
 
 emuYodaApp.controller('controlController', function($rootScope, $scope, $timeout, $location, yodaApiService) {
