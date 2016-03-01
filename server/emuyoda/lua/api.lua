@@ -44,6 +44,7 @@ local tcp = ngx.socket.tcp
 local tonumber = tonumber
 local tostring = tostring
 local type = type
+local unpack = unpack
 local session_dict = ngx.shared.session_dict
 local status_dict = ngx.shared.status_dict
 
@@ -77,13 +78,18 @@ function return_response(r, status)
     end
 end
 
-function return_error(r, error, error_code, error_description, error_id, method, service)
+function set_error(r, error, error_code, error_description, error_id, method, service)
     r.response.error = error
     r.response.error_code = error_code
     r.response.error_description = error_description
     r.response.error_id = error_id
     r.response.method = method
     r.response.service = service
+end
+
+function return_error(r, error, error_code, error_description, error_id, method, service)
+    set_error(r, error, error_code, error_description, error_id, method, service)
+
     return_response(r, "ERROR")
 
     if r.ws then
@@ -92,6 +98,7 @@ function return_error(r, error, error_code, error_description, error_id, method,
     end
 end
 
+-- execute a function that is wrapped by a locker
 function api_lock(...)
     local args = { ... }
     local name = table.remove(args, 1)
@@ -100,7 +107,7 @@ function api_lock(...)
     local ok, err = status_dict:add(lock, 1, 60)
 
     while not ok do
-	ngx.sleep(0.1)
+	ngx.sleep(math.random() / 4)
 	ok, err = status_dict:add(lock, 1, 60)
     end
 
@@ -885,26 +892,35 @@ function service_account()
 	return_error(r, "Password not set on account object", "INVALID_OBJECT", "the password value is not valid", "SYSTEM", ngx.req.get_method(), "account")
     end
 
-    local res, err, errno, sqlstate = db_query("SELECT `account_id` FROM `accounts` WHERE `username` = " .. ngx.quote_sql_str(call.account.username))
+    -- Do rest in context of an api lock to avoid duplicate account creation
+    api_lock("add_account", function(r, call)
+	local res, err, errno, sqlstate = db_query("SELECT `account_id` FROM `accounts` WHERE `username` = " .. ngx.quote_sql_str(call.account.username))
 
-    if res and #res > 0 then
-	ngx.log(ngx.ERR, 'Duplicate account attempt?:' .. cjson.encode(res))
-	return_error(r, "Username not available.", "EXISTING_USERNAME", "That username is already in use.", "SYSTEM", ngx.req.get_method(), "account")
+	if res and #res > 0 then
+	    ngx.log(ngx.ERR, 'Duplicate account attempt?:' .. cjson.encode(res))
+	    set_error(r, "Username not available.", "EXISTING_USERNAME", "That username is already in use.", "SYSTEM", ngx.req.get_method(), "account")
+	    return
+	end
+
+	local sql = "INSERT INTO `accounts` (`username`, `password`, `admin_level`) VALUES ("
+	..  ngx.quote_sql_str(call.account.username) .. ","
+	..  ngx.quote_sql_str(SHA1Hash(call.account.password)) .. ","
+	..  ngx.quote_sql_str(call.account.admin_level or 0)
+	.. ")"
+
+	local res, err, errno, sqlstate = db_query(sql)
+
+	if err then
+	    set_error(r, "Unknown error", "INTERNAL_ERROR", "Unexpected error", "SYSTEM", ngx.req.get_method(), "account")
+	    return
+	end
+    end, r, call)
+
+    if r.response.error ~= nil then
+	return_response(r, "ERROR")
+    else
+	return_response(r, "OK")
     end
-
-    local sql = "INSERT INTO `accounts` (`username`, `password`, `admin_level`) VALUES ("
-    ..  ngx.quote_sql_str(call.account.username) .. ","
-    ..  ngx.quote_sql_str(SHA1Hash(call.account.password)) .. ","
-    ..  ngx.quote_sql_str(call.account.admin_level or 0)
-    .. ")"
-
-    local res, err, errno, sqlstate = db_query(sql)
-
-    if err then
-	return_error(r, "Unknown error", "INTERNAL_ERROR", "Unexpected error", "SYSTEM", ngx.req.get_method(), "account")
-    end
-
-    return_response(r, "OK")
 end
 
 function service_control(path)
