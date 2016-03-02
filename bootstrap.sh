@@ -169,17 +169,17 @@ check_gitbash_win() {
 
 check_virtualbox_win() {
     local ve=$(wmic cpu get VirtualizationFirmwareEnabled | sed -n 2p)
-    echo "Virtualization Enabled: $ve"
+    echo "Virtualization Enabled: [$ve]"
 
-    if [ "$ve" != TRUE ]; then
-	echo "############################################################################"
-	echo "## ERROR: YOU MUST ENABLE VIRTUALIZATION IN YOUR BIOS BEFORE YOU CONTINUE ##"
-	echo "############################################################################"
-	echo
-	echo "** Please close this window, boot into your BIOS, enable virtualization and try again **"
-	echo
-	exit 202
-    fi
+#     if [ "$ve" != TRUE ]; then
+# 	echo "############################################################################"
+# 	echo "## ERROR: YOU MUST ENABLE VIRTUALIZATION IN YOUR BIOS BEFORE YOU CONTINUE ##"
+# 	echo "############################################################################"
+# 	echo
+# 	echo "** Please close this window, boot into your BIOS, enable virtualization and try again **"
+# 	echo
+# 	exit 202
+#     fi
 
     if [ -z "$VBOX_INSTALL_PATH" -a -z "$VBOX_MSI_INSTALL_PATH" ]; then
 	echo -e "** You need to install VirtualBox for windows **\n"
