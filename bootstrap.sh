@@ -168,18 +168,17 @@ check_gitbash_win() {
 }
 
 check_virtualbox_win() {
-    local ve=$(wmic cpu get VirtualizationFirmwareEnabled | sed -n 2p)
-    echo "Virtualization Enabled: [$ve]"
+    local ve=$(wmic cpu get VirtualizationFirmwareEnabled/value | grep TRUE)
 
-#     if [ "$ve" != TRUE ]; then
-# 	echo "############################################################################"
-# 	echo "## ERROR: YOU MUST ENABLE VIRTUALIZATION IN YOUR BIOS BEFORE YOU CONTINUE ##"
-# 	echo "############################################################################"
-# 	echo
-# 	echo "** Please close this window, boot into your BIOS, enable virtualization and try again **"
-# 	echo
-# 	exit 202
-#     fi
+    if [ -z "$ve" ]; then
+	echo "############################################################################"
+	echo "## ERROR: YOU MUST ENABLE VIRTUALIZATION IN YOUR BIOS BEFORE YOU CONTINUE ##"
+	echo "############################################################################"
+	echo
+	echo "** Please close this window, boot into your BIOS, enable virtualization and try again **"
+	echo
+	exit 202
+    fi
 
     if [ -z "$VBOX_INSTALL_PATH" -a -z "$VBOX_MSI_INSTALL_PATH" ]; then
 	echo -e "** You need to install VirtualBox for windows **\n"
@@ -196,12 +195,12 @@ check_virtualbox_win() {
 
     case $ver in
 	5.[0-9].1[2-9]* ) : ;;
-	* ) echo "Unsupported version of virtualbox ($ver), please upgrade to 5.0.12 or higher"
-	    exit 1
-	    ;;
-    esac
+    * ) echo "Unsupported version of virtualbox ($ver), please upgrade to 5.0.12 or higher"
+	exit 1
+	;;
+esac
 
-    echo "** Virtualbox version $ver **"
+echo "** Virtualbox version $ver **"
 }
 
 check_virtualbox_linux() {
