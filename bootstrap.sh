@@ -175,9 +175,16 @@ check_virtualbox_win() {
 	echo "## ERROR: YOU MUST ENABLE VIRTUALIZATION IN YOUR BIOS BEFORE YOU CONTINUE ##"
 	echo "############################################################################"
 	echo
-	echo "** Please close this window, boot into your BIOS, enable virtualization and try again **"
+	echo "** Unless you know what you're doing most likely you will not be able to start the VM **"
 	echo
-	exit 202
+	if yorn "Do you want to stop and fix the BIOS setting now?"; then
+	    echo "** Please close this window, boot into your BIOS, enable virtualization and try again **"
+	    exit 202
+	fi
+	echo
+	echo "** USER IGNORING VT WARNING **"
+	wmic cpu get VirtualizationFirmwareEnabled/value
+	echo "*****"
     fi
 
     if [ -z "$VBOX_INSTALL_PATH" -a -z "$VBOX_MSI_INSTALL_PATH" ]; then
