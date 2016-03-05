@@ -1,0 +1,4 @@
+if step_not_complete; then
+    sed 's/^ProgressMonitors.*/ProgressMonitors = "false"/' -i "${RUN_DIR}/conf/config.lua"
+    step_complete 0
+fi
