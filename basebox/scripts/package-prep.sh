@@ -7,8 +7,7 @@
 # Created: Mon Dec 28 13:54:13 EST 2015
 #
 
-# TODO need a better way to NOT HARDCODE username here
-source ~vagrant/ZonamaDev/common/global.config
+source ~/ZonamaDev/common/global.config
 
 cd ${ZDHOME}
 
@@ -36,9 +35,7 @@ builder_name="$2"
 ## Verify system state ##
 #########################
 
-if zdcfg get-flag firstboot/__full_run.status; then
-    :
-else
+if [ ! -f .firstboot.ran ]; then
     echo "** It doesn't look like firstboot completed successfully!"
     echo "** PACKAGE ABORTED **"
     exit 3
@@ -172,8 +169,8 @@ chmod 644 /.swgemudev.version
 echo '{ "build_version": "'$version'", "build_timestamp": '$(date -u +'%s, "build_datetime": "%Y-%m-%dT%H:%M:%SZ"')', "builder_name": "'$builder_name'" }' | tee /.swgemudev.builinfo.json | python -m json.tool
 
 # Ok let these run on first boot of new fasttrack image
-zdcfg clear-flag suspend_devsetup
-zdcfg clear-flag suspend_fasttrack
+~/ZonamaDev/fasttrack/bin/zdcfg clear-flag suspend_devsetup
+~/ZonamaDev/fasttrack/bin/zdcfg clear-flag suspend_fasttrack
 
 # Wait for sync to disk
 echo ">> Sync disk"
