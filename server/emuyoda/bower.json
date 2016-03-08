@@ -1,0 +1,20 @@
+{
+    "name": "emuYoda",
+    "author": "lordkator@swgemu.com",
+    "version": "0.0.2",
+    "private": true,
+    "dependencies": {
+	"angular": "~1.4.9",
+	"angular-sanitize": "~1.4.9",
+	"angular-animate": "~1.4.9",
+	"angular-bootstrap": "~1.1.0",
+	"angular-ui-router": "~0.2.15",
+	"bootstrap": "~3.3.6",
+	"requirejs": "~2.1.22"
+    },
+    "ignore": [
+	"**/.*",
+	"node_modules",
+	"bower_components"
+    ]
+}
