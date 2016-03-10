@@ -1,8 +1,23 @@
+--
 -- EmuYoda Configuration
+--
+-- The following globals are availble when this configuration is loaded:
+--
+-- ZDUSER - Username of the ZD user (e.g. 'vagrant')
+-- ZDHOME - Home directory of ZD user (e.g. ~vagrant)
+-- WORKSPACE - Where are the repos at? (e.g. ~vagrant/workspace)
+-- RUN_DIR - Where is the core3 binary ran from? (e.g. ~vagrant/workspace/Core3/MMOCoreORB/bin
+-- ZONAMADEV_CONFIG_HOME - Where are the ZD configuration files? (e.g. ~vagrant/.config/ZonamaDev)
+--
+
+-- ---------- --
+-- Emu Config --
+-- ---------- --
+
+-- Where is the swgemu config file?
 emuConfigPath = RUN_DIR .. '/conf/config.lua'
-yodaSecret = '460b06d2de997fac8a54aa87636cd937'
-consoleLevelRead = 1
-consoleLevelWrite = 15
+
+-- What Zones can be configured in Yoda UI/API
 ZonesAvailable = {
 	"corellia",
 	"dantooine",
@@ -16,7 +31,27 @@ ZonesAvailable = {
 	"tutorial",
 	"yavin4"
 }
--- Which ~/bin/swgemu commands are allowed through the API and what admin_level is required
+
+-- ----------- --
+-- Yoda Config --
+-- ----------- --
+
+-- If an api call is made with this token it's always allowed in, do not share this it's used for internal automation.
+-- A new token is generated when yoda is installed on every new ZD instance.
+yodaSecret = '460b06d2de997fac8a54aa87636cd937'
+
+-- How long your cookies and api auth tokens will last, shorter is safer if you expose yoda to the internet
+authTimeout = 86400 * 7
+
+--
+-- All permissions are controlled by mysql database: swgemu.accounts.admin_level
+--
+
+-- What admin_level allows a person to see the console messages?
+consoleLevelRead = 1
+-- What admin_level allows a person to send commands?
+consoleLevelWrite = 15
+-- What admin_level is needed for each command on the "Server Control" page?
 control_permission_level = {
     ['start'] = 9,
     ['stop'] = 9,
@@ -27,3 +62,6 @@ control_permission_level = {
     ['send'] = 15,
     ['version'] = 1,
 }
+
+-- Don't touch this, it's designed to help Yoda find his way in the dark if we change the config format later
+yodaConfigVersion = 1
