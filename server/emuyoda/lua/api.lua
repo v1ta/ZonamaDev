@@ -172,6 +172,11 @@ local function load_config()
 	fh:close();
     end
 
+    -- If Yoda is on the internet and you allow non-ssl API and Web access this should be set as short as you can stand
+    if yoda_cfg.authTimeout == nil then
+	authTimeout = 86400 * 7;
+    end
+
     -- Defaults for well known flags
     yoda_cfg.flags = {
 	['autostart_server'] = false,
@@ -422,6 +427,7 @@ end
 
 -- Implement /auth service
 function service_auth()
+    local cfg = load_config()
     local r = init_response()
 
     -- GET - Verify token is valid
@@ -479,7 +485,7 @@ function service_auth()
 	-- Setup session for this user
 	ngx.header['Set-Cookie'] = 'ZDAPI_SESSID=' .. new_token .. '; path=/'
 	session_dict:delete(user.account_id)
-	session_dict:add(new_token, user.account_id, 3600 * 2)
+	session_dict:add(new_token, user.account_id, cfg.yoda.authTimeout or (3600 * 2));
 
 	r.response.dbg_info.username = call.auth.username
 	r.response.token = new_token
