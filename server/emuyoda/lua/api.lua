@@ -174,7 +174,7 @@ local function load_config()
 
     -- If Yoda is on the internet and you allow non-ssl API and Web access this should be set as short as you can stand
     if yoda_cfg.authTimeout == nil then
-	authTimeout = 86400 * 7;
+	yoda_cfg.authTimeout = 86400 * 7;
     end
 
     -- Defaults for well known flags
