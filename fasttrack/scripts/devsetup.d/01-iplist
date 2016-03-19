@@ -198,6 +198,13 @@ check_ip() {
 	return 0
     fi
 
+    # If we can we should try and get ports forwarded before we test...
+    if [ -x ${ZDHOME}/bin/upnp_add_ports ]; then
+	msg "START upnp_add_ports"
+	${ZDHOME}/bin/upnp_add_ports
+	msg "END upnp_add_ports, RET=$?"
+    fi
+
     # Try SSL first
     local scheme='https'
     local result=$(curl -s -A zonamaipscan --insecure --connect-timeout 5 -m 5 ${scheme}'://'${server_ip}':'${OPENRESTY_SSL_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
@@ -205,6 +212,7 @@ check_ip() {
     # If that fails fall back to HTTP
     if [ -z "$result" ]; then
 	scheme='http'
+	echo "** https Failed trying ${scheme}"
         result=$(curl -s -A zonamaipscan --connect-timeout 5 -m 5 ${scheme}'://'${server_ip}':'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
     fi
 
