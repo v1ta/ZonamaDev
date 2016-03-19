@@ -466,10 +466,18 @@ server_update_ip() {
 
 	local our_instance="${instance_query[${#instance_query[@]}-1]}"
 
-	local result=$(curl -s -A zonamaipscan --connect-timeout 0.03 -m 0.03 'http://'${server_ip}':'${OPENRESTY_PORT}'/zonama-instance-id?why=start' 2>/dev/null)
+	# Try SSL first
+	local scheme='https'
+	local result=$(curl -s -A zonamaipscan --insecure --connect-timeout 5 -m 5 ${scheme}'://'${server_ip}':'${OPENRESTY_SSL_PORT}'/zonama-instance-id?why=start' 2>/dev/null)
+
+	# If that fails fall back to HTTP
+	if [ -z "$result" ]; then
+	    scheme='http'
+	    result=$(curl -s -A zonamaipscan --connect-timeout 5 -m 5 ${scheme}'://'${server_ip}':'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
+	fi
 
 	if [ "X$result" != "X$our_instance" ]; then
-	    echo "** ERROR: server_ip ($server_ip) is not valid."
+	    echo "** ERROR: server_ip (${scheme}://${server_ip}/) is not valid."
 	    reset_server_ip
 	    server_ip=$(zdcfg get server_ip 2> /dev/null)
 
