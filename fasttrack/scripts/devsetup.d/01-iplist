@@ -198,11 +198,19 @@ check_ip() {
 	return 0
     fi
 
-    local result=$(curl -s -A zonamaipscan --connect-timeout 5 -m 5 'http://'${server_ip}':'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
+    # Try SSL first
+    local scheme='https'
+    local result=$(curl -s -A zonamaipscan --insecure --connect-timeout 5 -m 5 ${scheme}'://'${server_ip}':'${OPENRESTY_SSL_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
+
+    # If that fails fall back to HTTP
+    if [ -z "$result" ]; then
+	scheme='http'
+        result=$(curl -s -A zonamaipscan --connect-timeout 5 -m 5 ${scheme}'://'${server_ip}':'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
+    fi
 
     if [ "X$result" = "X$our_instance" ]; then
-	echo "** Found ourselves at server_ip (${server_ip})"
-	return 0
+	echo "** Found ourselves at server_ip (${scheme}://${server_ip}/)"
+        return 0
     fi
 
     alert "Invalid Server IP" "Server IP was ${server_ip}, but it does not appear to be valid anymore.\nRe-running IP setup."
