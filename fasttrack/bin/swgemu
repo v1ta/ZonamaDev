@@ -473,7 +473,7 @@ server_update_ip() {
 	# If that fails fall back to HTTP
 	if [ -z "$result" ]; then
 	    scheme='http'
-	    result=$(curl -s -A zonamaipscan --connect-timeout 5 -m 5 ${scheme}'://'${server_ip}':'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2>/dev/null)
+	    result=$(curl -s -A zonamaipscan --connect-timeout 5 -m 5 ${scheme}'://'${server_ip}':'${OPENRESTY_PORT}'/zonama-instance-id?why=start' 2>/dev/null)
 	fi
 
 	if [ "X$result" != "X$our_instance" ]; then
