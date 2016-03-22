@@ -16,9 +16,9 @@ Zonama - The living planet, or in our world an easily deployed development envir
 ### Fast Start
 
 #### Downloads
-* Github's Git for Windows: https://git-for-windows.github.io/
-* VirtualBox for Windows: https://www.virtualbox.org/wiki/Downloads
-* Vagrant for Windows: https://www.vagrantup.com/downloads.html
+* [Github's Git for Windows](https://git-for-windows.github.io)
+* [VirtualBox for Windows](https://www.virtualbox.org/wiki/Downloads)
+* [Vagrant for Windows](https://www.vagrantup.com/downloads.html)
  
 #### Bootstrap
 Launch Git Bash: Start -> Programs -> Git Bash
@@ -52,10 +52,10 @@ First install git, curl, and zlib1g-dev via
 ````
 sudo apt-get install git curl zlib1g-dev
 ````
-Next install vagrant and virtualbox through thier websites:
+Next install Vagrant and VirtualBox through their websites:
 ````
-https://www.virtualbox.org/wiki/Linux_Downloads
-https://www.vagrantup.com/downloads.html
+[VirtualBox for Linux](https://www.virtualbox.org/wiki/Linux_Downloads)
+[Vagrant for Linux](https://www.vagrantup.com/downloads.html)
 ````
 * Virtualbox - Choose linux version (use 14.04 ubuntu as Linux Mint is based on 14.04)
 * Vagrant download the debian package for vagrant.  (The versions in the apt-get repos are older, and unsupported for ZonamaDev)
