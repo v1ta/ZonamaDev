@@ -111,7 +111,7 @@ check_win() {
 
     if [ $? -eq 127 ]; then
 	if [ -f /mingw64/bin/curl.exe ]; then
-	    echo "** WARNING: Patching your vagrant's embeded curl since it seems to be broken **"
+	    echo "** WARNING: Patching your vagrant's embedded curl since it seems to be broken **"
 	    cp /mingw64/bin/curl.exe /c/HashiCorp/Vagrant/embedded/bin/curl.exe
 	else
 	    echo "###################################################################"
