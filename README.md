@@ -53,12 +53,13 @@ First install git, curl, and zlib1g-dev via
 sudo apt-get install git curl zlib1g-dev
 ````
 Next install Vagrant and VirtualBox through their websites:
-````
-[VirtualBox for Linux](https://www.virtualbox.org/wiki/Linux_Downloads)
-[Vagrant for Linux](https://www.vagrantup.com/downloads.html)
-````
-* Virtualbox - Choose linux version (use 14.04 ubuntu as Linux Mint is based on 14.04)
-* Vagrant download the debian package for vagrant.  (The versions in the apt-get repos are older, and unsupported for ZonamaDev)
+ * [VirtualBox for Linux](https://www.virtualbox.org/wiki/Linux_Downloads)
+   
+Choose linux version (use 14.04 ubuntu as Linux Mint is based on 14.04)
+ 
+ * [Vagrant for Linux](https://www.vagrantup.com/downloads.html)
+   
+Download the debian package for vagrant.  (The versions in the apt-get repos are older, and unsupported for ZonamaDev)
 
 Install downloaded packages:
 ````
