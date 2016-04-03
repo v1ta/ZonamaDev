@@ -1,5 +1,6 @@
+# Not until we have a good install process, for now we check them all in..
+# html/lib/*
 yoda-config.lua
-html/lib/*
 node_modules
 bower_components
 .DS_STORE
