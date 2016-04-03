@@ -839,7 +839,7 @@ server_latest()
         git stash pop
         cd "${WORKSPACE}/PublicEngine"
         git pull
-	rm -f build/unix/config.log
+	rm -f "${BUILD_DIR}/build/unix/config.log"
     )
 
     local ret=$?
