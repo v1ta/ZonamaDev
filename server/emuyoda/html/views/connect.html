@@ -1,0 +1,88 @@
+<div class="container">
+  <h4>Getting Connected</h4>
+  <p>
+
+    <div class="panel panel-info" ng-show="server_status.autoreg">
+      <div class="panel-heading">
+        <h3 class="panel-title">NOTE: Auto Registration Enabled</h3>
+      </div>
+      <div class="panel-body">
+        <p>NOTE: Autoregistration is enabled, to create a new account when you connect via the client enter any username you desire and the new password. That account will be created on the fly as you login
+          and this user/password combination will allow you to return to your characters when you login again later.</p>
+        <p>To disable auto registration edit your bin/config.lua file and change "AutoReg = 1" to "AutoReg = 0" and restart the server.</p>
+        <div ng-show="server_status.account" class="alert alert-dismissible alert-success">
+          <b>Login as <u>{{ server_status.account.username }}</u> to create a character with administrator privilages.</b>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">New Launcher</h3>
+      </div>
+      <div class="panel-body">
+        <p>If you have the new <a href="http://www.swgemu.com/forums/content.php?r=179-Install-SWGEmu" target="_blank">launcher</a>, follow these steps:</p>
+
+        <ul>
+          <li>Click on Settings -&gt; Login Servers -&gt; Add</li>
+          <p>
+            <div class="well well-sm">
+              <p>Name: <b>localserver</b></p>
+              <p>Host: <b>{{ server_status.server_ip }}</b></p>
+              <p>Port: <b>{{ server_status.login_port }}</b></p>
+            </div>
+          </p>
+          <li>Hit [OK] to save the new host.</li>
+          <li>Hit and [OK] to close the Login Servers window.</li>
+          <li>Choose "localserver" in the dropdown next to the [START] button.</li>
+          <li>Hit the [START] button and login.</li>
+        </ul>
+        <p>Be sure to <a href='#/connect#client-admin' target='_self'>Enable Admin Commands</a> on the client before you launch the client.</p>
+      </div>
+    </div>
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">SWGEmu Executable</h3>
+      </div>
+      <div class="panel-body">
+        <p>If you're using the SWGEmu client without the new launcher <i>(not recommended)</i> you can do the following to connect to your server:</p>
+        <p>Copy and paste this info into swgemu_login.cfg:</p>
+        <pre>
+[ClientGame]
+loginServerPort0={{ server_status.login_port }}
+loginServerAddress0={{ server_status.server_ip }}
+
+[Station]
+subscriptionFeatures=1
+gameFeatures=65535</pre>
+        <p>Launch SWG Emu and login!</p>
+      </div>
+    </div>
+
+    <div id="client-admin" class="panel panel-warning">
+      <div class="panel-heading">
+        <h3 class="panel-title">Enable Admin Commands on Client</h3>
+      </div>
+      <div class="panel-body">
+        <p>Edit the user.cfg file in your SWGEmu folder <i>(Usually C:\SWGEmu\user.cfg)</i></p>
+        <p>Make sure the file looks like this:</p>
+        <pre>
+[ClientGame]
+0fd345d9 = true
+
+[ClientUserInterface]
+debugExamine=1</pre>
+        <p>Edit the swgemu.cfg file in your SWGEmu folder <i>(Usually C:\SWGEmu\swgemu.cfg)</i></p>
+        <p>Make sure the file looks like this:</p>
+        <pre>
+.include "swgemu_login.cfg"
+.include "swgemu_live.cfg"
+.include "swgemu_preload.cfg"
+.include "options.cfg"
+.include "user.cfg"</pre>
+        <p><b>NOTE: Often times you'll find a '#' character on the .include "user.cfg" line. You must remove that or your user.cfg will not used and admin commands will return "Command Not Found" errors.</b></p>
+        <p><u>Make sure to exit your client all the way to the windows desktop and re-load it after making these changes.</u></p>
+      </div>
+    </div>
+</div>

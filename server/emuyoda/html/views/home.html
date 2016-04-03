@@ -1,0 +1,87 @@
+<div class="container">
+  <h4>Welcome to SWGEmu</h4>
+  <p>
+    <div class="panel panel-success" ng-show='canCreateAdminAccount'>
+      <div class="panel-heading">
+        <h4 class="panel-title">Please Create Your First Administrator Account:</h4>
+      </div>
+      <div class="panel-body">
+        <form name="newAdmin" ng-submit="createAdminAccount()" class="form-horizontal ng-valid ng-dirty ng-valid-parse" style="">
+          <div class="form-group">
+            <label class="col-sm-4 control-label"><strong>Username:</strong></label>
+            <input type="text" name="username" ng-model="account.username" ng-minlength="3" ng-maxlength="32" ng-required="true" class="col-sm-8">
+            <p ng-show="newAdmin.username.$error.minlength" class="help-block">Username is too short. (min 3 characters)</p>
+            <p ng-show="newAdmin.username.$error.maxlength" class="help-block">Username is too long. (max 32 characters)</p>
+            <p ng-show="!newAdmin.username.$error.maxlength && !newAdmin.username.$error.minlength" class="help-block">(3 to 32 characters long)</p>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-4 control-label"><strong>Password:</strong></label>
+            <input type="password" name="password" ng-model="account.password" ng-minlength="6" ng-required="true" class="col-sm-8">
+            <p ng-show="newAdmin.password.$error.minlength" class="help-block">Password is too short. (min 6 characters)</p>
+            <p ng-show="!newAdmin.password.$error.maxlength && !newAdmin.password.$error.minlength" class="help-block">(At least 6 characters long)</p>
+          </div>
+          <button class="btn btn-success" ng-click="createAdminAccount()">Create Admin Account</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="panel panel-success" ng-show='shouldConfigureZones'>
+      <div class="panel-heading">
+        <h3 class="panel-title">Configure Zones</h3>
+      </div>
+      <div class="panel-body">
+        <p>Would you like to change the zones/planets that are enabled?</p>
+        <form name="zoneForm" ng-submit="enableZones()" class="form-horizontal ng-valid ng-dirty ng-valid-parse" style="">
+          <table class="table table-striped table-hover">
+            <tr ng-repeat="zone in cfg.yoda.ZonesAvailable">
+              <td><input type="checkbox" value="{{ zone }}" id="{{ zone }}" name="zone" ng-model="zones[zone]"></td>
+              <td style='width: 100%'>{{ zone }}</td>
+            </tr>
+          </table>
+          </br>
+          <button class="btn btn-success">Enable Zones</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="panel panel-success" ng-hide="currentUsername">
+      <div class="panel-heading">
+        <h3 class="panel-title">Get Connected</h3>
+      </div>
+      <div class="panel-body">
+        <span ng-show='server_status.server_pid'>Need to get connected?  Check <a href='#connect'>this page</a> out.</span>
+        <span ng-hide='server_status.server_pid'>You need to <a href="#control">START</a> the server before you can login with the client!</span>
+      </div>
+    </div>
+
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">Server Information</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-6" ng-show='server_status'>
+            <div class="col-md-10 well well-sm">
+              <table class="table table-striped table-hover" yoda-nested-table='server_status'>
+                <caption>Server&nbsp;Status:</caption>
+              </table>
+            </div>
+          </div>
+          <div class="col-sm-6" ng-show='cfg.emu.ZonesEnabled'>
+            <div class="col-md-10 well well-sm">
+              <table class="table table-striped table-hover">
+                <caption>Enabled&nbsp;Zones:</caption>
+                <tr ng-repeat="zone in cfg.emu.ZonesEnabled">
+                  <td>{{ zone }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="messages">{{ messages }}</div>
+    <!--<pre>{{ server_status | json }}</pre> <pre>{{ cfg | json }}</pre> -->
+</div>

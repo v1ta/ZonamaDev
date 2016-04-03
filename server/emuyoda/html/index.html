@@ -1,47 +1,47 @@
 <!DOCTYPE html>
-<html ng-app="emuYoda">
+<html lang="en" ng-app>
+
 <head>
   <title>SWGEmu Yoda</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="stylesheet" type="text/css" href="css/font-awesome-4.5.0/css/font-awesome.css" />
   <link rel="stylesheet" type="text/css" href="css/bootstrap-3.3.6/bootstrap-cyborg.css" />
   <link rel="stylesheet" type="text/css" href="css/emuyoda.css" />
-  <script src="js/angularjs/1.4.9/angular.min.js"></script>
-  <script src="js/angularjs/1.4.9/angular-animate.js"></script>
-  <script src="js/angularjs/1.4.9/angular-sanitize.js"></script>
-  <script src="js/angular-ui-router/0.2.15/angular-ui-router.js"></script>
-  <script src="js/ui-bootstrap/1.1.0/ui-bootstrap-tpls-1.1.0.js"></script>
-  <script src="js/emuyoda.js"></script>
 </head>
 
-<!-- define angular controller -->
-<body ng-controller="mainController">
-  <nav class="navbar navbar-default">
+<body>
+  <nav class="navbar navbar-default" ng-controller="navController">
     <div class="container">
       <div class="navbar-header">
         <a class="navbar-brand" href="/">SWGEmu Yoda</a>
       </div>
 
       <ul class="nav navbar-nav navbar-right">
-	<li ng-class="{ active: isActive('/home') }"><a ui-sref="home"><i class="fa fa-clock-o"></i> Home</a></li>
-	<li ng-class="{ active: isActive('/connect') }"><a ui-sref="connect"><i class="fa fa-bolt"></i> Get Connected</a></li>
-	<li ng-class="{ active: isActive('/control') }"><a ui-sref="control"><i class="fa fa-power-off"></i> Server Control</a></li>
-	<li ng-class="{ active: isActive('/tools') }"><a ui-sref="tools"><i class="fa fa-wrench"></i> Tools</a></li>
-	<li ng-class="{ active: isActive('/about') }"><a ui-sref="about"><i class="fa fa-info-circle"></i> About</a></li>
-	    <li ng-click="" ng-show="currentUsername">
-		<a ui-sref="logout"><i class="fa fa-sign-out"></i> Logout: {{ currentUsername }}</a>
-	    </li>
-	    <li ng-hide="currentUsername">
-		<a ui-sref="login"><i class="fa fa-sign-in"></i> Login</a>
-	    </li>
+        <li ng-class="{ active: isActive('/home') }"><a ui-sref="home"><i class="fa fa-clock-o"></i> Home</a></li>
+        <li ng-class="{ active: isActive('/connect') }"><a ui-sref="connect"><i class="fa fa-bolt"></i> Get Connected</a></li>
+        <li ng-class="{ active: isActive('/control') }"><a ui-sref="control"><i class="fa fa-power-off"></i> Server Control</a></li>
+        <li ng-class="{ active: isActive('/tools') }"><a ui-sref="tools"><i class="fa fa-wrench"></i> Tools</a></li>
+        <li ng-class="{ active: isActive('/about') }"><a ui-sref="about"><i class="fa fa-info-circle"></i> About</a></li>
+        <li ng-click="" ng-show="currentUsername">
+          <a ui-sref="logout"><i class="fa fa-sign-out"></i> Logout: {{ currentUsername }}</a>
+        </li>
+        <li ng-hide="currentUsername">
+          <a ui-sref="login"><i class="fa fa-sign-in"></i> Login</a>
+        </li>
       </ul>
     </div>
   </nav>
+
   <div id="main">
     <div ui-view></div>
   </div>
+
   <footer class="text-center">
     <p>Learn More at: <a href="https://github.com/lordkator/ZonamaDev">https://github.com/lordkator/ZonamaDev</a></p>
   </footer>
+
+  <script data-main='/js/main.js?burst=v2' src='/lib/requirejs/require.js?v=2.1.22'></script>
+
 </body>
+
 </html>

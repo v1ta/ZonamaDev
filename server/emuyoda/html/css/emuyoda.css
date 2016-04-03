@@ -1,86 +1,85 @@
 form {
-    display: table-cell;
+  display: table-cell;
 }
 
 .consoleText {
-    margin: 0 -9999rem;
-    padding: 0.25rem 9999rem;
+  margin: 0 -9999rem;
+  padding: 0.25rem 9999rem;
 }
 
 .control-server-options {
-    float: right;
+  float: right;
 }
 
 .control-server-options label {
-    white-space: nowrap;
-    color: #fff;
-    font-size: 8pt;
+  white-space: nowrap;
+  color: #fff;
+  font-size: 8pt;
 }
 
 .control-server-options input[type=checkbox] {
-    vertical-align: middle;
-    position: relative;
-    bottom: 2px;
+  vertical-align: middle;
+  position: relative;
+  bottom: 2px;
 }
 
 .control-buttonbar {
-    display: table;
-    text-align: center;
-    height: 40px;
+  display: table;
+  text-align: center;
+  height: 40px;
 }
 
 .control-button {
-    height: 40px;
-    width: 60px;
-    color: #000;
-    font-size: 8pt;
+  height: 40px;
+  width: 60px;
+  color: #000;
+  font-size: 8pt;
 }
 
 .control-button:hover {
-    height: 40px;
-    width: 60px;
-    border: 0px;
-    background: #fff;
+  height: 40px;
+  width: 60px;
+  border: 0px;
+  background: #fff;
 }
 
 .control-button:focus {
-    outline: 0;
+  outline: 0;
 }
 
 a:focus {
-    outline: 0;
+  outline: 0;
 }
 
 .control-button:active {
-    background: yellow;
+  background: yellow;
 }
 
-
 .control-send-text {
-    height: 40px;
-    width: 120px;
-    margin: 0px 0px 0px 5px;
-    float: right;
-    text-align: left;
-    font-size: 8pt;
-    vertical-align: bottom;
+  height: 40px;
+  width: 120px;
+  margin: 0px 0px 0px 5px;
+  float: right;
+  text-align: left;
+  font-size: 8pt;
+  vertical-align: bottom;
 }
 
 .logPre {
-    color: #000;
-    font-size: 8pt;
-    text-align: left;
-    white-space: nowrap;
+  color: #000;
+  font-size: 8pt;
+  text-align: left;
+  white-space: nowrap;
 }
 
 .consoleLog {
-    height: 300px;
+  height: 300px;
 }
 
 .reference-content {
-    color: #000;
-    background: #fff;
-    width: 100%;
-    height: 900px;
-    position: relative;
+  color: #000;
+  background: #fff;
+  width: 100%;
+  height: 900px;
+  position: relative;
 }
