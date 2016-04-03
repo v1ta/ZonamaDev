@@ -3,7 +3,8 @@
  * if you get 'unknown {x}Provider' errors from angular, be sure they are
  * properly referenced in one of the module dependencies in the array.
  **/
+'use strict';
+
 define(['angular'], function (angular) {
-  'use strict';
   return angular.module('app.controllers', ['ui.router']);
 });

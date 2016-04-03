@@ -1,0 +1,32 @@
+{
+    "bitwise": false,
+    "boss": true,
+    "eqnull": true,
+    "expr": true,
+    "globalstrict": true,
+    "immed": true,
+    "indent": 2,
+    "laxbreak": true,
+    "loopfunc": true,
+    "maxlen": 200,
+    "newcap": true,
+    "noarg": true,
+    "noempty": true,
+    "nonew": true,
+    "sub": true,
+    "trailing": true,
+    "undef": true,
+    "globals": {
+	"angular": true,
+	"document": true,
+        "$": true,
+        "Highcharts": true,
+        "alert": true,
+        "btoa": true,
+        "console": true,
+        "define": true,
+        "require": true,
+	"WebSocket": true,
+	"window": true
+    }
+}
