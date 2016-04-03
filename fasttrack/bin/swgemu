@@ -466,6 +466,15 @@ server_update_ip() {
 
 	local our_instance="${instance_query[${#instance_query[@]}-1]}"
 
+	# If we can we should try and get ports forwarded before we test...
+	if zdcfg check-flag enable_upnp && [ -x ${ZDHOME}/bin/upnp_add_ports ]; then
+	    if [ -z "$(luarocks list 2> /dev/null | grep upnpclient)" ]; then
+		echo "** Install upnpclient"
+		sudo luarocks install upnpclient
+	    fi
+	    ${ZDHOME}/bin/upnp_add_ports
+	fi
+
 	# Try SSL first
 	local scheme='https'
 	local result=$(curl -s -A zonamaipscan --insecure --connect-timeout 5 -m 5 ${scheme}'://'${server_ip}':'${OPENRESTY_SSL_PORT}'/zonama-instance-id?why=start' 2>/dev/null)

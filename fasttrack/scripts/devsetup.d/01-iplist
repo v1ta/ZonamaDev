@@ -199,7 +199,11 @@ check_ip() {
     fi
 
     # If we can we should try and get ports forwarded before we test...
-    if [ -x ${ZDHOME}/bin/upnp_add_ports ]; then
+    if zdcfg check-flag enable_upnp && [ -x ${ZDHOME}/bin/upnp_add_ports ]; then
+	msg "Check for upnpclient"
+	if [ -z "$(luarocks list 2> /dev/null | grep upnpclient)" ]; then
+	    sudo luarocks install upnpclient
+	fi
 	msg "START upnp_add_ports"
 	${ZDHOME}/bin/upnp_add_ports
 	msg "END upnp_add_ports, RET=$?"

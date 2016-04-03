@@ -1,0 +1,218 @@
+#!/usr/local/bin/lua
+--[[
+--
+-- upnp_add_ports - Use uPnP to ask router to portforward emu ports
+--
+-- Author: Lord Kator <lordkator@swgemu.com>
+--
+-- Created: Fri Mar 18 06:16:20 EDT 2016
+--
+]]
+
+local uPnPclient_ok, uPnPclient = pcall(_G.require, 'uPnPclient')
+
+function main()
+    if not zdcfg_check_flag('enable_upnp') then
+	if arg[1] == '-f' then
+	    print("** WARNING: enable_upnp flag is not set but -f was passed for we will forward ports anyway");
+	else
+	    print("To enable portforwarding please set enable_upnp flag: zdcfg set-flag enable_upnp");
+	    return 100
+	end
+    end
+
+    local emu_cfg = assert(load_config(
+	"config.lua",
+	{ ".", "conf", "bin/conf", os.getenv("HOME") .. "/workspace/Core3/MMOCoreORB/bin/conf" }
+    ))
+
+    local yoda_sslPort = assert(get_yoda_sslport())
+
+    -- Proto, ExternalPort, InternalPort, Description
+    local port_map = {
+	{ 'tcp', yoda_sslPort or 44443, yoda_sslPort or 44443, "HTTPS Emu Yoda" },
+	{ 'tcp', emu_cfg.StatusPort or 44455, emu_cfg.StatusPort or 44455, "SWGEMU StatusPort" },
+	{ 'udp', emu_cfg.LoginPort or 44453, emu_cfg.LoginPort or 44453, "SWGEMU LoginPort" },
+	{ 'udp', emu_cfg.PingPort or 44462, emu_cfg.PingPort or 44462, "SWGEMU PingPort" }
+    }
+
+    for _,v in pairs(assert(get_galaxy_ports(emu_cfg))) do
+	port_map[#port_map+1] = { 'udp', v, v, "SWGEmu GalaxyPort" }
+    end
+
+    -- Get client object
+    local u = uPnPclient:new{ debug_level = 0 }
+
+    -- Find the InternetGatewayDevice
+    local ret, err = u:discoverIGD()
+
+    if err then
+	print("FAILED: " .. err)
+	return 1
+    end
+
+    -- Check ip's
+    local server_ip = assert(get_server_ip())
+    local public_ip = assert(get_public_ip())
+
+    if public_ip ~= server_ip then
+	local ext_ip = assert(u:GetExternalIPAddress())
+
+	if ext_ip ~= server_ip then
+	    print("** WARNING: Your server ip is [" .. server_ip .. "], your public ip is [" .. public_ip .. "] and your router reports your external ip as [" .. ext_ip .. "]")
+	    if ext_ip ~= "0.0.0.0" then
+		print("** Not sending port forwarding requests since this server is not setup to use the external ip [" .. ext_ip .. "] of your network.")
+		return 0
+	    else
+		print("** Ignoring 0.0.0.0 external ip address reported by your router.");
+	    end
+	end
+    end
+
+    -- Clear prior mappings (if any)
+    for _,map in pairs(port_map) do
+	if u:DeletePortMapping(unpack(map)) then
+	    print("Removed old port forward: " .. table.concat(map, '/'))
+	end
+    end
+
+    -- Add new mappings
+    for _,map in pairs(port_map) do
+	local ret, err = u:AddPortMapping(unpack(map))
+
+	if err then
+	    print("Error while forwarding " .. table.concat(map, '/') .. ": " .. err)
+	    return 2
+	end
+
+	print("Added port forward: " .. table.concat(map, '/'))
+    end
+
+    return 0
+end
+
+if not setfenv then -- Lua 5.2+
+  -- based on http://lua-users.org/lists/lua-l/2010-06/msg00314.html
+  -- this assumes f is a function
+  local function findenv(f)
+    local level = 1
+    repeat
+      local name, value = debug.getupvalue(f, level)
+      if name == '_ENV' then return level, value end
+      level = level + 1
+    until name == nil
+    return nil end
+  getfenv = function (f) return(select(2, findenv(f)) or _G) end
+  setfenv = function (f, t)
+    local level = findenv(f)
+    if level then debug.setupvalue(f, level, t) end
+    return f end
+end
+
+function load_config(cfgFile, searchPaths)
+    local config_path = ""
+
+    for _, dir in pairs(searchPaths) do
+	local p = dir .. "/" .. cfgFile
+	local f = io.open(p)
+	if f then
+	    config_path = p
+	    f:close()
+	    break
+	end
+    end
+
+    if config_path == "" then
+	io.stderr:write(arg[0] .. ": Can't find " .. cfgFile .. "\n");
+	os.exit(2)
+    end
+
+    local config = setmetatable({}, {__index=_G})
+    assert(pcall(setfenv(assert(loadfile(config_path)), config)))
+    setmetatable(config, nil)
+    return config
+end
+
+function get_galaxy_ports(emu_cfg)
+    local ports = { }
+    local fh = io.popen('/usr/bin/mysql ' .. emu_cfg.DBName .. ' -u' .. emu_cfg.DBUser .. ' -p"' .. emu_cfg.DBPass .. '" -BN -e "select port from galaxy"', "r")
+
+    if fh then
+	for ln in fh:lines() do
+	    ports[#ports+1] = tonumber(ln)
+	end
+
+	fh:close()
+    end
+
+    return ports
+end
+
+function get_yoda_sslport()
+    local fh = io.open(os.getenv("HOME") .. "/server/openresty/nginx/conf/nginx.conf", "r")
+
+    if fh then
+	for ln in fh:lines() do
+	    local m = ln:match(".*listen%s+(%d+)%s+ssl.*")
+	    if m then
+		return tonumber(m)
+	    end
+	end
+    end
+
+    return nil
+end
+
+function get_server_ip()
+    local zonamadev_config_home = os.getenv("ZONAMADEV_CONFIG_HOME") or (os.getenv("HOME") .. "/.config/ZonamaDev")
+
+    -- Default to localhost
+    local server_ip = "127.0.0.1"
+
+    local fh = io.open(zonamadev_config_home .. "/config/server_ip")
+
+    if fh then
+	server_ip = fh:read("*l")
+	fh:close()
+    end
+
+    return server_ip
+end
+
+function get_public_ip()
+    local public_ip = nil
+    local fh = io.popen("dig @ns1.google.com -t txt o-o.myaddr.l.google.com +short | tr -d '\"'")
+
+    if fh then
+	public_ip = fh:read("*l")
+	fh:close()
+    end
+
+    return public_ip
+end
+
+function zdcfg_check_flag(flag)
+    local zonamadev_config_home = os.getenv("ZONAMADEV_CONFIG_HOME") or (os.getenv("HOME") .. "/.config/ZonamaDev")
+
+    local fh = io.open(zonamadev_config_home .. "/flags/" .. flag)
+
+    if fh then
+	fh:close()
+	return true
+    end
+
+    return false
+end
+
+if not uPnPclient_ok then
+    -- Depends on https://luarocks.org/modules/karlbunch/upnpclient from https://github.com/karlbunch/lua-upnclient
+    -- If you're missing this run: sudo luarocks install upnpclient
+    io.stderr:write(arg[0]
+        .. ": ERROR: Missing upnpclient module\n\n"
+	.. "To enable upnp you need to install the upnpclient module:\n\n"
+	.. "    sudo luarocks install upnpclient\n\n"
+    );
+    os.exit(2);
+end
+
+os.exit(main())
