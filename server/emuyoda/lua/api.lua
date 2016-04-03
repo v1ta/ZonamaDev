@@ -828,7 +828,7 @@ function service_status(path)
     local res, err, errno, sqlstate = db_query("SELECT COUNT(*) as `count` FROM `accounts`;")
 
     if res then
-	r.response.server_status.num_accounts = res[1]['count']
+	r.response.server_status.num_accounts = tonumber(res[1]['count'])
     else
 	r.response.server_status.mysql_error = errno .. ': ' .. err .. ' (' .. sqlstate .. ')'
     end
