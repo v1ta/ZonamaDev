@@ -31,6 +31,13 @@ define(["./module"], function (controllers) {
       }).catch(function () {
         $scope.error = "/api/config call failed";
       }), yodaApiService.getStatus().then(function (data) {
+	if (data.response.server_status.zoneServer_error) {
+	    if (data.response.server_status.zoneServer_error.indexOf('read stream from socket') > -1) {
+		data.response.server_status.zoneServer_error = 'Server not running';
+	    } else {
+		delete data.response.server_status.zoneServer_error;
+	    }
+	}
         $scope.server_status = data.response.server_status;
       }).catch(function () {
         $scope.error = "/api/status call failed";
