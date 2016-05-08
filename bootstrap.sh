@@ -226,7 +226,7 @@ check_virtualbox_linux() {
     local ver=$("${vbm}" --version)
 
     case $ver in
-	5.[0-9].1[2-9]* ) : ;;
+	5.[0-9].1[2-9]* | 5.[0-9].[2-9]* ) : ;;
 	* ) echo "Unsupported version of virtualbox ($ver), please upgrade to 5.0.12 or higher"
 	    exit 1
 	    ;;
