@@ -13,7 +13,7 @@
 * [ANH Wiki](http://wiki.swganh.org/index.php/Main_Page)
 * [Convo Editor](http://www.bluree.net/convos/)
 * [String Search Tool](http://swg.bass-speaker.com/strings.php)
-* [Netyoda's Creature Database](http://www.netyoda.co.uk/swg/mobs/critters.php?srt=creature&d=d)
+* [Netyoda's Creature Database](http://creaturedb.netyoda.co.uk/)
 * [Previous FastTrack VM Image](http://www.swgemu.com/forums/showthread.php?t=85624)
 
 ### Fun
