@@ -5,7 +5,7 @@ check-ldt-prefs() {
 
   read sum p <<< $(md5sum "${path}")
 
-  if [ "$p" -ne "20b40404d68380f39555ad7d2c47431e" ]; then
+  if [ "$sum" != "20b40404d68380f39555ad7d2c47431e" ]; then
       return
   fi
 
