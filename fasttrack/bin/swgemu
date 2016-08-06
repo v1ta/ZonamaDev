@@ -364,7 +364,7 @@ server_build() {
 
     cd "${BUILD_DIR}"
 
-    local extra=''
+    local extra="$*"
 
     local bdb_ver=$(sed -ne '/.*-ldb-\([0-9.]*\).*/s//\1/p' src/Makefile.am)
 
@@ -383,6 +383,38 @@ server_build() {
 	fi
     fi
 
+    if eval $LUA53_TEST_SRC > /dev/null 2>&1; then
+	if [ ! -d "${LUA53_TEST_DIR}" ]; then
+	    echo "** Source requires lua 5.3 but ${LUA53_TEST_DIR} doesn't exist."
+
+	    local upgrade_script=$(echo $HOME/ZonamaDev/fasttrack/scripts/devsetup.d/*lua53)
+	    local ret=255
+
+	    if [ -f "$upgrade_script" ]; then
+		echo
+		echo "##########################################"
+		echo "## AUTO-UPGRADING YOUR LUA TO LUA 5.3.x ##"
+		echo "##########################################"
+		echo
+		(cd $HOME;$HOME/ZonamaDev/fasttrack/scripts/devsetup --force $(basename $upgrade_script))
+
+		ret=$?
+		if [ $ret -eq 0 ]; then
+		    rm -f build/unix/config.log
+		    extra='clean '
+		fi
+	    else
+		ret=254
+		echo "** Can't find lua53 upgrade script!?"
+	    fi
+	    
+	    if [ $ret -ne 0 ]; then
+		echo "** You need to manually upgrade Lua to 5.3.x before you can build the server codebase. (ERR=${ret}) **"
+		return 12
+	    fi
+	fi
+    fi
+
     if [ ! -f build/unix/config.log ]; then
         extra="${extra}config"
     fi
@@ -392,37 +424,6 @@ server_build() {
         return 0
     else
         echo "** BUILD FAILED **"
-
-	# Check to see if build failed because of new lua 5.3.x code requirements...
-        if grep 'error: ‘lua_version’ was not declared in this scope' "${BUILD_LOG}"; then
-	    # Can we auto-upgrade them?
-            local upgrade_script=$(echo $HOME/ZonamaDev/fasttrack/scripts/devsetup.d/*lua53)
-
-            if [ -f "$upgrade_script" ]; then
-                echo
-                echo "##########################################"
-                echo "## AUTO-UPGRADING YOUR LUA TO LUA 5.3.x ##"
-                echo "##########################################"
-                echo
-                (cd $HOME;$HOME/ZonamaDev/fasttrack/scripts/devsetup --force $(basename $upgrade_script))
-
-                if [ $? -eq 0 ]; then
-                    # try one more time
-                    if server_build_step config clean; then
-                        echo "** BUILD SUCCESS IN $SECONDS SECOND(S) **"
-                        return 0
-                    else
-                        echo "** BUILD FAILED AGAIN, GET HELP! **"
-                        return 13
-                    fi
-                else
-                    echo "** Failed to auto-upgrade to Lua 5.3.x **"
-                fi
-            fi
-            echo '** You need to manually upgrade Lua to 5.3.x before you can build the server codebase. **'
-            return 12
-        fi
-
         return 11
     fi
 }
