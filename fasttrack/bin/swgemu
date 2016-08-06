@@ -329,7 +329,7 @@ server_build_step() {
     echo "Logging to ${BUILD_LOG}"
 
     (
-        if [ -n "$@" ]; then
+        if [ -n "$#" ]; then
 	    echo make -k $@
 	    make -k $@
 	fi
@@ -366,8 +366,25 @@ server_build() {
 
     local extra=''
 
+    local bdb_ver=$(sed -ne '/.*-ldb-\([0-9.]*\).*/s//\1/p' src/Makefile.am)
+
+    if [ "X${bdb_ver}" != 'X5.0' ]; then
+	if dpkg -s libdb5.3-dev > /dev/null 2>&1; then
+	    :
+	else
+	    echo
+	    echo "##########################################"
+	    echo "## AUTO-UPGRADING YOUR BDB TO BDB 5.3.x ##"
+	    echo "##########################################"
+	    echo
+	    sudo apt-get install -y libdb5.3-dev
+	    rm -f build/unix/config.log
+	    extra='clean '
+	fi
+    fi
+
     if [ ! -f build/unix/config.log ]; then
-        extra='config'
+        extra="${extra}config"
     fi
 
     if server_build_step $extra; then
