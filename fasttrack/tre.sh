@@ -219,6 +219,8 @@ last_tre=${trefiles[$i]}
 
 check_cmds
 
+cd $(dirname $0)
+
 main "$@"
 
 # :vi ft=sh sw=4 ai
