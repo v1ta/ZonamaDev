@@ -10,6 +10,7 @@
 ]]
 
 local uPnPclient_ok, uPnPclient = pcall(_G.require, 'uPnPclient')
+local unpack = table.unpack or unpack
 
 function main()
     if not zdcfg_check_flag('enable_upnp') then
