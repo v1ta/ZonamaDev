@@ -8,48 +8,43 @@
 #
 
 GERRIT_FIRSTTIME=false
+GERRIT_RETRY=false
 
 setup_gerrit() {
-    # is it setup already?
-    local gerrit_username=$(zdcfg get gerrit_username 2>/dev/null)
+    local l="${ASSETS_DIR}/openid_providers.txt"
+    local h=$(expr 100 + $(wc -l<$l) \* 20)
+    local r=$(egrep -v '^#' $l|cut -d'|' -f1|zenity --list --title="Choose your openId Provider" --column="OpenId Provider" --height=$h --width=300)
+    echo "Provider=[$r]"
 
-    if [ -z "$gerrit_username" -o "$gerrit_username" = "$GERRIT_UNKNOWN_USER" ]; then
-	# Looks like we need to get them started
-	local l="${ASSETS_DIR}/openid_providers.txt"
-	local h=$(expr 100 + $(wc -l<$l) \* 20)
-	local r=$(egrep -v '^#' $l|cut -d'|' -f1|zenity --list --title="Choose your openId Provider" --column="OpenId Provider" --height=$h --width=300)
-	echo "Provider=[$r]"
+    local url=$GERRIT_REGISTER_URL
 
-	local url=$GERRIT_REGISTER_URL
+    if [ -n "$r" -a "$?" -eq 0 ]; then
+	url="${url}"$(egrep "^$r\|" $l|cut -d '|' -f2)
+    fi
 
-	if [ -n "$r" -a "$?" -eq 0 ]; then
-	    url="${url}"$(egrep "^$r\|" $l|cut -d '|' -f2)
-	fi
+    echo "url=[$url]"
 
-	echo "url=[$url]"
-	
-        if xsel -b -i < ~/.ssh/id_rsa.pub; then
-	    alert "SSH Key" "Your ssh key has been added to the clipboard so you can paste it into Gerrit's registration form"
-	fi
+    if xsel -b -i < ~/.ssh/id_rsa.pub; then
+	alert "SSH Key" "Your ssh key has been added to the clipboard so you can paste it into Gerrit's registration form"
+    fi
 
-	alert 'Login and Register with Gerrit' 'Please follow these steps:\n  1) Login to your openID provider\n  2) Set your gerrit username\n  3) Paste you SSH key into the ssh field and hit [Add]\n  4) Exit the browser to continue'
+    alert 'Login and Register with Gerrit' 'Please follow these steps:\n  1) Login to your openID provider\n  2) Set your gerrit username\n  3) Paste you SSH key into the ssh field and hit [Add]\n  4) Exit the browser to continue'
 
-	$BROWSER "$url" > /dev/null 2>&1
+    $BROWSER "$url" > /dev/null 2>&1
 
-	xsel -c
+    xsel -c
 
-	local r=$(zenity --entry --title="Gerrit Username" --text="What is your Registered Gerrit Username?")
+    local r=$(zenity --entry --title="Gerrit Username" --text="What is your Registered Gerrit Username?")
 
-	echo "response=[$r]"
+    echo "response=[$r]"
 
-	if [ -n "$r" -a "$?" -eq 0 ]; then
-	    echo "gerrit_username=[$r]"
-	    zdcfg set gerrit_username "$r"
-	    setup_sshconfig
-	    GERRIT_FIRSTTIME=true
-	else
-	    error "Gerrit Registration Required\nYou must register, pick a username and set you ssh key before you can continue!" 202
-	fi
+    if [ -n "$r" -a "$?" -eq 0 ]; then
+	echo "gerrit_username=[$r]"
+	zdcfg set gerrit_username "$r"
+	setup_sshconfig
+	GERRIT_FIRSTTIME=true
+    else
+	error "Gerrit Registration Required\nYou must register, pick a username and set you ssh key before you can continue!" 202
     fi
 }
 
@@ -84,8 +79,11 @@ if [ -z "$BROWSER" -o ! -x "$BROWSER" ]; then
     error "Can't find web browser!\nYou must have a web browser installed to setup gerrit, did you remove it!?" 204
 fi
 
-# TODO should we count the number of loops and at some point kill ssh keys etc?
-GERRIT_RETRY=true
+GERRIT_USERNAME=$(zdcfg get gerrit_username 2>/dev/null)
+
+if [ -z "$GERRIT_USERNAME" -o "$GERRIT_USERNAME" = "$GERRIT_UNKNOWN_USER" ]; then
+    GERRIT_RETRY=true
+fi
 
 while $GERRIT_RETRY
 do
