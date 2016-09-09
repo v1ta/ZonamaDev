@@ -19,12 +19,18 @@ internet_test() {
     fi
 
     # TODO should we try and pull a large asset and test their internet speed or do we care?
-    if curl -s "${GERRIT_HOST}" > /dev/null; then
+    if curl -m 10 -s "${GERRIT_HOST}" > /dev/null; then
 	echo "${GERRIT_HOST} responds!"
     else
-	alert "Access to ${GERRIT_HOST} Required" "Setup can not continue until ${GERRIT_HOST} is available from this machine"
-	zenity --error --title "Access to ${GERRIT_HOST} Required" --text "We were unable to connect to ${GERRIT_HOST}\n\nTHIS HOST MUST BE AVAILABLE TO SETUP THIS BOX\n\nFIX IT OR GET HELP!"
-	exit 201
+	local gerrit_username=$(zdcfg get gerrit_username 2>/dev/null)
+
+	if [ -z "$gerrit_username" -o "$gerrit_username" = "$GERRIT_UNKNOWN_USER" ]; then
+	    alert "Access to ${GERRIT_HOST} Required" "Setup can not continue until ${GERRIT_HOST} is available from this machine"
+	    zenity --error --title "Access to ${GERRIT_HOST} Required" --text "We were unable to connect to ${GERRIT_HOST}\n\nTHIS HOST MUST BE AVAILABLE TO SETUP THIS BOX\n\nFIX IT OR GET HELP!"
+	    exit 201
+	else
+	    alert "Warning ${GERRIT_HOST} Failure" "WARNING: ${GERRIT_HOST} is not available!  You will not be able to pull or push code until this is resolved."
+	fi
     fi
 
     # Warn them if they seem to be a bit slow (so they don't bitch later about how long things take)
