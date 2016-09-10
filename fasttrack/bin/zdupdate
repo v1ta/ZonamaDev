@@ -11,11 +11,11 @@ check_update() {
     echo "** Checking $PWD"
     getgiturl "check"
 
+    git fetch --all
+
     local rev_local=$(git rev-parse @{0})
     local rev_remote=$(git rev-parse @{u})
     local rev_base=$(git merge-base @{0} @{u})
-
-    git fetch --all
 
     if [ "${rev_local}" = "${rev_remote}" ]; then
 	echo "Up-to-date"
