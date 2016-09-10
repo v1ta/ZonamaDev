@@ -41,16 +41,36 @@ update_zd() {
 
     local tag=$(git describe --tag)
 
-    # try and notify user
-    export DISPLAY=':0'
-    if xset q > /dev/null 2>&1; then
-	notify-send --icon=${ASSETS_DIR}/swgemu_icon.png --expire-time=0 "Updated ZonamaDev" "Updated ZonamaDev to ${tag}"
-	echo "Updated ZonamaDev to ${tag}"
-    fi
+    alert "Updated ZonamaDev" "Updated ZonamaDev to ${tag}"
 }
 
 getgiturl() {
     export ZDGITURL=$(curl -s http://downloads.lordkator.com/swgemudev/giturl.txt'?x-zdupdate='"${1}"'&x-uuid='$(sudo /usr/sbin/dmidecode -s system-uuid)'&x-version='$(cat /.swgemudev.version)'&x-zd-version='$(git describe --tag)'&x-id='$(cat /var/lib/dbus/machine-id))
+}
+
+alert() {
+    if [ -z "$HAVEX" ]; then
+	export HAVEX=false
+	export DISPLAY=':0'
+	if xset q > /dev/null 2>&1; then
+	    export HAVEX=true
+	else
+	    unset DISPLAY
+	fi
+    fi
+
+    local ttl=86400
+
+    if [ ! -z "$3" ]; then
+	ttl=$3
+    fi
+
+    if $HAVEX; then
+	notify-send --icon=${ASSETS_DIR}/swgemu_icon.png --expire-time=${ttl} "$1 - $(date)" "$2"
+	echo "USER ALERT: $1 - $2"
+    else
+	echo "**ALERT** $1: $2"
+    fi
 }
 
 pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
@@ -77,6 +97,7 @@ fi
 
 AUTO_UPDATE=false
 AUTO_RELOAD=false
+VERBOSE=false
 
 if zdcfg check-flag autoupdate_zd; then
     AUTO_UPDATE=true
@@ -89,6 +110,9 @@ do
     fi
     if [ "X$i" = "X--auto" ]; then
 	AUTO_RELOAD=true
+    fi
+    if [ "X$i" = "X--verbose" ]; then
+	VERBOSE=true
     fi
 done
 
@@ -104,10 +128,17 @@ if ! check_update "$@"; then
 	    else
 		unset DISPLAY
 	    fi
-	    echo "** RUNNING devsetup **"
-	    (unset ME; exec /home/vagrant/ZonamaDev/fasttrack/scripts/devsetup)
+	    alert "ZondamaDev Update Running" "Running devsetup"
+	    (unset ME; exec /home/vagrant/ZonamaDev/fasttrack/scripts/devsetup > /dev/null 2>&1)
 	    echo "** devsetup returned $?"
+	    alert "ZondamaDev Updated" "Completed devsetup"
+	else
+	    alert "ZondamaDev Updated" "Please reboot to run latest version" 0
 	fi
+    fi
+else
+    if $VERBOSE; then
+	alert "ZonamaDev Update" "You are up to date"
     fi
 fi
 
