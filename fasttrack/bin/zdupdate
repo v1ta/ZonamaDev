@@ -41,7 +41,7 @@ update_zd() {
 
     local tag=$(git describe --tag)
 
-    alert "Updated ZonamaDev" "Updated to ${tag}"
+    alert "Updated ZonamaDev" "Updated to ${tag}" 0
 }
 
 getgiturl() {
