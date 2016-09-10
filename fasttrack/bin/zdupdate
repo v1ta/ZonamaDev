@@ -41,7 +41,7 @@ update_zd() {
 
     local tag=$(git describe --tag)
 
-    alert "Updated ZonamaDev" "Updated ZonamaDev to ${tag}"
+    alert "Updated ZonamaDev" "Updated to ${tag}"
 }
 
 getgiturl() {
@@ -95,20 +95,22 @@ if [ -z "${ZDREPO}" -o ! -d "${ZDREPO}" ]; then
     exit 252
 fi
 
+VERBOSE=false
 AUTO_UPDATE=false
 AUTO_RELOAD=false
-VERBOSE=false
 
 if zdcfg check-flag autoupdate_zd; then
     AUTO_UPDATE=true
+    AUTO_RELOAD=true
 fi
 
 for i in "$@"
 do
-    if [ "X$i" = "X--force" -o "X$i" = "X--yes" ]; then
+    if [ "X$i" = "X--update" ]; then
 	AUTO_UPDATE=true
     fi
     if [ "X$i" = "X--auto" ]; then
+	AUTO_UPDATE=true
 	AUTO_RELOAD=true
     fi
     if [ "X$i" = "X--verbose" ]; then
@@ -122,12 +124,6 @@ if ! check_update "$@"; then
 	update_zd
 
 	if $AUTO_RELOAD; then
-	    export DISPLAY=':0'
-	    if xset q > /dev/null 2>&1; then
-		:
-	    else
-		unset DISPLAY
-	    fi
 	    alert "ZondamaDev Update Running" "Running devsetup"
 	    (unset ME; exec /home/vagrant/ZonamaDev/fasttrack/scripts/devsetup > /dev/null 2>&1)
 	    echo "** devsetup returned $?"
@@ -135,6 +131,8 @@ if ! check_update "$@"; then
 	else
 	    alert "ZondamaDev Updated" "Please reboot to run latest version" 0
 	fi
+    else
+	alert "ZondamaDev Out Of Date" "To update to the latest version please stop the server then click [Applications Menu]->[Log Out]->[Restart]" 0
     fi
 else
     if $VERBOSE; then
