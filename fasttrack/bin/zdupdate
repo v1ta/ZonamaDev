@@ -1,0 +1,113 @@
+#!/bin/bash
+#
+# zdupdate - check/update zd
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Sat Sep 10 07:48:31 EDT 2016
+#
+
+check_update() {
+    echo "** Checking $PWD"
+    getgiturl "check"
+
+    local rev_local=$(git rev-parse @{0})
+    local rev_remote=$(git rev-parse @{u})
+    local rev_base=$(git merge-base @{0} @{u})
+
+    git fetch --all
+
+    if [ "${rev_local}" = "${rev_remote}" ]; then
+	echo "Up-to-date"
+	return 0
+    elif [ "${rev_local}" = "${rev_base}" ]; then
+	echo "Need to pull"
+	return 1
+    elif [ "${rev_remote}" = "${rev_base}" ]; then
+	echo "Need to push"
+	return 0
+    fi
+
+    echo "Unknown state"
+    return 0
+}
+
+update_zd() {
+    echo "** Update ${ZDREPO}"
+    git stash
+    git pull
+
+    getgiturl "updated"
+
+    local tag=$(git describe --tag)
+
+    # try and notify user
+    export DISPLAY=':0'
+    if xset q > /dev/null 2>&1; then
+	notify-send --icon=${ASSETS_DIR}/swgemu_icon.png --expire-time=0 "Updated ZonamaDev" "Updated ZonamaDev to ${tag}"
+	echo "Updated ZonamaDev to ${tag}"
+    fi
+}
+
+getgiturl() {
+    export ZDGITURL=$(curl -s http://downloads.lordkator.com/swgemudev/giturl.txt'?x-zdupdate='"${1}"'&x-uuid='$(sudo /usr/sbin/dmidecode -s system-uuid)'&x-version='$(cat /.swgemudev.version)'&x-zd-version='$(git describe --tag)'&x-id='$(cat /var/lib/dbus/machine-id))
+}
+
+pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
+export ME=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
+popd > /dev/null
+
+# Hunt for local ZonamaDev repo
+dir=$(dirname $ME)
+for i in "$HOME" "${dir}" "${dir}/.." "${dir}/../.." "${dir}/../../.."
+do
+    dir="${i}/ZonamaDev"
+
+    if [ -d "${dir}/.git" ]; then
+	export ZDREPO="${dir}"
+	cd "${dir}"
+	break
+    fi
+done
+
+if [ -z "${ZDREPO}" -o ! -d "${ZDREPO}" ]; then
+    echo "** ERROR: Can not find ZonamaDev repo, GET HELP!"
+    exit 252
+fi
+
+AUTO_UPDATE=false
+AUTO_RELOAD=false
+
+if zdcfg check-flag autoupdate_zd; then
+    AUTO_UPDATE=true
+fi
+
+for i in "$@"
+do
+    if [ "X$i" = "X--force" -o "X$i" = "X--yes" ]; then
+	AUTO_UPDATE=true
+    fi
+    if [ "X$i" = "X--auto" ]; then
+	AUTO_RELOAD=true
+    fi
+done
+
+if check_update "$@"; then
+    if $AUTO_UPDATE; then
+	update_zd
+
+	if $AUTO_RELOAD; then
+	    export DISPLAY=':0'
+	    if xset q > /dev/null 2>&1; then
+		:
+	    else
+		unset DISPLAY
+	    fi
+	    echo "** RUNNING devsetup **"
+	    /home/vagrant/ZonamaDev/fasttrack/scripts/devsetup
+	    echo "** devsetup returned $?"
+	fi
+    fi
+fi
+
+exit $?
