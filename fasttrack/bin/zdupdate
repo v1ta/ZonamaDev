@@ -66,7 +66,7 @@ alert() {
     fi
 
     if $HAVEX; then
-	notify-send --icon=${ASSETS_DIR}/swgemu_icon.png --expire-time=${ttl} "$1 - $(date)" "$2"
+	notify-send --icon=${ASSETS_DIR}/swgemu_icon.png --expire-time=${ttl} "$1 - $(date)" "\n$2"
 	echo "USER ALERT: $1 - $2"
     else
 	echo "**ALERT** $1: $2"
@@ -132,7 +132,7 @@ if ! check_update "$@"; then
 	    alert "ZondamaDev Updated" "Please reboot to run latest version" 0
 	fi
     else
-	alert "ZondamaDev Out Of Date" "To update to the latest version please stop the server then click [Applications Menu]->[Log Out]->[Restart]" 0
+	alert "ZondamaDev Out Of Date" "To update to the latest version:\n\n\t1) Stop the emu server\n\n\t2) Click: [Applications Menu]->[Log Out]->[Restart]" 0
     fi
 else
     if $VERBOSE; then
