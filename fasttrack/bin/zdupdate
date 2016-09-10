@@ -92,7 +92,8 @@ do
     fi
 done
 
-if check_update "$@"; then
+if ! check_update "$@"; then
+    echo "** Out of date"
     if $AUTO_UPDATE; then
 	update_zd
 
@@ -104,7 +105,7 @@ if check_update "$@"; then
 		unset DISPLAY
 	    fi
 	    echo "** RUNNING devsetup **"
-	    /home/vagrant/ZonamaDev/fasttrack/scripts/devsetup
+	    (unset ME; exec /home/vagrant/ZonamaDev/fasttrack/scripts/devsetup)
 	    echo "** devsetup returned $?"
 	fi
     fi
