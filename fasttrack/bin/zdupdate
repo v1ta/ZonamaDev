@@ -73,6 +73,8 @@ alert() {
     fi
 }
 
+export PATH=$PATH:$HOME/bin
+
 pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
 export ME=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
 popd > /dev/null
