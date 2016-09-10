@@ -8,7 +8,7 @@
 #
 
 setup_crontab() {
-    (let "hr=$RANDOM % 24";crontab -l|grep -v zdupdate;echo '*/30 '${hr}' * * * /home/vagrant/bin/zdupdate --auto 2>&1 | logger -i -t "swgemu.zdupdate"')|crontab
+    (let "hh=$RANDOM % 24";let "mm=$RANDOM % 60";crontab -l|grep -v zdupdate;echo ${mm}' '${hh}' * * * /home/vagrant/bin/zdupdate --auto 2>&1 | logger -i -t "swgemu.zdupdate"')|crontab
     crontab -l|egrep -v '^#'
 }
 
