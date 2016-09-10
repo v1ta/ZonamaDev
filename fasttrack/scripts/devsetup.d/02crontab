@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# 02crontab - Setup user's crontab
+#
+# Author: Lord Kator <lordkator@swgemu.com>
+#
+# Created: Sat Sep 10 10:04:27 EDT 2016
+#
+
+setup_crontab() {
+    (let "hr=$RANDOM % 24";crontab -l|grep -v zdupdate;echo '*/30 '${hr}' * * * /home/vagrant/bin/zdupdate --auto 2>&1 | logger -i -t "swgemu.zdupdate"')|crontab
+    crontab -l|egrep -v '^#'
+}
+
+setup_crontab
