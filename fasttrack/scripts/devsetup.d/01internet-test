@@ -19,7 +19,7 @@ internet_test() {
     fi
 
     # TODO should we try and pull a large asset and test their internet speed or do we care?
-    if curl -m 10 -s "${GERRIT_HOST}" > /dev/null; then
+    if curl -m 30 -s "${GERRIT_HOST}" > /dev/null; then
 	echo "${GERRIT_HOST} responds!"
     else
 	local gerrit_username=$(zdcfg get gerrit_username 2>/dev/null)
