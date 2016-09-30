@@ -643,6 +643,8 @@ server_backup() {
 
     local ret=$(<"${bustat}")
 
+    rm -f "${bustat}"
+
     if [ $ret -ne 0 ]; then
 	echo "** ERROR: Backup failed with status ${ret} **"
 	return ${ret}
