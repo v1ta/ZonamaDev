@@ -537,7 +537,7 @@ server_backup() {
             autobackup=true
             shift
         elif [ "X$1" = "X--tag" ]; then
-            user_tag="$2"
+            user_tag="-$2"
             shift; shift;
         fi
     done
