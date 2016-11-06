@@ -15,7 +15,7 @@ IS_API_CALL=false
 
 main() {
     local ret=255
-    local cmd=$1
+    local cmd=$(echo $1 | tr '[:upper:]' '[:lower:]')
     shift
 
     if is_setup_pending "$cmd"; then
@@ -29,18 +29,18 @@ main() {
     fi
 
     case $cmd in
-        'backup' )      server_backup   "$@";;
-        'build' )       server_build    "$@";;
-        'latest' )      server_latest   "$@";;
-        'postdebug' )   post_debug      "$@";;
-        'send' )        server_send     "$@";;
-        'restore' )     server_restore  "$@";;
-        'runUnitTests' )    server_runUnitTests "$@";;
-        'start' )       server_start    "$@";;
-        'status' )      server_status   "$@";;
-        'stop' )        server_stop     "$@";;
+        'backup' )       server_backup       "$@";;
+        'build' )        server_build        "$@";;
+        'latest' )       server_latest       "$@";;
+        'postdebug' )    post_debug          "$@";;
+        'send' )         server_send         "$@";;
+        'restore' )      server_restore      "$@";;
+        'rununittests' ) server_rununittests "$@";;
+        'start' )        server_start        "$@";;
+        'status' )       server_status       "$@";;
+        'stop' )         server_stop         "$@";;
         'reset_ip' | 'resetip' | 'reset-ip' )    reset_server_ip "$@";;
-        'version' )     show_version    "$@";;
+        'version' )      show_version        "$@";;
         'help' | * ) echo "Usage: $0 [backup|build|postdebug|latest|send|restore|runUnitTests|start|status|stop|reset_ip|version]"; return 1 ;;
     esac
 
@@ -756,22 +756,15 @@ server_restore()
     fi
 }
 
-server_runUnitTests()
+server_rununittests()
 {
-    cd "${RUN_DIR}"
+    local filter='*'
 
-    local user_tag=''
-    user_tag="$1"
-
-    if [ -z "${user_tag}" ]; then
-        ./core3 runUnitTests
-        shift;
-        return
-    else
-        ./core3 runUnitTests --gtest_filter="${user_tag}"
-        shift;
-        return
+    if [ -n "$1" ]; then
+        filter="$1"
     fi
+
+    (set -x; cd "${RUN_DIR}"; ./core3 runUnitTests --gtest_filter="${filter}")
 }
 
 show_version()
