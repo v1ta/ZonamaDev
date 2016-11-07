@@ -366,7 +366,7 @@ server_build() {
 
     cd "${BUILD_DIR}"
 
-    local extra="$*"
+    local extra=""
 
     local bdb_ver=$(sed -ne '/.*-ldb-\([0-9.]*\).*/s//\1/p' src/Makefile.am)
 
@@ -973,6 +973,8 @@ server_latest()
     (
         set -xe
         cd "${BUILD_DIR}"
+        git rm -f build/unix/Makefile build/unix/config.h build/unix/config.status || true
+        git checkout HEAD -- Makefile.in aclocal.m4 config.h.in configure src/client/Makefile.in src/client/aclocal.m4 src/client/config.h.in src/client/configure bin/conf/config.lua build/unix
         git stash save "swgemu-latest $(date)"
         git pull
         git stash pop
