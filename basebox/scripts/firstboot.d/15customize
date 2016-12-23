@@ -11,9 +11,14 @@ usermod -c "${ZDUSER}" ${ZDUSER}
 usermod ${ZDUSER} -a -G adm
 
 # Setup for auto-update
-echo -e "#!/bin/bash\nexport ZDUSER='${ZDUSER}'\n" > /.swgemudev.update
+cat << ! > /.swgemudev.update
+#!/bin/bash
+export ZDUSER='${ZDUSER}'
+export ZONAMADEV_URL='${ZONAMADEV_URL}'
+source ~${ZDUSER}/ZonamaDev/common/global.config
+!
 cat << '!' >> /.swgemudev.update
-(set -x;/usr/bin/perl -ne '$b="master";if(/zdbranch=(\S+)/){$b=$1} END {($u,$g,$ENV{"HOME"})=(getpwnam($ENV{"ZDUSER"}))[2,3,7];$)=$g;$>=$u;system("cd;id -a;pwd;set -x;pwd;git clone https://github.com/lordkator/ZonamaDev.git;cd ZonamaDev;git stash;git fetch;git checkout $b;git pull");}' /proc/cmdline)2>&1|logger -t $0
+(set -x;/usr/bin/perl -ne 'BEGIN{$r=$ENV{"ZONAMADEV_URL"};$b="master"} $b=$1 if(/zdbranch=(\S+)/);$r=$1 if(/zdrepo=(\S+)/); END{($u,$g,$ENV{"HOME"})=(getpwnam($ENV{"ZDUSER"}))[2,3,7];$)=$g;$>=$u;system("cd;id -a;pwd;set -x;pwd;git clone $r;cd ZonamaDev;git stash;git fetch;git checkout $b;git pull");}' /proc/cmdline)2>&1|logger -t $0
 !
 
 chmod 700 /.swgemudev.update
@@ -31,11 +36,11 @@ echo "Using systemd for rc.fasttrack"
 cat << ! > /lib/systemd/system/rc.fasttrack.service
 # This file is part of ZonamaDev
 #
-# See https://github.com/lordkator/ZonamaDev for more details
+# See https://github.com/Zonama/ZonamaDev for more details
 #
 [Unit]
 Description=ZonamaDev Boot Script
-Documentation=https://github.com/lordkator/ZonamaDev
+Documentation=https://github.com/Zonama/ZonamaDev
 Before=systemd-user-sessions.service
 After=dbus.socket
 

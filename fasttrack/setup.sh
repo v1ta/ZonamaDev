@@ -18,6 +18,8 @@ main() {
 	exit 1
     fi
 
+    source ../common/global.config
+
     if [ ! -f 'config.yml' ]; then
 	local cores=$(calc_cores)
 	if [ $cores -gt 0 ]; then
@@ -43,7 +45,7 @@ main() {
 
     if [ $ret -ne 0 ]; then
 	echo "** Vagrant failed to bring the VM image up, look at errors above for clues **"
-	echo "** If this continues get help here: https://github.com/lordkator/ZonamaDev/issues **"
+	echo "** If this continues get help here: ${ZONAMADEV_URL}/issues **"
 	exit 1
     fi
 

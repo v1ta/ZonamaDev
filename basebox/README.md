@@ -20,7 +20,7 @@ Right click in desired directory -> Bit Bash
 # Once you have cloned and have a bash shell:
 
 ```
-git clone https://github.com/lordkator/ZonamaDev.git
+git clone https://github.com/Zonama/ZonamaDev.git
 cd ZonamaDev/basebox
 # Once to install the plugins
 vagrant up

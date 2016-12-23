@@ -875,7 +875,7 @@ post_debug()
 
             if [ -n "$issue_num" ]; then
                 echo "** Found issue #${issue_num}"
-                url="https://github.com/lordkator/ZonamaDev/issues/"${issue_num}
+                url="${ZONAMADEV_URL}/issues/"${issue_num}
             else
                 echo -e "WARNING: Unexpected output from ghi:\n\t${issue}\n\nGET HELP!"
             fi

@@ -1,10 +1,10 @@
 #!/bin/bash
-
 if [ -z "$BASH_VERSION" ]; then
     echo "** MUST RUN FROM bash, please run again from bash! **"
     exit
 fi
 
+ZONAMADEV_URL='https://github.com/Zonama/ZonamaDev'
 OS='unknown'
 
 main() {
@@ -83,7 +83,7 @@ main() {
     echo "** ZDHOME=${PWD} **"
 
     ## Clone Repo
-    if git clone https://github.com/lordkator/ZonamaDev.git; then
+    if git clone ${ZONAMADEV_URL}; then
 	:
     else
 	case $PWD in
