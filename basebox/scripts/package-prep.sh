@@ -7,8 +7,13 @@
 # Created: Mon Dec 28 13:54:13 EST 2015
 #
 
-# TODO need a better way to NOT HARDCODE the username here
-source ~vagrant/ZonamaDev/common/global.config
+if [ -z "ZDUSER" ]; then
+    export ZDUSER='vagrant'
+fi
+
+source ~${ZDUSER}/ZonamaDev/common/global.config
+
+export PATH=${ZDHOME}/ZonamaDev/fasttrack/bin:$PATH
 
 cd ${ZDHOME}
 
