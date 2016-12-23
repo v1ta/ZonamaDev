@@ -5,6 +5,7 @@ if [ -z "$BASH_VERSION" ]; then
 fi
 
 ZONAMADEV_URL='https://github.com/Zonama/ZonamaDev'
+BASEBOX='zonama/zonamadev-deb-jessie'
 OS='unknown'
 
 main() {
@@ -25,7 +26,7 @@ main() {
 	    echo '  mkdir /c/swgemudev'
 	    echo '  export HOME=/c/swgemudev'
 	    echo '  cd $HOME'
-	    echo '  curl -L http://downloads.lordkator.com/bootstrap.sh | bash'
+	    echo '  curl -L http://downloads.zonamaserver.com/zonamadev/bootstrap.sh | bash'
 	    echo
 	    echo 'However, every time you want to work with this system you will need to reset'
 	    echo 'your HOME when you open the bash shell window.'
@@ -346,7 +347,7 @@ reset_zd() {
     )
 
     echo "** Removing any cached copies of base box **"
-    vagrant box remove lordkator/swgemudev-deb-jessie --all --force
+    vagrant box remove ${BASEBOX} --all --force
 
     echo "** Looking for the ZonamaDev host directory..."
     local found_zd=false

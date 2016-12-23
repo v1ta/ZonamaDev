@@ -27,7 +27,7 @@ Right click in desired directory -> Git Bash
 
 Type:
 ````
-curl -L http://downloads.lordkator.com/bootstrap.sh | bash
+curl -L http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash
 ````
 
 Watch for instructions.
@@ -67,7 +67,7 @@ sudo dpkg -i <pathtofile>/<nameoffile>
 ````
 Type:
 ````
-curl -L http://downloads.lordkator.com/bootstrap.sh | bash
+curl -L http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash
 ````
 Watch for error messages, and resolve any unmet dependancy problems.  Each distro of linux has different versions:
 For example, on Debian Testing (Stretch) install should be able to do apt-get virtualbox and vagrant.
@@ -89,7 +89,7 @@ The system should update on reboot, please reboot the vm:
 To uninstall and re-install fresh on the host system type:
 
 ````
-curl -L http://downloads.lordkator.com/bootstrap.sh | bash -s destroy
+curl -L http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s destroy
 ````
 
 
@@ -98,7 +98,7 @@ curl -L http://downloads.lordkator.com/bootstrap.sh | bash -s destroy
 To uninstall on the host system type:
 
 ````
-curl -L http://downloads.lordkator.com/bootstrap.sh | bash -s uninstall
+curl -L http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s uninstall
 ````
 
 #### Local config for core and ram
