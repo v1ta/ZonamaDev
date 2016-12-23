@@ -28,21 +28,37 @@ echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources
     apt-get update
 
     # Upgrade whatever we can
-    apt-get -y -o Dpkg::Options::="--force-confnew" dist-upgrade
+    for i in 1 2 3
+    do
+        if apt-get -y -o Dpkg::Options::="--force-confnew" dist-upgrade; then
+            break
+        else
+            notice "apt-get dist-upgrade failed RET=$? RETRY=$i"
+        fi
+    done
 
     msg "Install Packages"
 
     echo ">> PACKAGES: $PACKAGES $EXTRAS"
 
-    apt-get -y install $PACKAGES $EXTRAS
+    for i in 1 2 3
+    do
+        if apt-get -y install $PACKAGES $EXTRAS; then
+            break
+        else
+            notice "apt-get failed RET=$? RETRY=$i"
+        fi
+    done
 
     apt-get -y autoremove
 
-    # Start out in text console until vbguest can update video drivers
-    systemctl set-default -f multi-user.target
+    if [ -d /etc/systemd ]; then
+        # Start out in text console until vbguest can update video drivers
+        systemctl set-default -f multi-user.target
 
-    # Wait a bit for network to start
-    systemctl enable systemd-networkd-wait-online
+        # Wait a bit for network to start
+        systemctl enable systemd-networkd-wait-online
+    fi
 )
 
 ret=$?
