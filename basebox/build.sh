@@ -109,7 +109,7 @@ package_box() {
 
     echo "** Executing package prep on guest..."
 
-    if ssh -t -F $sshcfg default "exec sudo ZDUSER=${USER} ZonamaDev/basebox/scripts/package-prep.sh '$version' '$builder'"; then
+    if ssh -t -F $sshcfg default "exec sudo ZDUSER=\${USER} ZonamaDev/basebox/scripts/package-prep.sh '$version' '$builder'"; then
 	msg "SUCCESS!"
     else
 	local st=$?

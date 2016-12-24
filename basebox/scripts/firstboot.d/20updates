@@ -52,7 +52,9 @@ echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources
 
     apt-get -y autoremove
 
-    if [ -d /etc/systemd ]; then
+    if dpkg -s sysvinit-core > /dev/null; then
+        :
+    else
         # Start out in text console until vbguest can update video drivers
         systemctl set-default -f multi-user.target
 

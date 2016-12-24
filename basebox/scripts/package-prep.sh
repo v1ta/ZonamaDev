@@ -110,11 +110,6 @@ dd if=/dev/zero of="$swappart" bs=1M > /dev/null 2>&1
 echo ">> Make new swap"
 /sbin/mkswap -U "$swapuuid" "$swappart"
 
-#####################
-## Fix permissions ##
-#####################
-chown -R ${ZDUSER}:${ZDUSER} ${ZDHOME}
-
 ###################################################
 ## Clean up any misc stuff in dev's user account ##
 ###################################################
@@ -184,6 +179,11 @@ echo '{ "build_version": "'$version'", "build_timestamp": '$(date -u +'%s, "buil
 # Ok let these run on first boot of new fasttrack image
 zdcfg clear-flag suspend_devsetup
 zdcfg clear-flag suspend_fasttrack
+
+#####################
+## Fix permissions ##
+#####################
+chown -R ${ZDUSER}:${ZDUSER} ${ZDHOME}
 
 # Wait for sync to disk
 echo ">> Sync disk"
