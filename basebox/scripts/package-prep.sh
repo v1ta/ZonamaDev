@@ -47,6 +47,8 @@ builder_name="$2"
 #########################
 
 if zdcfg get-flag firstboot/__full_run.status; then
+    :
+else
     echo "** It doesn't look like firstboot completed successfully!"
     echo "** PACKAGE ABORTED **"
     exit 3
