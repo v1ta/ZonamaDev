@@ -4,12 +4,19 @@
 #
 wait_fasttrack() {
    local timeout=30
+   local warn=5
    local delta=0
 
    while let "$timeout > 0"
    do
-       let "timeout=$timeout - 1"
        sleep 1
+       let "timeout=$timeout - 1"
+       let "warn=$warn - 1"
+
+       if let "$warn == 0"; then
+           alert "Please wait ${timeout} seconds for startup script to complete."
+       fi
+
        read tm_last st note <<<$(zdcfg get-flag rc.fasttrack/__full_run.status)
 
        if [ -z "$st" ]; then
@@ -18,13 +25,19 @@ wait_fasttrack() {
        fi
 
        let "delta=$(date +%s)-${tm_last}"
+       read tm_uptime <<<$(sed 's/[\. ].*//' /proc/uptime)
 
-       if [ "$delta" -lt 30 ]; then
-           echo "** rc.fasttrack completed ${delta} second(s) ago with status of ${st} ${note}"
+       if [ "$delta" -le "$tm_uptime" ]; then
+           echo "** rc.fasttrack ran since last boot (${tm_uptime}) ${delta} second(s) ago with status of ${st} ${note}"
+           break
        fi
 
-       echo "** last rc.fasttrack run was ${delta} second(s) ago with status of ${st} ${note}"
+       echo "** last rc.fasttrack run was ${delta} second(s) ago with status of ${st} ${note}, timeout in ${timeout} second(s)"
    done
+
+   if let "$timeout < 1"; then
+       alert "Timeouted waiting for rc.fasttrack to run, continuing anyway."
+   fi
 }
 
 wait_fasttrack
