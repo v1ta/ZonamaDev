@@ -54,3 +54,5 @@ if zdcfg check-flag suspend_fasttrack; then
     msg "SUSPENDING SETUP BECAUSE suspend_fasttrack flag EXISTS"
     exit 0
 fi
+#
+clear_full_run_status

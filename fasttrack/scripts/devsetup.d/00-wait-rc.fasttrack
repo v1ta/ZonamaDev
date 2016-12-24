@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# Wait for rc.fasttrack to finish
+#
+wait_fasttrack() {
+   local timeout=30
+   local delta=0
+
+   while let "$timeout > 0"
+   do
+       let "timeout=$timeout - 1"
+       sleep 1
+       read tm_last st note <<<$(zdcfg get-flag rc.fasttrack/__full_run.status)
+
+       if [ -z "$st" ]; then
+           echo "** waiting for rc.fasttrack to finish, timeout in ${timeout} second(s)"
+           continue
+       fi
+
+       let "delta=$(date +%s)-${tm_last}"
+
+       if [ "$delta" -lt 30 ]; then
+           echo "** rc.fasttrack completed ${delta} second(s) ago with status of ${st} ${note}"
+       fi
+
+       echo "** last rc.fasttrack run was ${delta} second(s) ago with status of ${st} ${note}"
+   done
+}
+
+wait_fasttrack

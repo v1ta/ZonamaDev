@@ -191,6 +191,10 @@ full_run_not_complete() {
     fi
 }
 
+clear_full_run_status() {
+    rm "${RUN_FLAGS_DIR}/__full_run.status"
+}
+
 full_run_complete() {
     date "+%s 0 seconds=$SECONDS" > "${RUN_FLAGS_DIR}/__full_run.status"
 }
