@@ -202,6 +202,8 @@ sleep 5
 
 sync;init 0
 
+sleep 5
+
 # these aren't the droids you're looking for...
 echo "** SHOULD NOT BE HERE! GET HELP! **"
 
