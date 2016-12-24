@@ -11,7 +11,12 @@ if [ -z "ZDUSER" ]; then
     export ZDUSER='vagrant'
 fi
 
-source ~${ZDUSER}/ZonamaDev/common/global.config
+eval source ~${ZDUSER}/ZonamaDev/common/global.config
+
+if [ -z "${ZDHOME}" ]; then
+    echo "** Failed to parse global.config file: ZDUSER=[${ZDUSER}]"
+    exit 42
+fi
 
 export PATH=${ZDHOME}/ZonamaDev/fasttrack/bin:$PATH
 
