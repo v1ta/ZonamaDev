@@ -4,7 +4,8 @@
 #
 wait_fasttrack() {
    local timeout=30
-   local warn=5
+   local warn=7
+   local warned=false
    local delta=0
 
    while let "$timeout > 0"
@@ -14,7 +15,9 @@ wait_fasttrack() {
        let "warn=$warn - 1"
 
        if let "$warn == 0"; then
-           alert "Please wait ${timeout} seconds for startup script to complete."
+           notice "Please wait up to ${timeout} seconds for startup script to complete."
+           warn=7
+           warned=true
        fi
 
        read tm_last st note <<<$(zdcfg get-flag rc.fasttrack/__full_run.status)
@@ -37,6 +40,10 @@ wait_fasttrack() {
 
    if let "$timeout < 1"; then
        alert "Timeouted waiting for rc.fasttrack to run, continuing anyway."
+   else
+       if $warned; then
+           alert "Startup scripts completed"
+       fi
    fi
 }
 
