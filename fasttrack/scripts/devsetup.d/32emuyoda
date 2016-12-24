@@ -39,10 +39,14 @@ install_yoda() {
 check_yoda() {
     echo "** Check ${YODA_URL} ***"
 
-    if curl -s -k "${YODA_URL}/api/status/" | python -m json.tool; then
-	echo "** /api/status success **"
-	return 0
-    fi
+    for i in 10 9 8 7 6 5 4 3 2 1
+    do
+        if curl -s -k "${YODA_URL}/api/status/" | python -m json.tool; then
+            echo "** /api/status success **"
+            return 0
+        fi
+        echo "** waiting $i seconds for /api/status to return ok"
+    done
 
     echo "** /api/status failed **"
     return 1
