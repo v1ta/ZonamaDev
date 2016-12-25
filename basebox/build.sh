@@ -57,6 +57,11 @@ build_box() {
 
     time vagrant up
 
+    sleep 5
+
+    echo "** Resizing to 1280x800"
+    vboxmanage controlvm $(<.vagrant/machines/default/virtualbox/id) setvideomodehint 1280 800 24
+
     # Use instructions from README.md
     echo
     echo "*** Manual Steps ***"

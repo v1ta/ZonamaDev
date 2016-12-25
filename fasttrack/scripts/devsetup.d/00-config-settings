@@ -14,7 +14,7 @@ GERRIT_REGISTER_URL='http://'${GERRIT_HOST}'/login/%23%2Fregister%2Fq%2Fstatus%3
 GERRIT_UNKNOWN_USER='darthvaderdev'
 #
 ## Which editors should we "consider" offering? (will check each before we offer)
-EDITORS='nano gedit gvim vim'
+EDITORS='nano gedit gvim geany'
 #
 ## Network settings
 PINGTEST_HOST=www.cisco.com # This has worked for eons, hope they keep it up

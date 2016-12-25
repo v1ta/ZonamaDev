@@ -170,7 +170,7 @@ ps -fu ${ZDUSER}
 echo ">> Cleanup /var/log"
 find /var/log -name \*.gz -o -name \*.[0-9] | xargs --no-run-if-empty -t rm 
 
-rm -fr /var/tmp/* /tmp/* /etc/ssh/ssh_host*_key* /root/.viminfo /root/.bash_history /root/.lesshst /root/.bash_history /root/.ssh/* /var/log/*.gz /var/log/*.[1-9]* /var/log/*.old /var/spool/anacron/*
+rm -fr /var/tmp/* /tmp/* /etc/ssh/ssh_host*_key* /root/.viminfo /root/.bash_history /root/.lesshst /root/.bash_history /root/.ssh/* /var/log/*.gz /var/log/*.[1-9]* /var/log/*.old /var/spool/anacron/* /var/spool/mail/*
 
 find /var/log ${ZDHOME}/server/openresty/nginx/logs /etc/machine-id /var/lib/dbus/machine-id -type f | while read fn
 do
