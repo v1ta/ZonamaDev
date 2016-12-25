@@ -41,6 +41,8 @@ else
 fi
 
 builder_name="$2"
+build_timestamp=$(date %+s)
+build_datetime=$(date -u --date="@${build_timestamp}" "+%Y-%m-%dT%H:%M:%SZ")
 
 #########################
 ## Verify system state ##
@@ -88,9 +90,28 @@ if [ $chrome_width -lt 1280 -o $chrome_height -lt 720 ]; then
     exit 6
 fi
 
+#####################
+## BRAND GRUB BOOT ##
+#####################
+if [ -x /usr/bin/convert ]; then
+    line1="ZonamaDev Box ${version}"
+    line2="Built by ${builder_name} on "$(date -u --date="@${build_timestamp}" +'%Y-%m-%d at %H:%M:%S %Z')
+    echo ">> Branding bootscreen with:"
+    echo ">> ** ${line1}"
+    echo ">> ** ${line2}"
+    convert /usr/share/images/desktop-base/lines-grub.png -gravity southeast ${ZDHOME}/Pictures/logo_yellow.png'[45%]' -geometry +0+5 -composite \
+        -gravity center -antialias -font Helvetica-Bold \
+        -pointsize 22 -fill black -annotate +1+206 "${line1}" -annotate +2+207 "${line1}" -fill gold -annotate +0+205 "${line1}" \
+        -pointsize 12 -fill black -annotate +1+226 "${line2}" -annotate +2+227 "${line2}" -fill grey -annotate +0+225 "${line2}" \
+        ${ZDHOME}/Pictures/swgemu-grub.png
+    sed -i -e '$ a GRUB_BACKGROUND="'"${ZDHOME}"'/Pictures/swgemu-grub.png"' -e '/GRUB_BACKGROUND/d' /etc/default/grub
+    /usr/sbin/update-grub
+fi
+
 ###############
 ## Clean apt ##
 ###############
+echo ">> Cleanup apt"
 apt-get --yes autoremove
 apt-get --yes clean
 
@@ -174,7 +195,7 @@ rm -f /EMPTY
 #################################
 echo "$version" > /.swgemudev.version
 chmod 644 /.swgemudev.version
-echo '{ "build_version": "'$version'", "build_timestamp": '$(date -u +'%s, "build_datetime": "%Y-%m-%dT%H:%M:%SZ"')', "builder_name": "'$builder_name'" }' | tee /.swgemudev.builinfo.json | python -m json.tool
+echo '{ "build_version": "'"${version}"'", "build_timestamp": '"${build_timestamp}"', "build_datetime": "'"${build_datetime}"'", "builder_name": "'"${builder_name}"'" }' | tee /.swgemudev.builinfo.json | python -m json.tool
 
 # Ok let these run on first boot of new fasttrack image
 zdcfg clear-flag suspend_devsetup
