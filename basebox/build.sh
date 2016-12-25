@@ -118,6 +118,9 @@ package_box() {
     # Wait for virtualbox to cleanly exit
     sleep 5
 
+    echo "** Removing old cached boxes"
+    vagrant box remove zonama/zonamadev-deb-jessie --all
+
     echo "** Ok now build the package!"
 
     # TODO - Include a Vagrantfile with hints/metadata?
