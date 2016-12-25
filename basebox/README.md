@@ -17,37 +17,45 @@ Launch Git Bash: Start -> Programs -> Git Bash
 or
 Right click in desired directory -> Bit Bash
 
-# Once you have cloned and have a bash shell:
+#### Build the box
 
-```
+```bash
 git clone https://github.com/Zonama/ZonamaDev.git
 cd ZonamaDev/basebox
-# Once to install the plugins
-vagrant up
-# One more time to get it going
-vagrant up
+./build.sh
 ```
 
 Currently this takes about 10 mins on a fairly fast internet connection and nice sized box.
 
-Once you have it up you need to do a couple things to prep for packaging:
+Follow steps in next section to prepare the box.
 
-1) Resize the virtualbox to 1280x800 using the "Display Size" icon on the bottom of the virtual box window
+### Manual steps
 
-2) Launch eclipse and clean up any positioning then close it.
+1. Resize the virtualbox to 1280x800 using the Virtualbox view menu.
+2. Launch eclipse, set default workspace as ~/workspace
+3. Install the Lua Development Tools LDT (http://download.eclipse.org/ldt/releases/milestones/)
+4. Import Projects in ~/workspace
+5. Associate *.idl *.lua *.h *.cpp *.lst with Eclipse
+6. Launch Chrome and verify it's positioned properly then close it.
+7. Launch Firefox and verify it's positioned properly, set home page to http://www.swgemu.com/
+8. Clean up the box for packaging: exec sudo ~vagrant/ZonamaDev/basebox/scripts/package-prep.sh "0.0.X" (next box version number)
+9. When the box halts from your host run: vagrant package
+10. Close all windows
 
-3) Launch Chrome and verify it's positioned properly then close it.
-
-4) Clean up the box for packaging: exec sudo ~vagrant/ZonamaDev/basebox/scripts/package-prep.sh "0.0.X" (next box version number)
-
-5) When the box halts from your host run: vagrant package
-
-6) Update the box in Altlas, don't forget to "Release" the version once it's setup.
-
-7) Update ../fasttrack/Vagrant with the new version number
-
-8) Test on a fasttrack setup
-
-9) Update git with new Vagrant files etc: git add ../fasttrack/Vagrantfile;git commit -m "New version 0.0.x"; git push
-
-10) Tell lots of people, good luck!
+### Publish
+1. Upload package-x.y.z.box to atlas
+2. Set the new version to x.y.z
+3. Don't forget to release the version in the atlas UI!
+3. Test the new box:
+```
+cd ../fasttrack
+vagrant destroy
+sed -i 's/config.vm.box_version = ".*"/config.vm.box_version = "x.y.z"/' Vagrantfile
+./setup.sh
+```
+4. If the tests pass then push the new fasttrack/Vagrantfile:
+```
+git add Vagrantfile
+git commit -m "Bump to box version x.y.z"
+git push
+```
