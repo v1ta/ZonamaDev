@@ -39,7 +39,7 @@ wait_fasttrack() {
    done
 
    if let "$timeout < 1"; then
-       alert "Timeouted waiting for rc.fasttrack to run, continuing anyway."
+       notice "Timeouted waiting for rc.fasttrack to run, continuing anyway."
    else
        if $warned; then
            alert "Startup scripts completed"
@@ -47,4 +47,8 @@ wait_fasttrack() {
    fi
 }
 
-wait_fasttrack
+if zdcfg check-flag suspend_devsetup; then
+    :
+else
+    wait_fasttrack
+fi
