@@ -53,7 +53,7 @@ vagrant destroy
 sed -i 's/config.vm.box_version = ".*"/config.vm.box_version = "x.y.z"/' Vagrantfile
 ./setup.sh
 ```
-4. If the tests pass then push the new fasttrack/Vagrantfile:
+If the tests pass then push the new fasttrack/Vagrantfile:
 ```
 git add Vagrantfile
 git commit -m "Bump to box version x.y.z"
