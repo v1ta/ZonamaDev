@@ -53,9 +53,11 @@ mktarball() {
     local oldtarball="${tarball}~"
     shift
 
-    echo "Creating ${tarball} with files: $@"
+    echo "** Creating ${tarball} with files: $@"
 
-    ssh -F "${SSHCONFIG}" default '(set -x;cd "'"${ZDHOME}"'";tar cvzf - '"$@"')' > "${newtarball}" 2> >(tee "${errfile}" >&2)
+    ssh -F "${SSHCONFIG}" default '(set -x;cd "'"${ZDHOME}"'";tar czf - '"$@"')' > "${newtarball}" 2> >(tee "${errfile}" >&2)
+
+    echo "**"
 
     local errcount=$(egrep '^tar: ' "${errfile}"|wc -l)
 
@@ -70,19 +72,21 @@ mktarball() {
 
     local count=$(tar tf "${newtarball}"|wc -l)
 
-    if [ "${count}" -gt 0 ]; then
-        echo "** SUCCESS **"
-
-        if [ -f "${tarball}" -a ! -f "${oldtarball}" ]; then
-            echo "Saved old tarball to ${oldtarball}"
-            mv "${tarball}" "${oldtarball}"
-        fi
-        mv "${newtarball}" "${tarball}"
-    else
+    if [ "${count}" -le 0 ]; then
         echo "** Failed to create tarball, look above for errors."
-        rm -f "${newtarball}"
+        rm -f "${newtarball}" "${errfile}"
         exit 11
     fi
+
+    echo "** SUCCESS, SAVED" ${count} "FILE(S) **"
+
+    if [ -f "${tarball}" -a ! -f "${oldtarball}" ]; then
+        echo "Saved old tarball to ${oldtarball}"
+        mv "${tarball}" "${oldtarball}"
+    fi
+
+    mv "${newtarball}" "${tarball}"
+    rm -f "${errfile}"
 }
 
 tarballprep() {
@@ -126,7 +130,7 @@ tarballprep() {
 
     echo -n '** Getting ssh config...'
     (cd $(dirname "${ZDCFGPATH}")"/../basebox";vagrant ssh-config > "${SSHCONFIG}")
-    echo
+    echo " **"
 
     if [ ! -s "${SSHCONFIG}" ]; then
         echo "** Failed to get ssh config from vagrant?"
