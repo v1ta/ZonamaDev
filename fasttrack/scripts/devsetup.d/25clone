@@ -37,18 +37,37 @@ clone_repos() {
     local status_file=$(mktemp /tmp/clone-status-file-XXXXXX)
 
     echo 255 > $status_file
-    mknod $status_pipe p
-    command_window "Clone Status" "tail -f $status_pipe"  &
+    mknod "${status_pipe}" p
+    command_window "Clone Status" "tail -f '${status_pipe}'"  &
     sleep 3
 
     (
-    echo 254 > $status_file
+    echo 254 > "${status_file}"
     echo -e 'H4sIACYziVYAA5WSYQpAIQiD/3eKwe5/x8h8ZaweKlE2PmyMyFEA6Y0Xff90P9vSA2UdRf+BrU/D\nc2VhU9PwMH7CyUAMFvp+f8UXpqrFKhxfBraT12QCBRuswPJvNJAZXwcxETL5fgIAAA=='|base64 -d|gunzip
-    trap 'echo $? > '${status_file}';echo -e "H4sIAC81iVYAA1NWBgMFIAATQArMg3IUlKHyEIoLJgxSAFOvgKwchUZSjzATv3plZOuVMdWjynOh\nO5NY9+A0n6B6qP0owQIPHi4ArjNqZE8BAAA="|base64 -d|gunzip' 0
+    trap 'echo $? > "'"${status_file}"'";echo -e "H4sIAC81iVYAA1NWBgMFIAATQArMg3IUlKHyEIoLJgxSAFOvgKwchUZSjzATv3plZOuVMdWjynOh\nO5NY9+A0n6B6qP0owQIPHi4ArjNqZE8BAAA="|base64 -d|gunzip' 0
     set -xe
     for i in $missing
     do
-	git clone --progress ssh://${GERRIT_HOST}/${i}.git
+        (
+            SECONDS=0
+            git clone --progress ssh://${GERRIT_HOST}/${i}.git
+            st=$?
+            echo $st > "${status_pipe}-${i}"
+            if [ "$st" -ne 0 ]; then
+                notice "Clone $i" "Failed after ${SECONDS} second(s) ERR=${st}"
+            else
+                notice "Clone $i" "Took ${SECONDS} second(s)"
+            fi
+        ) &
+    done
+    wait
+    for i in $missing
+    do
+        st=$(<"${status_pipe}-${i}")
+        if [ -z "$st" -o "$st" -ne "0" ]; then
+            msg "Failed to clone ${i}"
+            exit 200
+        fi
 	scp ${GERRIT_HOST}:hooks/commit-msg ${i}/.git/hooks
     done
     set +x
@@ -63,10 +82,10 @@ clone_repos() {
     echo -e 'H4sIAJ00iVYAA1NQBgEFBSBSAJNQPoxWVkZmwMS5YMrx0wro4lzYxRVw01wKaA7EUAF1F5oDFVCU\n47YI3TpyPYYebkSGIxcAebZM9YABAAA='|base64 -d|gunzip
     trap - 0
     echo 0 > $status_file
-    ) 2>&1 | tee $status_pipe
-    local ret=$(cat $status_file 2> /dev/null)
+    ) 2>&1 | tee "${status_pipe}"
+    local ret=$(cat "${status_file}" 2> /dev/null)
 
-    if [ -x "$ret" ]; then
+    if [ -z "$ret" ]; then
 	ret=256
     fi
 
@@ -75,8 +94,8 @@ clone_repos() {
     else
 	zenity --info --text="Clone process success.\n\nPress [OK] to discard the log window"
     fi
-    fuser -k $status_pipe
-    rm -f $status_pipe $status_file
+    fuser -k "${status_pipe}"
+    rm -f "${status_pipe}"* "${status_file}"
 }
 
 check_repos() {
