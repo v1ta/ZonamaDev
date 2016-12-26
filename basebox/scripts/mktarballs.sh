@@ -32,6 +32,7 @@ main() {
         .config/google-chrome/ \
         .config/xfce4/ \
         .gnome/apps/ \
+        .mozilla/firefox \
         .xscreensaver \
         Pictures/3073-starwars-galaxies-002-ilhrq.jpg \
         Pictures/logo_yellow.png \
