@@ -34,7 +34,9 @@ main() {
         .gnome/apps/ \
         .xscreensaver \
         Pictures/3073-starwars-galaxies-002-ilhrq.jpg \
-        Pictures/logo_yellow.png
+        Pictures/logo_yellow.png \
+        eclipse/configuration/config.ini \
+        workspace/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi
 
     echo "**"
     echo "** Don't forget to add the files to git and push them before testing!"
