@@ -14,6 +14,11 @@
 # touch /tmp/stamp
 # << do manual config on the gui >>
 # find . -newer /tmp/stamp -depth
+# <control-d>
+#
+# Edit mktarballs.sh and add directories as needed or singular files
+#
+# Then from the host run: ./mktarballs.sh
 #
 # Try to choose the core directory where the change happened and make sure you use absolute paths
 # from the $HOME directory.
@@ -21,33 +26,116 @@
 # On basebox firstboot all tarballs are extracted to ZDHOME by basebox/scripts/firstboot.d/10tarballs
 #
 
-pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
-export ME=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
-popd > /dev/null
+main() {
+    # default-config.tar.gz - Capture most of the things we care about
+    mktarball default-config.tar.gz \
+        .config/google-chrome/ \
+        .config/xfce4/ \
+        .gnome/apps/ \
+        .xscreensaver \
+        Pictures/3073-starwars-galaxies-002-ilhrq.jpg \
+        Pictures/logo_yellow.png
 
-TARBALLDIR=$(dirname $ME)'/../tarballs/'
+    echo "**"
+    echo "** Don't forget to add the files to git and push them before testing!"
+    echo "**"
+    echo "** git add -A ${TARBALLDIR}"
+    echo "** git commit -m 'Updated mktarballs.sh'"
+    echo "** git push"
+    echo "**"
+    exit 0
+}
 
 mktarball() {
     local tarball="${TARBALLDIR}/$1"
-    if [ -f "${tarball}" -a ! -f "${tarball}~" ]; then
-        echo "Saved old tarball to ${tarball}~"
-        mv "${tarball}" "${tarball}~"
-    fi
+    local newtarball="${tarball}~new~"
+    local errfile="${newtarball}~errors~"
+    local oldtarball="${tarball}~"
     shift
+
     echo "Creating ${tarball} with files: $@"
-    tar cvzf "${tarball}" "$@"
+
+    ssh -F "${SSHCONFIG}" default '(set -x;cd "'"${ZDHOME}"'";tar cvzf - '"$@"')' > "${newtarball}" 2> >(tee "${errfile}" >&2)
+
+    local errcount=$(egrep '^tar: ' "${errfile}"|wc -l)
+
+    if [ "${errcount}" -gt 0 ]; then
+        echo "** FAILED **"
+        echo "** Resolve these errors and retry:"
+        sed -n -e '/^\+ /s/^/** /p' -e '/^tar: /s/^/** /p' "${errfile}"
+        echo "**"
+        rm -f "${newtarball}" "${errfile}"
+        exit 13
+    fi
+
+    local count=$(tar tf "${newtarball}"|wc -l)
+
+    if [ "${count}" -gt 0 ]; then
+        echo "** SUCCESS **"
+
+        if [ -f "${tarball}" -a ! -f "${oldtarball}" ]; then
+            echo "Saved old tarball to ${oldtarball}"
+            mv "${tarball}" "${oldtarball}"
+        fi
+        mv "${newtarball}" "${tarball}"
+    else
+        echo "** Failed to create tarball, look above for errors."
+        rm -f "${newtarball}"
+        exit 11
+    fi
 }
 
-cd $HOME
+tarballprep() {
+    # Get script's full pathname
+    pushd $(dirname ${BASH_SOURCE[0]}) > /dev/null
+    export ME=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
+    popd > /dev/null
 
-# default-config.tar.gz - Capture most of the things we care about
-mktarball default-config.tar.gz .gnome/apps/ .xscreensaver .config/xfce4/ .config/google-chrome/ Pictures/logo_yellow.png Pictures/3073-starwars-galaxies-002-ilhrq.jpg
+    # Hunt for global.config
+    dir=$(dirname $ME)
+    for i in "$HOME" "${dir}" "${dir}/.." "${dir}/../.." "${dir}/../../.."
+    do
+        cfg="${i}/ZonamaDev/common/global.config"
 
-echo "*****************************************************************************"
-echo "** Don't forget to add the files to git and push them before testing!      **"
-echo "**                                                                         **"
-echo "** git add -A ${TARBALLDIR};git commit -m 'Updated mktarballs.sh';git push **"
-echo "**                                                                         **"
-echo "*****************************************************************************"
+        if [ -f "${cfg}" ]; then
+            export ZDCFGPATH="${cfg}"
+            break
+        fi
+    done
+
+    if [ -z "${ZDCFGPATH}" -o ! -f "${ZDCFGPATH}" ]; then
+        echo "** ERROR: Can not find global.config, GET HELP!"
+        exit 252
+    fi
+
+    echo "** Using config ${ZDCFGPATH}"
+    source "${ZDCFGPATH}"
+
+    if [ "${USER}" == "${ZDUSER}" ]; then
+        echo "** Run this script from the host machine, it will ssh in can run as needed"
+        exit 1
+    fi
+
+    TARBALLDIR=$(dirname $ME)'/../tarballs/'
+    TARBALLDIR=$(cd "${TARBALLDIR}";/bin/pwd -P)
+
+    SSHCONFIG=$(mktemp)
+    trap 'rm -f "${SSHCONFIG}"' 0 1 2 15
+
+    cp /dev/null "${SSHCONFIG}"
+
+    echo -n '** Getting ssh config...'
+    (cd $(dirname "${ZDCFGPATH}")"/../basebox";vagrant ssh-config > "${SSHCONFIG}")
+    echo
+
+    if [ ! -s "${SSHCONFIG}" ]; then
+        echo "** Failed to get ssh config from vagrant?"
+        exit 12
+    fi
+}
+
+tarballprep
+
+main
 
 exit 0
