@@ -42,7 +42,7 @@ wait_fasttrack() {
        notice "Timeouted waiting for rc.fasttrack to run, continuing anyway."
    else
        if $warned; then
-           alert "Startup scripts completed"
+           notice "Startup scripts completed"
        fi
    fi
 }
