@@ -1129,7 +1129,8 @@ if [ "X$1" == "X--panel" ]; then
                     url="${url}#/control?cmd="$(python -c "import urllib;print(urllib.quote('''$*'''))")
                     echo "** Launch $BROWSER '${url}' **"
                     set -x
-                    $BROWSER "${url}" > /dev/null 2>&1 < /dev/null &
+                    nohup $BROWSER "${url}" > /dev/null 2>&1 < /dev/null &
+                    sleep 5
                     exit 0
                 fi
             fi
