@@ -36,8 +36,10 @@ check_repos() {
     do
 	echo "Clone $i from ${REPO_PUBLIC_URL}"
 
-	git clone --progress ${REPO_PUBLIC_URL}/${i}.git
+	git clone --progress ${REPO_PUBLIC_URL}/${i}.git 2>&1 | sed "s/^/git-clone-$i: /" &
     done
+
+    wait
 }
 
 make_links() {
