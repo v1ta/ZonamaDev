@@ -12,7 +12,7 @@ export ME=$(pwd -P)'/'$(basename ${BASH_SOURCE[0]})
 popd > /dev/null
 RUNDIR=$(dirname $ME)
 
-eval $(${RUNDIR}/bin/get_config --bash '^Tre')
+eval $(${RUNDIR}/get_config --bash '^Tre')
 
 verbose=true
 
