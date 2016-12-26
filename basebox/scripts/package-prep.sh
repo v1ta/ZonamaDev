@@ -41,7 +41,7 @@ else
 fi
 
 builder_name="$2"
-build_timestamp=$(date %+s)
+build_timestamp=$(date +%s)
 build_datetime=$(date -u --date="@${build_timestamp}" "+%Y-%m-%dT%H:%M:%SZ")
 
 #########################
