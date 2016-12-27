@@ -96,7 +96,7 @@ package_box() {
     builder=$(cat .builder 2> /dev/null)
 
     echo "** Pulling latest greatest ${ZONAMADEV_URL}..."
-    if ssh -t -F $sshcfg default "rm -fr ZonamaDev;git clone ${ZONAMADEV_URL}"; then
+    if ssh -t -F $sshcfg default "sudo rm -fr ZonamaDev;git clone ${ZONAMADEV_URL}"; then
 	:
     else
 	msg "git clone ${ZONAMADEV_URL} SEEMS TO HAVE FAILED WITH ERR=$?, fix it and after that try: ./build.sh package"
