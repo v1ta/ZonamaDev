@@ -211,7 +211,7 @@ mv /var/log/syslog /var/log/syslog.1 > /dev/null 2>&1
 ###########################################################
 echo ">> Fill filesystem with 0 bytes to reduce box size"
 if type pv > /dev/null 2>&1; then
-    pv < /dev/zero > /EMPTY 2> /dev/null
+    pv < /dev/zero > /EMPTY
 else
     dd if=/dev/zero of=/EMPTY bs=1M 2> /dev/null
 fi
