@@ -26,6 +26,7 @@ chmod 700 /.swgemudev.update
 # Add rc.fasttrak
 if dpkg -s sysvinit-core > /dev/null; then
     echo "Using /etc/rc.local for rc.fasttrack"
+    sed -i '/^## ZonamaDev Boot/,+3d' /etc/rc.local
     echo -e "## ZonamaDev Boot\n/.swgemudev.update\n${ZDHOME}/ZonamaDev/fasttrack/scripts/rc.fasttrack" >> /etc/rc.local
     sed -e '/^exit/{H;d}' -e '${p;x}' -i /etc/rc.local
     return
@@ -57,4 +58,5 @@ StandardError=null
 WantedBy=multi-user.target
 !
 
+systemctl daemon-reload
 systemctl enable rc.fasttrack
