@@ -90,6 +90,28 @@ if [ $chrome_width -lt 1280 -o $chrome_height -lt 720 ]; then
     exit 6
 fi
 
+#------------------------------------------------------------------------------
+# If we made it this far time to start cleanup for packaging...
+#------------------------------------------------------------------------------
+
+##############
+## STOP GUI ##
+##############
+echo ">> Stop lightdm"
+service lightdm stop
+sleep 5
+
+##########################
+## KILL EVERYTHING ELSE ##
+##########################
+echo ">> Stop ${ZDUSER} processes"
+ps -fu ${ZDUSER} | awk 'NR > 1 && $3 == 1 { print $2 }' | xargs -t kill
+sleep 2
+ps -fu ${ZDUSER} | awk 'NR > 1 && $3 == 1 { print $2 }' | xargs -t kill -9
+sleep 2
+echo ">> Remaining ${ZDUSER} processes:"
+ps -fu ${ZDUSER} | sed 's/^/>> /'
+
 #####################
 ## BRAND GRUB BOOT ##
 #####################
@@ -107,6 +129,12 @@ if [ -x /usr/bin/convert ]; then
     sed -i -e '$ a GRUB_BACKGROUND="'"${ZDHOME}"'/Pictures/swgemu-grub.png"' -e '/GRUB_BACKGROUND/d' /etc/default/grub
     /usr/sbin/update-grub
 fi
+
+#####################
+## Clear run flags ##
+#####################
+echo ">> Clear run flags for devsetup or rc.fasttrack"
+rm -fr "${ZONAMADEV_CONFIG_HOME}/flags/devsetup" "${ZONAMADEV_CONFIG_HOME}/flags/rc.fasttrack"
 
 ###############
 ## Clean apt ##
@@ -149,7 +177,6 @@ cp -vr /etc/skel/. ${ZDHOME}
 ########################
 ## Stop all the noise ##
 ########################
-service lightdm stop
 service vboxadd stop
 service mysql stop
 service syslog stop
