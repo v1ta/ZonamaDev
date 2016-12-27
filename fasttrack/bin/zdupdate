@@ -45,7 +45,7 @@ update_zd() {
 }
 
 getgiturl() {
-    export ZDGITURL=$(curl -G -s "http://downloads.zonamaserver.org/zonamadev/giturl.txt" --data-urlencode "x-zdupdate=${1}" --data-urlencode "x-uuid=$(sudo /usr/sbin/dmidecode -s system-uuid)" --data-urlencode "x-version=$(cat /.swgemudev.version)" --data-urlencode "x-zd-version=$(git describe --tag)" --data-urlencode "x-zd-repo=$(git ls-remote --get-url)" --data-urlencode "x-zd-branch=$(git rev-parse --abbrev-ref HEAD)" --data-urlencode "x-id=$(cat /var/lib/dbus/machine-id)")
+    export ZDGITURL=$(curl -G -s "http://downloads.zonamaserver.org/zonamadev/giturl.txt" --data-urlencode "x-ztype=zd" --data-urlencode "x-zdupdate=${1}" --data-urlencode "x-uuid=$(sudo /usr/sbin/dmidecode -s system-uuid)" --data-urlencode "x-version=$(cat /.swgemudev.version)" --data-urlencode "x-zd-version=$(git describe --tag)" --data-urlencode "x-zd-repo=$(git ls-remote --get-url)" --data-urlencode "x-zd-branch=$(git rev-parse --abbrev-ref HEAD)" --data-urlencode "x-id=$(cat /var/lib/dbus/machine-id)")
 }
 
 alert() {
