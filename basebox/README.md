@@ -38,9 +38,10 @@ Follow steps in next section to prepare the box.
 5. Associate *.idl *.lua *.h *.cpp *.lst with Eclipse
 6. Launch Chrome and verify it's positioned properly then close it.
 7. Launch Firefox and verify it's positioned properly, set home page to http://www.swgemu.com/
-8. Clean up the box for packaging: exec sudo ~vagrant/ZonamaDev/basebox/scripts/package-prep.sh "0.0.X" (next box version number)
-9. When the box halts from your host run: vagrant package
-10. Close all windows
+8. Launch Atom, open ~/workspace/Core3 as a folder, navigate to config.lua and leave open
+9. Clean up the box for packaging: exec sudo ~vagrant/ZonamaDev/basebox/scripts/package-prep.sh "0.0.X" (next box version number)
+10. When the box halts from your host run: vagrant package
+11. Close all windows
 
 ### Publish
 1. Upload package-x.y.z.box to atlas
