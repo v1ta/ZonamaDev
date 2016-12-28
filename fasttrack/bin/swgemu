@@ -798,7 +798,7 @@ show_version()
     local json="{ "
 
         json="${json} "'"server_version":{"remote-'${name}'":"'${url}'","remote-git-tag":"'${git_remote}'","local-get-tag":"'${git_local}'","asof_isodate":"'$(date -Iseconds)'","swgemu-script":"'${me}'","swgemu-md5":"'${me_md5}'","zd-tag":"'${zd_tag}'","collection_errors":"'${errors}'"}'
-        json="${json}, "'"box_buildinfo":'$(< /.swgemudev.builinfo.json)
+        json="${json}, "'"box_buildinfo":'$(< /.swgemudev.buildinfo.json)
 
     json="$json }"
 

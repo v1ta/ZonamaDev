@@ -222,7 +222,7 @@ rm -f /EMPTY
 #################################
 echo "$version" > /.swgemudev.version
 chmod 644 /.swgemudev.version
-echo '{ "build_version": "'"${version}"'", "build_timestamp": '"${build_timestamp}"', "build_datetime": "'"${build_datetime}"'", "builder_name": "'"${builder_name}"'" }' | tee /.swgemudev.builinfo.json | python -m json.tool
+echo '{ "build_version": "'"${version}"'", "build_timestamp": '"${build_timestamp}"', "build_datetime": "'"${build_datetime}"'", "builder_name": "'"${builder_name}"'" }' | tee /.swgemudev.buildinfo.json | python -m json.tool
 
 # Ok let these run on first boot of new fasttrack image
 zdcfg clear-flag suspend_devsetup
