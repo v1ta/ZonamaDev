@@ -7,18 +7,4 @@
 ## Get global config values
 source $(dirname $ME)/../../common/global.config
 #
-## GERRIT SETTINGS
-GERRIT_HOST=review.swgemu.com
-GERRIT_PORT=29418
-GERRIT_REGISTER_URL='http://'${GERRIT_HOST}'/login/%23%2Fregister%2Fq%2Fstatus%3Aopen'
-GERRIT_UNKNOWN_USER='darthvaderdev'
-#
-## Which editors should we "consider" offering? (will check each before we offer)
-EDITORS='nano gedit gvim geany'
-#
-## Network settings
-PINGTEST_HOST=www.cisco.com # This has worked for eons, hope they keep it up
-NETWORK_SLOW_SECONDS=5 # If the internet tests take longer than this we will warn them with a notice
-#
-#
 # vi:set ft=sh
