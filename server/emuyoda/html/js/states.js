@@ -32,6 +32,7 @@ define(['app', 'services'], function (app) {
         url         : '/control',
         templateUrl : 'views/control.html' + burst,
         controller  : 'controlController',
+        params      : { 'args': {} },
         data        : { requireLogin: true },
     })
     .state('tools', {

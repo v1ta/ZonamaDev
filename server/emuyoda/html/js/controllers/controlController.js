@@ -1,7 +1,7 @@
 "use strict";
 
 define(["./module"], function (controllers) {
-  controllers.controller("controlController", ["$rootScope", "$scope", "$timeout", "$location", "yodaApiService", function ($rootScope, $scope, $timeout, $location, yodaApiService) {
+  controllers.controller("controlController", ["$rootScope", "$scope", "$stateParams", "$timeout", "$location", "yodaApiService", function ($rootScope, $scope, $stateParams, $timeout, $location, yodaApiService) {
     $scope.pendingCmd = "";
     $scope.pendingSend = false;
     $scope.sendText = "";
@@ -177,5 +177,10 @@ define(["./module"], function (controllers) {
     }).catch(function () {
       console.log("/api/config call failed");
     });
+
+    if ($stateParams && $stateParams['args'] && $stateParams['args']['cmd']) {
+        console.debug("Loaded with a cmd: " + $stateParams['args']['cmd']);
+        $scope.serverCommand($stateParams['args']['cmd']);
+    }
   }]);
 });
