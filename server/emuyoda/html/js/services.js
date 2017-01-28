@@ -88,7 +88,7 @@ define(["angular"], function (angular) {
           console.debug("loginModalService.openModal()");
           return $uibModal.open({
             animation: true,
-            templateUrl: "views/loginModalTemplate.html?burst=v2",
+            templateUrl: "views/loginModalTemplate.html?burst=v3",
             controller: "loginModalController",
             size: "sm"
           }).result.then(function (auth) {

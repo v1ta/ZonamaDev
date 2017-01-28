@@ -12,7 +12,7 @@ define(['app', 'services'], function (app) {
 
     $urlRouterProvider.otherwise("/home");
 
-    var burst = '?burst=v2';
+    var burst = '?burst=v3';
 
     $stateProvider
 

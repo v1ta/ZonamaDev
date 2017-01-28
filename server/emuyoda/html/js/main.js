@@ -1,7 +1,7 @@
 "use strict";
 
 require.config({
-  urlArgs: 'bust=v2',
+  urlArgs: 'burst=v3',
   paths: {
     'angular': '/lib/angular/angular',
     'angular.sanitize': '/lib/angular-sanitize/angular-sanitize.min',
