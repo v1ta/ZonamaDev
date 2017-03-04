@@ -26,7 +26,7 @@ define([
     "app.filters"
   ], function ($controllerProvider) {
     controllerProvider = $controllerProvider;
-  }).run(function ($rootScope, $state, $templateCache, $cacheFactory, loginModalService) {
+  }).run(function ($rootScope, $state, $templateCache, $cacheFactory, $location, loginModalService) {
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
       if (typeof toState !== "undefined" && typeof toState.templateUrl == "string") {
         $templateCache.remove(toState.templateUrl);
@@ -35,6 +35,7 @@ define([
       if (requireLogin && typeof $rootScope.currentUsername === "undefined") {
         event.preventDefault();
         loginModalService.openModal().then(function () {
+          toParams.args = $location.search();
           return $state.go(toState.name, toParams);
         }).catch(function () {
           return $state.go("home");

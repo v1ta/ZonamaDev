@@ -12,7 +12,7 @@ define(['app', 'services'], function (app) {
 
     $urlRouterProvider.otherwise("/home");
 
-    var burst = '?burst=v2';
+    var burst = '?burst=v3';
 
     $stateProvider
 
@@ -32,6 +32,7 @@ define(['app', 'services'], function (app) {
         url         : '/control',
         templateUrl : 'views/control.html' + burst,
         controller  : 'controlController',
+        params      : { 'args': {} },
         data        : { requireLogin: true },
     })
     .state('tools', {
