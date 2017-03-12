@@ -59,9 +59,9 @@ LUA53_TAR=$PWD/$(basename "${LUA53_URL}")
 
 rm -f "${LUA53_TAR}" && echo "** Removed old ${LUA53_TAR}"
 
-wget --progress=dot "${LUA53_URL}" || error "Failed to download $url" 130
+wget --progress=dot "${LUA53_URL}" || error "Failed to download ${LUA53_URL}" 128
 
-[ -f $LUA53_TAR ] || error "Can't find downloaded file: $LUA53_TAR" 130
+[ -f $LUA53_TAR ] || error "Can't find downloaded file: $LUA53_TAR" 129
 
 (cd ${EXTERNAL_SRC_DIR};tar xzf $LUA53_TAR)
 
