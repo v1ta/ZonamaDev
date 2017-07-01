@@ -55,7 +55,12 @@ build_box() {
 
     date
 
-    time vagrant up
+    if time vagrant up; then
+        :
+    else
+        echo "** VARGANT FAILED! RET=$? **"
+        exit 1
+    fi
 
     sleep 5
 
