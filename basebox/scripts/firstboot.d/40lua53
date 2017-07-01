@@ -53,7 +53,7 @@ fi
 
     LUA53_TAR=$PWD/$(basename "${LUA53_URL}")
 
-    rm -f "${LUA53_TAR}" && echo "** Removed old ${LUA53_TAR}"
+    rm "${LUA53_TAR}" && echo "** Removed old ${LUA53_TAR}"
 
     wget --progress=dot "${LUA53_URL}" || error "Failed to download ${LUA53_URL}" 128
 
