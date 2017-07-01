@@ -11,6 +11,9 @@
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
 
+# Hack for initramfs build bug: https://bugs.launchpad.net/ubuntu/+source/initramfs-tools/+bug/1636922
+rmdir /etc/udev/rules.d/70-persistent-net.rules && echo "Removed empty /etc/udev/rules.d/70-persistent-net.rules directory"
+
 (
     # die on error
     set -e
