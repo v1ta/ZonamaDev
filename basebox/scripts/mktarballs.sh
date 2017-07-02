@@ -31,9 +31,9 @@ main() {
     mktarball default-config.tar.gz \
         .config/google-chrome/ \
         .config/xfce4/ \
+        .config/dconf/user \
         .gnome/apps/ \
         .mozilla/firefox \
-        .xscreensaver \
         Pictures/3073-starwars-galaxies-002-ilhrq.jpg \
         Pictures/logo_yellow.png
 
