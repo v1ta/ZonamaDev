@@ -35,9 +35,11 @@ main() {
         .mozilla/firefox \
         .xscreensaver \
         Pictures/3073-starwars-galaxies-002-ilhrq.jpg \
-        Pictures/logo_yellow.png \
-        eclipse/configuration/config.ini \
-        workspace/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi
+        Pictures/logo_yellow.png
+
+    # Eclipse config changes a lot from version to version, not safe to have it in tar file -- Karl 07/02/2017
+    # eclipse/configuration/config.ini \
+    # workspace/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi
 
     echo "**"
     echo "** Don't forget to add the files to git and push them before testing!"
