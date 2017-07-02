@@ -121,7 +121,7 @@ tarballprep() {
     source "${ZDCFGPATH}"
 
     if [ "${USER}" == "${ZDUSER}" ]; then
-        echo "** Run this script from the host machine, it will ssh in can run as needed"
+        echo "** Run this script from the host machine, it will ssh in and run as needed"
         exit 1
     fi
 
