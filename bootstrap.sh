@@ -26,7 +26,7 @@ main() {
 	    echo '  mkdir /c/swgemudev'
 	    echo '  export HOME=/c/swgemudev'
 	    echo '  cd $HOME'
-	    echo '  curl -Lk http://downloads.zonamaserver.com/zonamadev/bootstrap.sh | bash'
+	    echo '  curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash'
 	    echo
 	    echo 'However, every time you want to work with this system you will need to reset'
 	    echo 'your HOME when you open the bash shell window.'
