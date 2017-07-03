@@ -134,7 +134,7 @@ server_start() {
     fi
 
     # Start server detached
-    screen -dmS swgemu-server -L gdb --command=$HOME/bin/gdb_settings ./core3
+    screen -dmS swgemu-server -L -- gdb --command=$HOME/bin/gdb_settings ./core3
 
     if $autostart; then
         echo "** server started **"
