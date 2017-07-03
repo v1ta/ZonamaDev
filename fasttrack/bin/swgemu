@@ -477,7 +477,7 @@ server_update_ip() {
 	echo '** Skipping ipcheck because flag disable_ipcheck is on **'
     else
 	# Check if ip is valid
-	read -a instance_query <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:'${OPENRESTY_PORT}'/zonama-instance-id?why=start' 2> /dev/null)
+	read -a instance_query -d '\0' <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:'${OPENRESTY_PORT}'/zonama-instance-id?why=start' 2> /dev/null)
 
 	if [ "${instance_query[1]}" != "200" ]; then
 	    echo "** ERROR: Local zonama-instance-id service is not running on port ${OPENRESTY_PORT} as expected, giving up." >&2
