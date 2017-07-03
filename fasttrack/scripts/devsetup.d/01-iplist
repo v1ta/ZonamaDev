@@ -157,10 +157,10 @@ update_iplist() {
 get_instance() {
     local scan_token=$1
 
-    read -a instance_query <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2> /dev/null)
+    read -a instance_query -d '\0' <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2> /dev/null)
     for i in 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1
     do
-	read -a instance_query <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2> /dev/null)
+	read -a instance_query -d '\0' <<<$(curl -s -D - -A zonamaipscan --connect-timeout 5 -m 5 'http://127.0.0.1:'${OPENRESTY_PORT}'/zonama-instance-id?scantoken='$scan_token 2> /dev/null)
 
 	if [ "${instance_query[1]}" = "200" ]; then
 	    echo "** Found zonama-instance-id service on localhost." >&2
