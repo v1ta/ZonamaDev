@@ -19,6 +19,8 @@ cat << ! > /.swgemudev.update
     source ~${ZDUSER}/ZonamaDev/common/global.config
 !
 cat << '!' >> /.swgemudev.update
+    githost=$(echo "$ZONAMADEV_URL"|sed -e 's!.*//!!' -e 's!/.*!!')
+    while ! host -T -W 5 -t A ${githost}; do sleep 1; done
     /usr/bin/perl -ne 'BEGIN{$r=$ENV{"ZONAMADEV_URL"};$b="master"} $b=$1 if(/zdbranch=(\S+)/);$r=$1 if(/zdrepo=(\S+)/); END{($u,$g,$ENV{"HOME"})=(getpwnam($ENV{"ZDUSER"}))[2,3,7];$)=$g;$>=$u;system("cd;id -a;pwd;set -x;pwd;git clone $r;cd ZonamaDev;git stash;git fetch;git checkout $b;git pull");}' /proc/cmdline
 ) 2>&1 |logger -t $0
 !
@@ -44,14 +46,14 @@ cat << ! > /lib/systemd/system/rc.fasttrack.service
 [Unit]
 Description=ZonamaDev Boot Script
 Documentation=https://github.com/Zonama/ZonamaDev
-Before=systemd-user-sessions.service
-After=dbus.socket
+Before=lightdm.service
+After=network-online.target auditd.service nss-lookup.target
 
 [Service]
 Type=forking
 ExecStartPre=/.swgemudev.update
 ExecStart=${ZDHOME}/ZonamaDev/fasttrack/scripts/rc.fasttrack
-TimeoutSec=0
+TimeoutSec=180
 RemainAfterExit=yes
 StandardOutput=null
 StandardError=null
