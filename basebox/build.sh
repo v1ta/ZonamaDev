@@ -100,8 +100,10 @@ package_box() {
 
     builder=$(cat .builder 2> /dev/null)
 
-    echo "** Pulling latest greatest ${ZONAMADEV_URL}..."
-    if ssh -t -F $sshcfg default "sudo rm -fr ZonamaDev;git clone ${ZONAMADEV_URL}"; then
+    local branch=$(git rev-parse --abbrev-ref HEAD)
+
+    echo "** Pulling latest greatest ${ZONAMADEV_URL} using branch ${branch}"
+    if ssh -t -F $sshcfg default "sudo rm -fr ZonamaDev;git clone -b ${branch} ${ZONAMADEV_URL}"; then
 	:
     else
 	msg "git clone ${ZONAMADEV_URL} SEEMS TO HAVE FAILED WITH ERR=$?, fix it and after that try: ./build.sh package"
@@ -128,8 +130,11 @@ package_box() {
     # Wait for virtualbox to cleanly exit
     sleep 5
 
+    local box_name=$(egrep 'config.vm.box[[:space:]=]' ../fasttrack/Vagrantfile | tr -d '['"'"'"]' | sed -e 's/.*=[ ]*//' -e 's/;//')
+
     echo "** Removing old cached boxes"
-    vagrant box remove zonama/zonamadev-deb-jessie --all
+
+    vagrant box remove ${box_name} --all
 
     echo "** Ok now build the package!"
 
@@ -141,15 +146,48 @@ package_box() {
 	exit 1
     fi
 
-    if [ -f package.box ]; then
-	local fn=package-${version}.box
-	mv package.box $fn
-	ls -lh "$PWD/$fn"
-        echo
-        # Use instructions from README.md
-        sed -e '1,/^### Publish/d' -e '/^###/,$d' -e 's/x\.y\.z/'"${version}"'/g' -e '/```/,/```/s/^/   * /' -e '/```/d' README.md
-    else
+    if [ ! -f package.box ]; then
 	echo "** Something strange happened did not get a package.box file!?"
+        exit 2
+    fi
+
+    local fn=package-${version}.box
+    mv package.box $fn
+    ls -lh "$PWD/$fn"
+    echo -e "\nNEXT STEPS:\n"
+
+    # Show instructions from README.md
+    sed -e '1,/^### Publish/d' -e '/^###/,$d' -e 's/x\.y\.z/'"${version}"'/g' -e '/```/,/```/s/^/   * /' -e '/```/d' README.md
+
+    echo -e "\nPlease make sure you upload the box named as: ${box_name} version ${version}"
+
+    if yorn "\nAfter you upload would you like to test [$version] in the ${PWD}/../fasttrack folder?"; then
+        while :
+        do
+            if yorn "\nDid you upload the box and set it to release yet?"; then
+                if vagrant box add ${box_name} --box-version $version; then
+                    break
+                else
+                    echo "** vagrant box add failed!"
+                fi
+            else
+                echo "** You can't test until you upload and release the new box"
+                exit 4
+            fi
+        done
+
+        if yorn "\nWARNING: This will destroy your existing fasttrack box (if any) in ${PWD}/../fastrack!\n\nContinue?"; then
+            set -x
+            cd ../fasttrack
+            if sed -i '~' 's/config.vm.box_version = ".*"/config.vm.box_version = "'${version}'"/' Vagrantfile; then
+                exec ./setup.sh
+            else
+                echo "** Unable to edit Vagrant file, you'll have to test manually. **"
+                exit 1
+            fi
+        else
+            echo "** Test aborted, please test the box manually **"
+        fi
     fi
 
     exit 0
