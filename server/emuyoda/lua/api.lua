@@ -981,12 +981,14 @@ function service_control(path)
 
     local parts = { }
 
-    if ngx.var.arg_arg1 then cmd = cmd .. " " .. ngx.var.arg_arg1 end
+    if ngx.var.arg_arg1 then cmd = cmd .. " " .. ngx.unescape_uri(ngx.var.arg_arg1) end
 
-    if ngx.var.arg_arg2 then cmd = cmd .. " " .. ngx.var.arg_arg2 end
+    if ngx.var.arg_arg2 then cmd = cmd .. " " .. ngx.unescape_uri(ngx.var.arg_arg2) end
+
+    if ngx.var.arg_nowait then cmd = " --nowait " .. cmd end
 
     -- TODO is this enough to avoid injection attack?
-    cmd = cmd:gsub("[;`$()%c\"|]", "")
+    cmd = cmd:gsub("[<>;`$()%c\"|]", "")
 
     ngx.log(ngx.ERR, "cmd=[" .. cmd .. "]")
 
