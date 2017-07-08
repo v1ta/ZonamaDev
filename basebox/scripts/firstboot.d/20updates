@@ -68,9 +68,6 @@ rmdir /etc/udev/rules.d/70-persistent-net.rules && echo "Removed empty /etc/udev
     else
         # Start out in text console until vbguest can update video drivers
         systemctl set-default -f multi-user.target
-
-        # Wait a bit for network to start
-        systemctl enable systemd-networkd-wait-online
     fi
 )
 
