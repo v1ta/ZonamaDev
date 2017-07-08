@@ -39,10 +39,12 @@ main() {
         'rununittests' ) server_rununittests "$@";;
         'start' )        server_start        "$@";;
         'status' )       server_status       "$@";;
-        'stop' )         server_stop         "$@";;
+        'shutdown' )     server_shutdown     "$@";;
+        'stop' )         server_shutdown     "0";;  # Backwards compatibility stop => shutdown 0
+        'kill' )         server_kill         "$@";;
         'reset_ip' | 'resetip' | 'reset-ip' )    reset_server_ip "$@";;
         'version' )      show_version        "$@";;
-        'help' | * ) echo "Usage: $0 [backup|build|postdebug|latest|send|restore|runUnitTests|start|status|stop|reset_ip|version]"; return 1 ;;
+        'help' | * ) echo "Usage: $0 [backup|build|postdebug|latest|send|restore|runUnitTests|start|status|shutdown|reset_ip|version|kill]"; return 1 ;;
     esac
 
     ret=$?
@@ -69,7 +71,7 @@ server_start() {
 
         if yorn "Would you like to stop the sever?"; then
             echo "** stopped server first **"
-            server_stop
+            server_shutdown 0
         else
             release_lock
             exec screen -D -RR swgemu-server
@@ -215,7 +217,44 @@ server_send() {
     return 1
 }
 
-server_stop() {
+server_shutdown() {
+    local delay=$1
+
+    if [ -z "${delay}" ]; then
+        delay=0
+    fi
+
+    if server_status -q; then
+        :
+    else
+        echo "** Server not running **"
+        return 0
+    fi
+
+    cd "${RUN_DIR}"
+
+    if [ ! -f "screenlog.0" ]; then
+        echo "** screenlog is missing, did you run the server from $0?"
+        return 1
+    fi
+
+    local sz=$(stat -c '%s' screenlog.0)
+
+    echo "** send 'shutdown ${delay}' command to server **"
+    server_send "shutdown ${delay}"
+
+    sentinel --stop-next-prompt --tail --seek $sz
+
+    if server_status -q; then
+        echo -e $(tput setaf 2)"\n** ERROR: server shutdown failed **"$(tput sgr0)
+    else
+        echo -e $(tput setaf 2)"\n** server shutdown complete **"$(tput sgr0)
+
+        echo -e "\n** "$(date)" SERVER SHUTDOWN BY swgemu shutdown ${delay} COMMAND. **\n" >> screenlog.0
+    fi
+}
+
+server_kill() {
     if server_status -q; then
         :
     else
@@ -435,7 +474,7 @@ server_build() {
 
 reset_server_ip() {
     echo "** Re-running IP setup"
-    server_stop
+    server_shutdown 0
     zdcfg clear iplist
     zdcfg clear server_ip
 
@@ -566,11 +605,11 @@ server_backup() {
             server_send "info"
 
             echo "** stopping server **"
-            server_stop
+            server_shutdown 0
             restartserver=true
         else
             if yorn "Would you like to shutdown the server first?"; then
-                server_stop
+                server_shutdown 0
                 restartserver=true
             else
                 echo "** USER ABORTED BACKUP **"
@@ -698,7 +737,7 @@ server_restore()
         echo "** SERVER IS RUNNING **"
 
         if yorn "Would you like to shutdown the server first?"; then
-            server_stop
+            server_shutdown 0
             :
         else
             echo "** USER ABORTED RESTORE **"
@@ -961,7 +1000,7 @@ server_latest()
         echo "** Server is running **"
 
         if yorn "Would you like to shut it down?"; then
-            if server_stop; then
+            if server_shutdown 0; then
                 :
             else
                 echo "** server stop error=$? **"
