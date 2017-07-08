@@ -12,6 +12,7 @@ source ~/ZonamaDev/common/global.config
 BUILD_LOG=${BUILD_DIR}/build.out
 IS_PANEL=false
 IS_API_CALL=false
+API_WAIT_OUTPUT=false
 
 main() {
     local ret=255
@@ -207,7 +208,9 @@ server_send() {
 
     screen -S swgemu-server -X stuff "$string"
 
-    sentinel --stop-next-prompt --tail --seek $sz
+    if $API_WAIT_OUTPUT; then
+        sentinel --stop-next-prompt --tail --seek $sz
+    fi
 
     return 1
 }
@@ -1101,6 +1104,10 @@ if [ "X$1" == "X--api" ]; then
     IS_API_CALL=true
     exec 2>&1
     shift
+    if [ "X$1" == "X--nowait" ]; then
+        API_WAIT_OUTPUT=false
+        shift
+    fi
     tmp=$1
     shift
     set -- $tmp --auto $*
