@@ -12,7 +12,7 @@ source ~/ZonamaDev/common/global.config
 BUILD_LOG=${BUILD_DIR}/build.out
 IS_PANEL=false
 IS_API_CALL=false
-API_WAIT_OUTPUT=false
+API_WAIT_OUTPUT=true
 
 main() {
     local ret=255
