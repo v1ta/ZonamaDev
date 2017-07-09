@@ -17,9 +17,8 @@ Zonama - The living planet, or in our world an easily deployed development envir
 
 #### Downloads
 * [Github's Git for Windows](https://git-for-windows.github.io)
-* [VirtualBox for Windows](https://www.virtualbox.org/wiki/Downloads)
-* [Vagrant for Windows](https://releases.hashicorp.com/vagrant/1.9.1/vagrant_1.9.1.msi)
-    (Vagrant versions above 1.9.1 are currently causing a setup failure. Install version 1.9.1 to avoid.)
+* [VirtualBox for Windows version 5.1.22 or higher](https://www.virtualbox.org/wiki/Downloads)
+* [Vagrant for Windows version 1.9.7 or higher](https://releases.hashicorp.com/vagrant/1.9.7/vagrant_1.9.7_x86_64.msi)
 
 #### Bootstrap
 Launch Git Bash: Start -> Programs -> Git Bash
