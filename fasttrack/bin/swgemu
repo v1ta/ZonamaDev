@@ -459,6 +459,28 @@ server_build() {
 	fi
     fi
 
+    # Check to see if codebase is using external Google Test Framework
+    if [ ! -f utils/gmock-1.6.0/README ]; then
+        gtestpkg=googletest
+
+        if [ $(lsb_release -rs|tr -d .) -lt 90 ]; then
+            gtestpkg='libgtest-dev google-mock'
+        fi
+
+	if dpkg -s ${gtestpkg} > /dev/null 2>&1; then
+	    :
+        else
+	    echo
+	    echo "##########################################"
+	    echo "## AUTO-INSTALLING GOOGLE TEST FRAMEWORK #"
+	    echo "##########################################"
+	    echo
+	    sudo apt-get install -y ${gtestpkg}
+	    rm -f build/unix/config.log
+	    extra='clean '
+        fi
+    fi
+
     if [ ! -f build/unix/config.log ]; then
         extra="${extra}config"
     fi
