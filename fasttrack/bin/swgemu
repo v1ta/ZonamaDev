@@ -475,7 +475,18 @@ server_build() {
 	    echo "## AUTO-INSTALLING GOOGLE TEST FRAMEWORK #"
 	    echo "##########################################"
 	    echo
-	    sudo apt-get install -y ${gtestpkg}
+            (
+                set -x
+                sudo rm -fr /usr/src/googletest
+                sudo apt-get install -y ${gtestpkg}
+                if [ "${gtestpkg}" != "googletest" ]; then
+                    sudo mkdir /usr/src/googletest
+                    sudo chown ${ZDUSER}:${ZDUSER} /usr/src/googletest
+                    cd /usr/src/googletest
+                    ln -s ../gmock googlemock
+                    ln -s ../gtest googletest
+                fi
+            )
 	    rm -f build/unix/config.log
 	    extra='clean '
         fi
