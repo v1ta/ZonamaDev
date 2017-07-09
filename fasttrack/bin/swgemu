@@ -408,7 +408,7 @@ server_build() {
 
     cd "${BUILD_DIR}"
 
-    local extra=""
+    local extra="$@"
 
     local bdb_ver=$(sed -ne '/.*-ldb-\([0-9.]*\).*/s//\1/p' src/Makefile.am)
 
