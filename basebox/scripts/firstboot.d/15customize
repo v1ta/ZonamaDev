@@ -19,9 +19,11 @@ cat << ! > /.swgemudev.update
     source ~${ZDUSER}/ZonamaDev/common/global.config
 !
 cat << '!' >> /.swgemudev.update
-    githost=$(echo "$ZONAMADEV_URL"|sed -e 's!.*//!!' -e 's!/.*!!')
+    branch=$(VBoxControl --nologo guestproperty get "/ZonamaDev/branch"|sed -e 's/^.*: //' -e 's/^No value.*//' 2> /dev/null);branch=${branch:-master}
+    repo=$(VBoxControl --nologo guestproperty get "/ZonamaDev/url"|sed -e 's/^.*: //' -e 's/^No value.*//' 2> /dev/null);repo=${repo:-$ZONAMADEV_URL}
+    githost=$(echo "${repo}"|sed -e 's!.*//!!' -e 's!/.*!!')
     while ! host -T -W 5 -t A ${githost}; do sleep 1; done
-    /usr/bin/perl -ne 'BEGIN{$r=$ENV{"ZONAMADEV_URL"};$b="master"} $b=$1 if(/zdbranch=(\S+)/);$r=$1 if(/zdrepo=(\S+)/); END{($u,$g,$ENV{"HOME"})=(getpwnam($ENV{"ZDUSER"}))[2,3,7];$)=$g;$>=$u;system("cd;id -a;pwd;set -x;pwd;git clone $r;cd ZonamaDev;git stash;git fetch;git checkout $b;git pull");}' /proc/cmdline
+    /usr/bin/perl -ne 'BEGIN{$r="'${repo}'";$b="'${branch}'"} $b=$1 if(/zdbranch=(\S+)/);$r=$1 if(/zdrepo=(\S+)/); END{($u,$g,$ENV{"HOME"})=(getpwnam($ENV{"ZDUSER"}))[2,3,7];$)=$g;$>=$u;system("cd;id -a;pwd;set -x;pwd;git clone $r;cd ZonamaDev;git stash;git fetch;git checkout $b;git pull");}' /proc/cmdline
 ) 2>&1 |logger -t $0
 !
 
