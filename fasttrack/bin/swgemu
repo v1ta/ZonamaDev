@@ -374,7 +374,7 @@ server_build_step() {
 
     (
         if [ -n "$#" ]; then
-	    echo make -k $@
+	    echo "Running: make -k $@"
 	    make -k $@
 	fi
 
@@ -407,6 +407,10 @@ server_build() {
     fi
 
     cd "${BUILD_DIR}"
+
+    if [ "X$1" = "X--auto" ]; then
+        shift
+    fi
 
     local extra="$@"
 
