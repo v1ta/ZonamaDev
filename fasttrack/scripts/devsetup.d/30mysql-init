@@ -48,6 +48,8 @@ mysql_init_database() {
 
     mysql -ve "GRANT ALL PRIVILEGES ON ${DBName}.* TO '${DBUser}'@'localhost';" || error "Failed to grant access on ${DBName} to ${DBUser} user!?" 130
 
+    mysql -ve "CREATE USER root IDENTIFIED VIA unix_socket" && echo "Allow: sudo mysql -uroot"
+
     mysql -ve "FLUSH PRIVILEGES;"
 
     alert "Mysql Database Initialized" "The database ${DBName} was created and initialized and the database user ${DBUser} was granted all privileges."
