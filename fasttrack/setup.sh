@@ -107,6 +107,10 @@ calc_cores() {
 }
 
 check_win() {
+    if [ ! -f /c/HashiCorp/Vagrant/embedded/bin/curl.exe ]; then
+        return 0
+    fi
+
     # Check for bad embedded curl in Vagrant
     # See https://github.com/mitchellh/vagrant/issues/6852
     /c/HashiCorp/Vagrant/embedded/bin/curl.exe > /dev/null 2>&1
