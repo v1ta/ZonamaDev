@@ -60,6 +60,15 @@ main() {
 	fi
     fi
 
+    if [ "X$1" = "Xbranch" -a "X$2" != "X" ]; then
+        shift
+        ZONAMADEV_BRANCH="$1"
+        shift
+    fi
+
+    # If not set then use master
+    ZONAMADEV_BRANCH=${ZONAMADEV_BRANCH:-master}
+
     ## Check for git
     if git --version > /dev/null 2>&1; then
 	:
@@ -84,7 +93,8 @@ main() {
     echo "** ZDHOME=${PWD} **"
 
     ## Clone Repo
-    if git clone ${ZONAMADEV_URL}; then
+    echo "Using ${ZONAMADEV_URL} branch ${ZONAMADEV_BRANCH}"
+    if git clone -b "${ZONAMADEV_BRANCH}" ${ZONAMADEV_URL}; then
 	:
     else
 	case $PWD in
