@@ -274,6 +274,20 @@ check_vagrant_base() {
     local ver=$(vagrant --version | cut -d' ' -f2 2> /dev/null)
 
     if [ -z "$ver" ]; then
+        if [ -n "$(type -P vagrant)" ]; then
+            echo -e "** You might have a broken version of vagrant installed\n\nvagrant -v"
+
+            vagrant -v
+
+            if yorn "Is the version of vagrant installed ${ver_min} or higher?"; then
+                echo "** Please note that you could have problems unless you downgrade to ${ver_min}"
+                return 0
+            else
+                echo "** Please close this window, install Vagrant ${ver_min} or higher and try again **"
+                exit 1
+            fi
+        fi
+
 	echo -e "** You need to install Vagrant ${ver_min} or higher **\n"
 
 	if yorn "Would you like me to take you to: https://www.vagrantup.com/downloads.html?"; then
