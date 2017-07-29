@@ -119,7 +119,7 @@ Vagrant.configure(2) do |config|
   ## Providers ##
   ###############
 
-  zonamadev_url=%x[source #{File.dirname(__FILE__)}/../common/global.config;echo $ZONAMADEV_URL].strip
+  zonamadev_url=%x[bash -c 'source #{File.dirname(__FILE__)}/../common/global.config;echo $ZONAMADEV_URL'].strip
   zonamadev_branch=%x[git rev-parse --abbrev-ref HEAD].strip
   [ "vmware_fusion", "vmware_workstation", "virtualbox" ].each do |provider|
     config.vm.provider provider do |v|
