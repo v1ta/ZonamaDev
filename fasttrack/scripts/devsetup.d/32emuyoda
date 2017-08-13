@@ -60,7 +60,7 @@ launch_yoda() {
     local opts=''
 
     case $BROWSER in
-        *chromium* | *google-chrome* ) opts='--disable-session-crashed-bubble ' ;;
+        *chromium* | *google-chrome* ) opts='--restore-last-session ' ;;
     esac
 
     echo "** Launch $BROWSER ${opts}'${YODA_URL}' **"
