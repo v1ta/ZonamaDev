@@ -412,33 +412,18 @@ yorn() {
 }
 
 version_error() {
-    local want="$1"
-    local have="$2"
+    local want_int want_maj want_min want_sub want_misc have_int have_maj have_min have_sub have_misc
+    read want_maj want_min want_sub want_misc <<<${1//[^0-9]/ }
+    read have_maj have_min have_sub have_misc <<<${2//[^0-9]/ }
 
-    read have_maj have_min have_sub have_misc <<<${have//[^0-9]/ }
-    read want_maj want_min want_sub want_misc <<<${want//[^0-9]/ }
+    let "have_int = ${have_maj:-0} * 1000000 + ${have_min:-0} * 1000 + ${have_sub:-0}"
+    let "want_int = ${want_maj:-0} * 1000000 + ${want_min:-0} * 1000 + ${want_sub:-0}"
 
-    if [ "${have_maj}" -lt "${want_maj}" ]; then
+    if [ "${have_int}" -le "${want_int}" ]; then
         return 0
     fi
 
-    if [ "${have_maj}" -gt "${want_maj}" ]; then
-        return 1
-    fi
-
-    if [ "${have_min}" -gt "${want_min}" ]; then
-        return 2
-    fi
-
-    if [ "${have_sub}" -gt "${want_sub}" ]; then
-        return 3
-    fi
-
-    if [ "${have_maj}" -eq "${want_maj}" -a "${have_min}" -eq "${want_min}" -a "${have_sub}" -eq "${want_sub}" ]; then
-        return 4
-    fi
-
-    return 0
+    return 1
 }
 
 main "$@" < /dev/tty
