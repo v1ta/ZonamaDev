@@ -1,1 +1,1 @@
-echo '/home/vagrant/bin/zdupdate --auto > /dev/null 2>&1' | at now +2 minutes
+echo '/home/vagrant/bin/zdupdate --auto 2>&1 | logger -i -t "swgemu.99zdupdate"' | at now +2 minutes
