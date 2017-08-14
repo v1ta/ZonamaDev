@@ -1,0 +1,1 @@
+echo '/home/vagrant/bin/zdupdate --auto' | at now +2 minutes
