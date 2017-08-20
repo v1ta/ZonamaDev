@@ -69,23 +69,11 @@ main() {
     # If not set then use master
     ZONAMADEV_BRANCH=${ZONAMADEV_BRANCH:-master}
 
-    ## Check for git
-    if git --version > /dev/null 2>&1; then
-	:
-    else
-	eval install_git_$OS
+    check_versions
+
+    if [ "X$1" = "Xcheck-versions" ]; then
+        exit 0
     fi
-
-    if [ "$OS" = "win" ]; then
-	echo "** Checking for Git Bash **"
-	check_gitbash_$OS
-    fi
-
-    echo "** Checking for VirtualBox **"
-    check_virtualbox_$OS
-
-    echo "** Checking for Vagrant **"
-    check_vagrant_$OS
 
     # If we're under the ZonamaDev dir back out to parent
     cd ${PWD/ZonamaDev*/}
@@ -127,6 +115,28 @@ main() {
     echo "** Something went wrong, get help **"
 
     exit 11
+}
+
+check_versions() {
+    ## Check for git
+    if git --version > /dev/null 2>&1; then
+	:
+    else
+	eval install_git_$OS
+    fi
+
+    if [ "$OS" = "win" ]; then
+	echo "** Checking for Git Bash **"
+	check_gitbash_$OS
+    fi
+
+    echo "** Checking for VirtualBox **"
+    check_virtualbox_$OS
+
+    echo "** Checking for Vagrant **"
+    check_vagrant_$OS
+
+    return 0
 }
 
 install_git_win() {
@@ -176,7 +186,7 @@ check_gitbash_win() {
 
     echo "** BASH_VERSION: ${BASH_VERSION} **"
 
-    return 1
+    return 0
 }
 
 check_virtualbox_win() {
@@ -219,6 +229,8 @@ check_virtualbox_win() {
     fi
 
     echo "** Virtualbox version $ver **"
+
+    return 0
 }
 
 check_virtualbox_linux() {
@@ -243,6 +255,8 @@ check_virtualbox_linux() {
     fi
 
     echo "** Virtualbox version $ver **"
+
+    return 0
 }
 
 check_virtualbox_osx() {
@@ -304,6 +318,8 @@ check_vagrant_base() {
     fi
 
     echo "** Vagrant version $ver **"
+
+    return 0
 }
 
 check_vagrant_win() {
@@ -332,7 +348,7 @@ check_vagrant_linux() {
 	fi
     fi
 
-    return $?
+    return 0
 }
 
 reset_zd() {
@@ -400,6 +416,7 @@ reset_zd() {
 }
 
 yorn() {
+  local yorn
   if tty -s; then
       echo -n -e "$@ Y\b" > /dev/tty
       read yorn < /dev/tty
@@ -419,7 +436,7 @@ version_error() {
     let "have_int = ${have_maj:-0} * 1000000 + ${have_min:-0} * 1000 + ${have_sub:-0}"
     let "want_int = ${want_maj:-0} * 1000000 + ${want_min:-0} * 1000 + ${want_sub:-0}"
 
-    if [ "${have_int}" -le "${want_int}" ]; then
+    if [ "${have_int}" -lt "${want_int}" ]; then
         return 0
     fi
 
