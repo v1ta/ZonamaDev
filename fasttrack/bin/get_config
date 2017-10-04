@@ -69,7 +69,8 @@ if not setfenv then -- Lua 5.2+
 end
 
 function load_config(path)
-    local config = setmetatable({ loadfile = function(file) loadfile(string.gsub(path, "(.*/)(.*)", "%1") .. "/" .. file) end }, {__index=_G})
+    local config = setmetatable({}, {__index=_G})
+    config.loadfile = function(file) local f = loadfile(file) or loadfile(string.gsub(path, "(.*)/(.*)/(.*)", "%1") .. "/" .. file) if f then return setfenv(f, config) else return nil end end
     assert(pcall(setfenv(assert(loadfile(path)), config)))
     setmetatable(config, nil)
 

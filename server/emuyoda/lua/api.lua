@@ -210,7 +210,8 @@ local function load_config()
     f:close()
 
     -- Support config.lua having a relative path loadfile
-    local emu_cfg = setmetatable({ loadfile = function(file) loadfile(string.gsub(emu_config_path, "(.*/)(.*)", "%1") .. "/" .. file) end }, {__index=_G})
+    local emu_cfg = setmetatable({}, {__index=_G})
+    emu_cfg.loadfile = function(file) local f = loadfile(file) or loadfile(string.gsub(emu_config_path, "(.*)/(.*)/(.*)", "%1") .. "/" .. file); if f then return setfenv(f, emu_cfg) else return nil end end
     assert(pcall(setfenv(assert(loadfile(emu_config_path)), emu_cfg)))
     setmetatable(emu_cfg, nil)
 
