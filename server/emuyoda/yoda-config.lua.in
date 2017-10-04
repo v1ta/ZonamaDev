@@ -29,7 +29,8 @@ ZonesAvailable = {
 	"talus",
 	"tatooine",
 	"tutorial",
-	"yavin4"
+	"yavin4",
+	"dungeon1",
 }
 
 -- ----------- --

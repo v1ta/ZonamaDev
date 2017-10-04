@@ -152,7 +152,7 @@ server_start() {
 }
 
 server_status() {
-    local pid=$(pgrep core3)
+    local pid=$(pgrep -x core3)
     local verbose=true
 
     if [ "X$1" = "X-q" ]; then
@@ -228,7 +228,7 @@ server_stop() {
     fi
 
     local sz=$(stat -c '%s' screenlog.0)
-    local pid=$(pgrep core3)
+    local pid=$(pgrep -x core3)
     local state=$(ps -p $pid -ho state)
     local ppid=$(ps -p $pid -ho ppid)
     local pcmd=$(ps -p $ppid -ho cmd)
@@ -267,7 +267,7 @@ server_stop() {
 
     for i in 10 9 8 7 6 5 4 3 2 1
     do
-        if pgrep core3 > /dev/null 2>&1; then
+        if pgrep -x core3 > /dev/null 2>&1; then
             if $gdb; then
                 # Look for state 't'
                 local state=$(ps -p $pid -ho state)
@@ -290,7 +290,7 @@ server_stop() {
         fi
     done
 
-    if pgrep core3 > /dev/null 2>&1; then
+    if pgrep -x core3 > /dev/null 2>&1; then
         echo "** WARNING: Server is still up, sending KILL **"
         kill -KILL $pid
         if $gdb; then
@@ -301,7 +301,7 @@ server_stop() {
         fi
     fi
 
-    if pgrep core3 > /dev/null 2>&1; then
+    if pgrep -x core3 > /dev/null 2>&1; then
         echo "** WARNING: Unable to stop server! pid=$pid **"
         return 1
     else

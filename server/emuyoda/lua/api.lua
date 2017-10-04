@@ -209,9 +209,17 @@ local function load_config()
 
     f:close()
 
-    local emu_cfg = setmetatable({}, {__index=_G})
+    -- Support config.lua having a relative path loadfile
+    local emu_cfg = setmetatable({ loadfile = function(file) loadfile(string.gsub(emu_config_path, "(.*/)(.*)", "%1") .. "/" .. file) end }, {__index=_G})
     assert(pcall(setfenv(assert(loadfile(emu_config_path)), emu_cfg)))
     setmetatable(emu_cfg, nil)
+
+    -- Clear out the localFile function
+    for k,v in pairs(emu_cfg) do
+        if type(v) == "function" then
+            emu_cfg[k] = nil
+        end
+    end
 
     emu_cfg['__FILE__'] = emu_config_path
 

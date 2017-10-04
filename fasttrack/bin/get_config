@@ -69,9 +69,17 @@ if not setfenv then -- Lua 5.2+
 end
 
 function load_config(path)
-    local config = setmetatable({}, {__index=_G})
+    local config = setmetatable({ loadfile = function(file) loadfile(string.gsub(path, "(.*/)(.*)", "%1") .. "/" .. file) end }, {__index=_G})
     assert(pcall(setfenv(assert(loadfile(path)), config)))
     setmetatable(config, nil)
+
+    -- Clear out the "localFile" function
+    for k, v in pairs(config) do
+        if type(v) == "function" then
+            config[k] = nil
+        end
+    end
+
     return config
 end
 

@@ -90,7 +90,8 @@ function pgrep(expr)
 		if ln then
 		    local _, _, field, value = string.find(ln, "(%S+)%s+(%S+)")
 
-		    if not expr or string.find(value, expr) then
+		    -- if not expr or string.find(value, expr) then
+                    if not expr or expr == value then
 			hits[tonumber(k)] = value
 		    end
 		end
