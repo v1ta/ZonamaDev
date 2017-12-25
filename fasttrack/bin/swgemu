@@ -338,9 +338,9 @@ server_build_step() {
 
         export MAKE=$(type -P make)' -j'$(nproc)
 
-	echo time $MAKE -k build
+	echo time $MAKE -k build-cmake-with-idl
 
-	time $MAKE -k build 2>&1
+	time $MAKE -k build-cmake-with-idl 2>&1
 
 	echo $? > ${build_status_file}
     ) | tee "${BUILD_LOG}"
@@ -379,10 +379,62 @@ server_build() {
 	    echo "## AUTO-UPGRADING YOUR BDB TO BDB 5.3.x ##"
 	    echo "##########################################"
 	    echo
-	    sudo apt-get install -y libdb5.3-dev
+            sudo apt-get update
+	    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y libdb5.3-dev
 	    rm -f build/unix/config.log
 	    extra='clean '
 	fi
+    fi
+
+    if ! grep backports /etc/apt/sources.list > /dev/null 2>&1; then
+        echo "deb http://ftp.debian.org/debian jessie-backports main" | sudo tee -a /etc/apt/sources.list > /dev/null
+        echo
+        echo "#############################################################"
+        echo "## ADDED DEBIAN BACKPORTS TO GET NEWER PACKAGES INTO JESSIE #"
+        echo "#############################################################"
+        echo
+    fi
+
+    local cmake_version=$(dpkg-query --showformat='${Version}' --show cmake)
+
+    if [[ ${cmake_version} =~ ^3.0 ]]; then
+        echo
+        echo "#######################################"
+        echo "## UPGRADING CMAKE TO LATEST VERSION ##"
+        echo "#######################################"
+        echo
+        sudo apt-get update
+        sudo DEBIAN_FRONTEND=noninteractive apt-get -t jessie-backports install -y cmake
+        cmake_version=$(dpkg-query --showformat='${Version}' --show cmake)
+        echo "cmake version: ${cmake_version}"
+        rm -f build/unix/config.log
+        extra='clean '
+    fi
+
+    if ! grep unstable /etc/apt/sources.list > /dev/null 2>&1; then
+        echo "deb http://ftp.us.debian.org/debian unstable main contrib non-free" | sudo tee -a /etc/apt/sources.list > /dev/null
+        echo
+        echo "############################################################"
+        echo "## ADDED DEBIAN UNSTABLE TO GET NEWER PACKAGES INTO JESSIE #"
+        echo "############################################################"
+        echo
+    fi
+
+    local gpp_version=$(dpkg-query --showformat='${Version}' --show g++-6 2> /dev/null)
+
+    if [ -z "${gpp_version}" ]; then
+        echo
+        echo "#######################################"
+        echo "## UPGRADING g++-6 TO LATEST VERSION ##"
+        echo "#######################################"
+        echo
+        echo 'libc6 libraries/restart-without-asking boolean true' | sudo debconf-set-selections
+        sudo apt-get update
+        sudo DEBIAN_FRONTEND=noninteractive apt-get -t unstable install -y g++-6
+        gpp_version=$(dpkg-query --showformat='${Version}' --show g++-6)
+        echo "g++-6 version: ${gpp_version}"
+        rm -f build/unix/config.log
+        extra='clean '
     fi
 
     if eval $LUA53_TEST_SRC > /dev/null 2>&1; then
@@ -419,6 +471,14 @@ server_build() {
 
     if [ ! -f build/unix/config.log ]; then
         extra="${extra}config"
+
+        (
+            cd "${WORKSPACE}/PublicEngine"
+            git pull
+            cd MMOEngine
+            rm -f lib/unix/libengine3.a
+            make
+        )
     fi
 
     if server_build_step $extra; then
@@ -785,6 +845,8 @@ show_version()
     local git_local=$(cd ${BUILD_DIR};git rev-parse refs/heads/unstable 2>> ${tmp})
     local zd_tag=$(cd ~/ZonamaDev;git describe --tag 2>> ${tmp})
     local me_md5=$(md5sum < $me|cut -d' ' -f1 2>&1)
+    local gpp_version=$(dpkg-query --showformat='${Version}' --show g++-6)
+    local cmake_version=$(dpkg-query --showformat='${Version}' --show cmake)
 
     unset GIT_SSH
     rm -f "${tmpssh}"
@@ -797,7 +859,7 @@ show_version()
 
     local json="{ "
 
-        json="${json} "'"server_version":{"remote-'${name}'":"'${url}'","remote-git-tag":"'${git_remote}'","local-get-tag":"'${git_local}'","asof_isodate":"'$(date -Iseconds)'","swgemu-script":"'${me}'","swgemu-md5":"'${me_md5}'","zd-tag":"'${zd_tag}'","collection_errors":"'${errors}'"}'
+        json="${json} "'"server_version":{"remote-'${name}'":"'${url}'","remote-git-tag":"'${git_remote}'","local-get-tag":"'${git_local}'","asof_isodate":"'$(date -Iseconds)'","swgemu-script":"'${me}'","swgemu-md5":"'${me_md5}'","zd-tag":"'${zd_tag}'","gpp6-version":"'${gpp_version}'","cmake-version":"'${cmake_version}'","collection_errors":"'${errors}'"}'
         json="${json}, "'"box_buildinfo":'$(cat /.swgemudev.buildinfo.json /.swgemudev.builinfo.json 2> /dev/null)
 
     json="$json }"
@@ -985,6 +1047,9 @@ server_latest()
         fi
         cd "${WORKSPACE}/PublicEngine"
         git pull
+        cd MMOEngine
+        rm -f lib/unix/libengine3.a
+        make
 	rm -f "${BUILD_DIR}/build/unix/config.log"
     )
 
