@@ -140,6 +140,15 @@ check_repos() {
 
 make_links() {
     msg "Make links"
+    # newer engine has Makefile that sets up the lib and ildc
+    ( set -x
+        cd PublicEngine
+        git pull
+        cd MMOEngine
+        rm -f lib/unix/libengine3.a
+        make
+    )
+
     ( set -x
 	rm -f MMOCoreORB MMOEngine Core3/MMOEngine
 	[ -d Core3 ] && (cd $PWD/Core3;ln -s ../PublicEngine/MMOEngine .)
