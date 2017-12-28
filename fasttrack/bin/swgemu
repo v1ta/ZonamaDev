@@ -405,9 +405,10 @@ server_build() {
 
     local extra="$@"
 
-    if [ ! -d build/ninja ]; then
+    if [ ! -f build/ninja/build.ninja ]; then
         (
             set -xe
+            rm -fr build/ninja
             mkdir -p build/ninja
             cd build/ninja
             echo '*' > .gitignore
