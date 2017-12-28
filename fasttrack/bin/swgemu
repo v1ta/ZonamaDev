@@ -938,7 +938,7 @@ show_version()
 
     local json="{ "
 
-        json="${json} "'"server_version":{"remote-'${name}'":"'${url}'","remote-git-tag":"'${git_remote}'","local-get-tag":"'${git_local}'","asof_isodate":"'$(date -Iseconds)'","swgemu-script":"'${me}'","swgemu-md5":"'${me_md5}'","zd-tag":"'${zd_tag}'","gpp6-version":"'${gpp_version}'","cmake-version":"'${cmake_version}'","collection_errors":"'${errors}'"}'
+        json="${json} "'"server_version":{"remote-'${name}'":"'${url}'","remote-git-tag":"'${git_remote}'","local-git-tag":"'${git_local}'","asof_isodate":"'$(date -Iseconds)'","swgemu-script":"'${me}'","swgemu-md5":"'${me_md5}'","zd-tag":"'${zd_tag}'","gpp6-version":"'${gpp_version}'","cmake-version":"'${cmake_version}'","collection_errors":"'${errors}'"}'
         json="${json}, "'"box_buildinfo":'$(cat /.swgemudev.buildinfo.json /.swgemudev.builinfo.json 2> /dev/null)
 
     json="$json }"
