@@ -1,11 +1,11 @@
 #!/bin/bash
 if [ -z "$BASH_VERSION" ]; then
     echo "** MUST RUN FROM bash, please run again from bash! **"
-    exit
+    exit 15
 fi
 
 ZONAMADEV_URL='https://github.com/Zonama/ZonamaDev'
-BASEBOX='zonama/zonamadev-deb-jessie'
+ZONAMADEV_BRANCH='master'
 OS='unknown'
 
 main() {
@@ -60,6 +60,15 @@ main() {
 	fi
     fi
 
+    if [ "X$1" = "Xbranch" ]; then
+        shift
+        ZONAMADEV_BRANCH="$1"
+        shift
+        echo "######################################"
+        echo "## Using branch ${ZONAMADEV_BRANCH}"
+        echo "######################################"
+    fi
+
     ## Check for git
     if git --version > /dev/null 2>&1; then
 	:
@@ -84,7 +93,7 @@ main() {
     echo "** ZDHOME=${PWD} **"
 
     ## Clone Repo
-    if git clone ${ZONAMADEV_URL}; then
+    if git clone -b ${ZONAMADEV_BRANCH} ${ZONAMADEV_URL}; then
 	:
     else
 	case $PWD in
@@ -99,10 +108,14 @@ main() {
 	    ;;
 	esac
 
-	if git pull; then
-	    :
+        git stash
+
+        git fetch --all
+
+	if git pull --all; then
+            git checkout ${ZONAMADEV_BRANCH}
 	else
-	    echo "** Failed to clone too, you might need help!"
+	    echo "** Failed to pull too, you might need help!"
 	    exit 1
 	fi
     fi
@@ -147,6 +160,11 @@ install_git_linux() {
 check_gitbash_win() {
     local ver_min="4.3.0"
     local ver=$("${vbm}" --version)
+
+    if [ -z "${MSYSTEM}" ]; then
+        echo "** MUST RUN FROM GITBASH SHELL NOT CYGWIN, ABORTING **"
+        exit 16
+    fi
 
     if version_error "${ver_min}" "${BASH_VERSION}"; then
 	echo "Unsupported version of BASH (${BASH_VERSION}), please upgrade to BASH 4.3.x+"
@@ -346,8 +364,11 @@ reset_zd() {
 	 fi
     )
 
-    echo "** Removing any cached copies of base box **"
-    vagrant box remove ${BASEBOX} --all --force
+    echo "** Removing any cached copies of base box(es) **"
+    vagrant box list | awk '/^zonama/ { print $1 }' | while read basebox
+    do
+        vagrant box remove ${basebox} --all --force
+    done
 
     echo "** Looking for the ZonamaDev host directory..."
     local found_zd=false
