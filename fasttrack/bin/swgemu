@@ -373,19 +373,10 @@ server_build_step() {
     echo "Logging to ${BUILD_LOG}"
 
     (
-        if [ -n "$#" ]; then
-	    echo "Running: make -k $@"
-	    make -k $@
-	fi
-
-        export MAKE=$(type -P make)' -j'$(nproc)
-
-	echo time $MAKE -k build-cmake-with-idl
-
-	time $MAKE -k build-cmake-with-idl 2>&1
-
+        cd build/ninja
+        time ninja -v
 	echo $? > ${build_status_file}
-    ) | tee "${BUILD_LOG}"
+    ) 2>&1 | tee "${BUILD_LOG}"
 
     local status=$(cat $build_status_file)
 
@@ -414,10 +405,16 @@ server_build() {
 
     local extra="$@"
 
-    if [ ! -f build/unix/config.log ]; then
-        extra="${extra}config"
-
+    if [ ! -d build/ninja ]; then
         (
+            set -xe
+            mkdir -p build/ninja
+            cd build/ninja
+            echo '*' > .gitignore
+            cmake -G Ninja -DENABLE_CCACHE=ON -DBUILD_IDL=ON -DRUN_GIT=ON ../..
+        )
+        (
+            set -xe
             cd "${WORKSPACE}/PublicEngine"
             git pull
             cd MMOEngine
@@ -980,8 +977,6 @@ server_latest()
     (
         set -xe
         cd "${BUILD_DIR}"
-        git rm -f --ignore-unmatch build/unix/Makefile build/unix/config.h build/unix/config.status || true
-        git checkout HEAD -- Makefile.in aclocal.m4 config.h.in configure src/client/Makefile.in src/client/aclocal.m4 src/client/config.h.in src/client/configure build/unix || true
         local have_changes=$(git status --porcelain --untracked-files=no | wc -l)
         if [ $have_changes -gt 0 ]; then
             git stash save "swgemu-latest $(date)"
@@ -995,7 +990,7 @@ server_latest()
         cd MMOEngine
         rm -f lib/unix/libengine3.a
         make
-	rm -f "${BUILD_DIR}/build/unix/config.log"
+	rm -rf "${BUILD_DIR}/build/ninja"
     )
 
     local ret=$?
