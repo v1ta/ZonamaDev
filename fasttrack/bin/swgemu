@@ -437,7 +437,7 @@ server_build() {
         extra='clean '
     fi
 
-    if eval $LUA53_TEST_SRC > /dev/null 2>&1; then
+    if eval $LUA53_TEST_SRC < /dev/null > /dev/null 2>&1; then
 	if [ ! -d "${LUA53_TEST_DIR}" ]; then
 	    echo "** Source requires lua 5.3 but ${LUA53_TEST_DIR} doesn't exist."
 
