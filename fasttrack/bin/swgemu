@@ -787,6 +787,7 @@ show_version()
     local git_remote=$(cd ${BUILD_DIR};git ls-remote origin refs/heads/unstable 2>> ${tmp} | cut -f1)
     local git_local=$(cd ${BUILD_DIR};git rev-parse refs/heads/unstable 2>> ${tmp})
     local zd_tag=$(cd ~/ZonamaDev;git describe --tag 2>> ${tmp})
+    local zd_branch=$(cd ~/ZonamaDev;git rev-parse --abbrev-ref HEAD 2>> ${tmp})
     local me_md5=$(md5sum < $me|cut -d' ' -f1 2>&1)
     local gpp_version=$(dpkg-query --showformat='${Version}' --show g++-6)
     local cmake_version=$(dpkg-query --showformat='${Version}' --show cmake)
@@ -802,7 +803,7 @@ show_version()
 
     local json="{ "
 
-        json="${json} "'"server_version":{"remote-'${name}'":"'${url}'","remote-git-tag":"'${git_remote}'","local-git-tag":"'${git_local}'","asof_isodate":"'$(date -Iseconds)'","swgemu-script":"'${me}'","swgemu-md5":"'${me_md5}'","zd-tag":"'${zd_tag}'","gpp6-version":"'${gpp_version}'","cmake-version":"'${cmake_version}'","collection_errors":"'${errors}'"}'
+        json="${json} "'"server_version":{"remote-'${name}'":"'${url}'","remote-git-tag":"'${git_remote}'","local-git-tag":"'${git_local}'","asof_isodate":"'$(date -Iseconds)'","swgemu-script":"'${me}'","swgemu-md5":"'${me_md5}'","zd-tag":"'${zd_tag}'","zd-branch":"'${zd_branch}'","gpp6-version":"'${gpp_version}'","cmake-version":"'${cmake_version}'","collection_errors":"'${errors}'"}'
         json="${json}, "'"box_buildinfo":'$(cat /.swgemudev.buildinfo.json /.swgemudev.builinfo.json 2> /dev/null)
 
     json="$json }"
