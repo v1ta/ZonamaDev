@@ -141,6 +141,7 @@ server_start() {
 
     if $autostart; then
         echo "** server started **"
+        sleep 5
         return 0
     fi
 
