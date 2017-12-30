@@ -31,22 +31,33 @@ main() {
 	fi
     fi
 
-    echo "vagrant up"
+    local ret=255
 
-    time vagrant up
+    for retry in 1 2
+    do
+        echo "vagrant up"
+        time vagrant up
+        ret=$?
 
-    local ret=$?
+        if [ $ret -eq 0 ]; then
+            break
+        fi
 
-    if [ $ret -eq 101 ]; then
-	echo "** Running vagrant up again after plugin install **"
-	time vagrant up
-	ret=$?
-    fi
+        if [ $ret -eq 101 ]; then
+            echo "** Running vagrant up again after plugin install **"
+        fi
+
+        if [ $ret -ne 0 ]; then
+            # Maybe plugins are broken?
+            echo "** Vagrant failed, trying to repair plugins **"
+            vagrant plugin repair
+        fi
+    done
 
     if [ $ret -ne 0 ]; then
-	echo "** Vagrant failed to bring the VM image up, look at errors above for clues **"
-	echo "** If this continues get help here: ${ZONAMADEV_URL}/issues **"
-	exit 1
+        echo "** Vagrant failed to bring the VM image up, look at errors above for clues, RET=$ret **"
+        echo "** If this continues get help here: ${ZONAMADEV_URL}/issues **"
+        exit 1
     fi
 
     sleep 5
