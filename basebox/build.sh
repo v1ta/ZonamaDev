@@ -16,6 +16,7 @@ main() {
     case $1 in
 	help ) echo "$0: Choose build or package" ; exit 1 ;;
 	package ) package_box ;;
+	upload ) shift ; upload_box "$@" ;;
 	build | * ) build_box ;;
     esac
 }
@@ -46,12 +47,7 @@ build_box() {
 	fi
     fi
 
-    if vagrant destroy; then
-	:
-    else
-	echo "** ABORTED BY USER **"
-	exit 0
-    fi
+    vagrant destroy && echo "** Destoryed old basebox VM **"
 
     date
 
@@ -154,12 +150,19 @@ package_box() {
     local fn=package-${version}.box
     mv package.box $fn
     ls -lh "$PWD/$fn"
+
+    upload_box "${version}" "${fn}"
+
     echo -e "\nNEXT STEPS:\n"
 
     # Show instructions from README.md
     sed -e '1,/^### Publish/d' -e '/^###/,$d' -e 's/x\.y\.z/'"${version}"'/g' -e '/```/,/```/s/^/   * /' -e '/```/d' README.md
 
     echo -e "\nPlease make sure you upload the box named as: ${box_name} version ${version}"
+
+    if [ -x ~/.config/ZonamaDev/upload-box.sh ]; then
+        ~/.config/ZonamaDev/upload-box.sh "${PWD}/${fn}"
+    fi
 
     if yorn "\nAfter you upload would you like to test [$version] in the ${PWD}/../fasttrack folder?"; then
         while :
@@ -191,6 +194,32 @@ package_box() {
     fi
 
     exit 0
+}
+
+upload_box() {
+    local version=$1
+    local box=$2
+    local box_name=$(egrep 'config.vm.box[[:space:]=]' ../fasttrack/Vagrantfile | tr -d '['"'"'"]' | sed -e 's/.*=[ ]*//' -e 's/;//')
+    local user=''
+    local token=''
+    
+    read user token <<<$(<~/.config/ZonamaDev/vagrantup.credentials)
+
+    if [ -z "$user" -o -z "$token" ]; then
+        echo "** Please manually upload the box to vagrantup via the web UI **"
+        return
+    fi
+
+    echo "** curl -s 'https://app.vagrantup.com/api/v1/box/${box_name}/version/${version}/provider/virtualbox/upload?access_token=${token}' "
+    local upload_url=$(curl -s "https://app.vagrantup.com/api/v1/box/${box_name}/version/${version}/provider/virtualbox/upload?access_token=${token}" | python -c 'import sys, json; print json.load(sys.stdin)["upload_path"]')
+
+    if [ -z "$upload_url" ]; then
+        echo "Failed to find upload URL"
+        return
+    fi
+
+    echo "** curl -X PUT --upload-file $box '${upload_url}'"
+    curl -X PUT --upload-file $box "${upload_url}" > /dev/null
 }
 
 get_version() {
