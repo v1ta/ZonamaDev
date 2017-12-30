@@ -64,6 +64,9 @@ main() {
         shift
         ZONAMADEV_BRANCH="$1"
         shift
+        echo "######################################"
+        echo "## Using branch ${ZONAMADEV_BRANCH}"
+        echo "######################################"
     fi
 
     # If not set then use master
@@ -97,7 +100,11 @@ main() {
 	    ;;
 	esac
 
-	if git pull; then
+        git stash
+
+        git fetch --all
+
+	if git pull --all; then
 	    :
 	else
 	    echo "** Failed to clone too, you might need help!"
@@ -168,6 +175,11 @@ check_gitbash_win() {
     local ver_min="4.3.0"
     local ver=$("${vbm}" --version)
 
+    if [ -z "${MSYSTEM}" ]; then
+        echo "** MUST RUN FROM GITBASH SHELL NOT CYGWIN, ABORTING **"
+        exit 16
+    fi
+
     if version_error "${ver_min}" "${BASH_VERSION}"; then
 	echo "Unsupported version of BASH (${BASH_VERSION}), please upgrade to BASH 4.3.x+"
 	exit 1
@@ -190,7 +202,7 @@ check_gitbash_win() {
 }
 
 check_virtualbox_win() {
-    local ver_min="5.1.22"
+    local ver_min="5.1.30"
     local ve=$(wmic cpu get VirtualizationFirmwareEnabled/value | grep TRUE)
 
     if [ -z "$ve" ]; then
@@ -234,7 +246,7 @@ check_virtualbox_win() {
 }
 
 check_virtualbox_linux() {
-    local ver_min="5.1.22"
+    local ver_min="5.1.30"
     local vbm=$(type -P VBoxManage)
 
     if [ -z "${vbm}" ]; then
@@ -260,7 +272,7 @@ check_virtualbox_linux() {
 }
 
 check_virtualbox_osx() {
-    local ver_min="5.1.22"
+    local ver_min="5.1.30"
     local vbm=$(type -P VBoxManage)
 
     if [ -z "${vbm}" ]; then
@@ -284,7 +296,7 @@ check_virtualbox_osx() {
 }
 
 check_vagrant_base() {
-    local ver_min="1.9.6"
+    local ver_min="2.0.1"
     local ver=$(vagrant --version | cut -d' ' -f2 2> /dev/null)
 
     if [ -z "$ver" ]; then
