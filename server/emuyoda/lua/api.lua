@@ -1125,6 +1125,8 @@ function service_console(path)
 		    if pos > tail_bytes then
 			pos = pos - tail_bytes
 			console_output("..skip " .. pos .. " bytes..\n")
+                    else
+                        pos = console_fh:seek("set", 0)
 		    end
 		end
 	    elseif not console_log_err_sent and err then
