@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# Boxes before 1.5 would run from master, from 1.5 forward we use release-x.y
+#
+# If this is a legacy box we need to switch it to release-1.4 branch.
+#
+legacy_checkup() {
+    local zd_branch=$(cd $(dirname $ME);git rev-parse --abbrev-ref HEAD)
+
+    if [ -z "${ZONAMADEV_BRANCH}" ]; then
+        export ZONAMADEV_BRANCH="release-1.4"
+        echo 'export ZONAMADEV_BRANCH="'"${ZONAMADEV_BRANCH}"'"' >> $(dirname $ME)/../../common/global.config
+    fi
+
+    if [ "$zd_branch" = "${ZONAMADEV_BRANCH}" ]; then
+        return 0
+    fi
+
+    (
+        echo "** Migrate to ${ZONAMADEV_BRANCH}"
+        cd $(dirname $ME)
+        set -x
+        git stash
+        git fetch --all
+        git pull --all
+        git checkout "${ZONAMADEV_BRANCH}"
+    )
+
+    source $(dirname $ME)/../../common/global.config
+
+    sudo rm -f /.swgemudev.update
+
+    sudo /bin/bash -xc 'unset ME CHILD_STATUS;exec $(dirname $ME)/../../basebox/scripts/firstboot --force 15customize > /tmp/legacy_checkup.out 2>&1'
+
+    notice "Legacy Checkup" "Moved ZonamaDev to legacy branch ${ZONAMADEV_BRANCH}\n\nMost likely you need to update your host and virtual machine."
+}
+
+legacy_checkup
