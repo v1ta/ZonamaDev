@@ -1,11 +1,11 @@
 #!/bin/bash
 if [ -z "$BASH_VERSION" ]; then
     echo "** MUST RUN FROM bash, please run again from bash! **"
-    exit
+    exit 15
 fi
 
 ZONAMADEV_URL='https://github.com/Zonama/ZonamaDev'
-BASEBOX='zonama/zonamadev-deb-jessie'
+ZONAMADEV_BRANCH='release-1.4'
 OS='unknown'
 
 main() {
@@ -26,7 +26,7 @@ main() {
 	    echo '  mkdir /c/swgemudev'
 	    echo '  export HOME=/c/swgemudev'
 	    echo '  cd $HOME'
-	    echo '  curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash'
+	    echo '  curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash '"$@"
 	    echo
 	    echo 'However, every time you want to work with this system you will need to reset'
 	    echo 'your HOME when you open the bash shell window.'
@@ -58,23 +58,45 @@ main() {
 	    echo "** Aborted by user **"
 	    exit 14
 	fi
+        shift
     fi
 
+    # Handle release {x.y}
+    if [ "X$1" = "Xrelease" -a "X$2" != "X" ]; then
+        shift
+        ZONAMADEV_BRANCH="release-$1"
+        shift
+    fi
+
+    # Handle branch {branchName}
     if [ "X$1" = "Xbranch" -a "X$2" != "X" ]; then
         shift
         ZONAMADEV_BRANCH="$1"
         shift
-        echo "######################################"
-        echo "## Using branch ${ZONAMADEV_BRANCH}"
-        echo "######################################"
     fi
 
-    # If not set then use master
-    ZONAMADEV_BRANCH=${ZONAMADEV_BRANCH:-master}
+    if [ -z "${ZONAMADEV_BRANCH}" ]; then
+        echo "ERROR: No branch to boot from?, GET HELP"
+        exit 126
+    fi
+
+    echo "######################################"
+    echo "## Using branch ${ZONAMADEV_BRANCH}"
+    echo "######################################"
 
     check_versions
 
+    # Used by fasttrack/upgrade.sh to verify host software versions
     if [ "X$1" = "Xcheck-versions" ]; then
+        shift
+        exit 0
+    fi
+
+    if [ -n "$@" ]; then
+        [ "$1" -ne "help" ] && echo "** Unexpected arguments: $@"
+        echo
+        echo "Usage: $0 (help|destroy|uninstall|branch {branchName}|release {x.y})"
+        echo
         exit 0
     fi
 
@@ -85,7 +107,7 @@ main() {
 
     ## Clone Repo
     echo "Using ${ZONAMADEV_URL} branch ${ZONAMADEV_BRANCH}"
-    if git clone -b "${ZONAMADEV_BRANCH}" ${ZONAMADEV_URL}; then
+    if git clone -b ${ZONAMADEV_BRANCH} ${ZONAMADEV_URL}; then
 	:
     else
 	case $PWD in
@@ -107,9 +129,16 @@ main() {
 	if git pull --all; then
 	    :
 	else
-	    echo "** Failed to clone too, you might need help!"
+	    echo "** Failed to pull too, you might need help!"
 	    exit 1
 	fi
+
+        if git checkout "${ZONAMADEV_BRANCH}"; then
+            :
+        else
+            echo "** Failed to checkout branch ${ZONAMADEV_BRANCH}, GET HELP!"
+            exit 125
+        fi
     fi
 
     ## hand off to next script
@@ -399,7 +428,10 @@ reset_zd() {
     )
 
     echo "** Removing any cached copies of base box **"
-    vagrant box remove ${BASEBOX} --all --force
+    vagrant box list | awk '/^zonama/ { print $1 }' | while read basebox
+    do
+        vagrant box remove ${basebox} --all --force
+    done
 
     echo "** Looking for the ZonamaDev host directory..."
     local found_zd=false
@@ -441,18 +473,33 @@ yorn() {
 }
 
 version_error() {
-    local want_int want_maj want_min want_sub want_misc have_int have_maj have_min have_sub have_misc
-    read want_maj want_min want_sub want_misc <<<${1//[^0-9]/ }
-    read have_maj have_min have_sub have_misc <<<${2//[^0-9]/ }
+    local want="$1"
+    local have="$2"
 
-    let "have_int = ${have_maj:-0} * 1000000 + ${have_min:-0} * 1000 + ${have_sub:-0}"
-    let "want_int = ${want_maj:-0} * 1000000 + ${want_min:-0} * 1000 + ${want_sub:-0}"
+    read have_maj have_min have_sub have_misc <<<${have//[^0-9]/ }
+    read want_maj want_min want_sub want_misc <<<${want//[^0-9]/ }
 
-    if [ "${have_int}" -lt "${want_int}" ]; then
+    if [ "${have_maj}" -lt "${want_maj}" ]; then
         return 0
     fi
 
-    return 1
+    if [ "${have_maj}" -gt "${want_maj}" ]; then
+        return 1
+    fi
+
+    if [ "${have_min}" -gt "${want_min}" ]; then
+        return 2
+    fi
+
+    if [ "${have_sub}" -gt "${want_sub}" ]; then
+        return 3
+    fi
+
+    if [ "${have_maj}" -eq "${want_maj}" -a "${have_min}" -eq "${want_min}" -a "${have_sub}" -eq "${want_sub}" ]; then
+        return 4
+    fi
+
+    return 0
 }
 
 main "$@" < /dev/tty
