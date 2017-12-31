@@ -16,10 +16,11 @@ cat << ! > /.swgemudev.update
 (
     export ZDUSER='${ZDUSER}'
     export ZONAMADEV_URL='${ZONAMADEV_URL}'
+    export ZONAMADEV_BRANCH='${ZONAMADEV_BRANCH:-release-1.4}'
     source ~${ZDUSER}/ZonamaDev/common/global.config
 !
 cat << '!' >> /.swgemudev.update
-    /usr/bin/perl -ne 'BEGIN{$r=$ENV{"ZONAMADEV_URL"};$b="master"} $b=$1 if(/zdbranch=(\S+)/);$r=$1 if(/zdrepo=(\S+)/); END{($u,$g,$ENV{"HOME"})=(getpwnam($ENV{"ZDUSER"}))[2,3,7];$)=$g;$>=$u;system("cd;id -a;pwd;set -x;pwd;git clone $r;cd ZonamaDev;git stash;git fetch;git checkout $b;git pull");}' /proc/cmdline
+    /usr/bin/perl -ne 'BEGIN{$r=$ENV{"ZONAMADEV_URL"};$b=$ENV{"ZONAMADEV_BRANCH"};} $b=$1 if(/zdbranch=(\S+)/);$r=$1 if(/zdrepo=(\S+)/); END{($u,$g,$ENV{"HOME"})=(getpwnam($ENV{"ZDUSER"}))[2,3,7];$)=$g;$>=$u;system("cd;id -a;pwd;set -x;pwd;git clone $r;cd ZonamaDev;git stash;git fetch;git checkout $b;git pull");}' /proc/cmdline
 ) 2>&1 |logger -t $0
 !
 

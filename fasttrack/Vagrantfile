@@ -119,6 +119,8 @@ Vagrant.configure(2) do |config|
   ## Providers ##
   ###############
 
+  zonamadev_url=%x[bash -c 'source #{File.dirname(__FILE__)}/../common/global.config;echo $ZONAMADEV_URL'].strip
+  zonamadev_branch=%x[git rev-parse --abbrev-ref HEAD].strip
   [ "vmware_fusion", "vmware_workstation", "virtualbox" ].each do |provider|
     config.vm.provider provider do |v|
       v.name = "ZonamaDev-" + Time.now.to_i.to_s
@@ -127,6 +129,9 @@ Vagrant.configure(2) do |config|
       v.gui = true
 
       if provider == "virtualbox"
+        v.customize [ "guestproperty", "set", :id, "/ZonamaDev/url", zonamadev_url ]
+        v.customize [ "guestproperty", "set", :id, "/ZonamaDev/branch", zonamadev_branch ]
+        v.customize [ "guestproperty", "set", :id, "/ZonamaDev/upgrade", ENV['ZONAMADEV_UPGRADE'] || 'no' ]
         # Hint at a bigger video config
         v.customize ["modifyvm", :id, "--accelerate3d", "off"]
         v.customize ["modifyvm", :id, "--accelerate2dvideo", "on"]
