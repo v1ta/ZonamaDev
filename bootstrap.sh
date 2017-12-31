@@ -5,7 +5,7 @@ if [ -z "$BASH_VERSION" ]; then
 fi
 
 ZONAMADEV_URL='https://github.com/Zonama/ZonamaDev'
-ZONAMADEV_BRANCH='master'
+ZONAMADEV_BRANCH='release-1.4'
 OS='unknown'
 
 main() {
@@ -26,7 +26,7 @@ main() {
 	    echo '  mkdir /c/swgemudev'
 	    echo '  export HOME=/c/swgemudev'
 	    echo '  cd $HOME'
-	    echo '  curl -L http://downloads.zonamaserver.com/zonamadev/bootstrap.sh | bash'
+	    echo '  curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash '"$@"
 	    echo
 	    echo 'However, every time you want to work with this system you will need to reset'
 	    echo 'your HOME when you open the bash shell window.'
@@ -58,34 +58,47 @@ main() {
 	    echo "** Aborted by user **"
 	    exit 14
 	fi
+        shift
     fi
 
-    if [ "X$1" = "Xbranch" ]; then
+    # Handle release {x.y}
+    if [ "X$1" = "Xrelease" -a "X$2" != "X" ]; then
+        shift
+        ZONAMADEV_BRANCH="release-$1"
+        shift
+    fi
+
+    # Handle branch {branchName}
+    if [ "X$1" = "Xbranch" -a "X$2" != "X" ]; then
         shift
         ZONAMADEV_BRANCH="$1"
         shift
-        echo "######################################"
-        echo "## Using branch ${ZONAMADEV_BRANCH}"
-        echo "######################################"
     fi
 
-    ## Check for git
-    if git --version > /dev/null 2>&1; then
-	:
-    else
-	eval install_git_$OS
+    if [ -z "${ZONAMADEV_BRANCH}" ]; then
+        echo "ERROR: No branch to boot from?, GET HELP"
+        exit 126
     fi
 
-    if [ "$OS" = "win" ]; then
-	echo "** Checking for Git Bash **"
-	check_gitbash_$OS
+    echo "######################################"
+    echo "## Using branch ${ZONAMADEV_BRANCH}"
+    echo "######################################"
+
+    check_versions
+
+    # Used by fasttrack/upgrade.sh to verify host software versions
+    if [ "X$1" = "Xcheck-versions" ]; then
+        shift
+        exit 0
     fi
 
-    echo "** Checking for VirtualBox **"
-    check_virtualbox_$OS
-
-    echo "** Checking for Vagrant **"
-    check_vagrant_$OS
+    if [ -n "$@" ]; then
+        [ "$1" -ne "help" ] && echo "** Unexpected arguments: $@"
+        echo
+        echo "Usage: $0 (help|destroy|uninstall|branch {branchName}|release {x.y})"
+        echo
+        exit 0
+    fi
 
     # If we're under the ZonamaDev dir back out to parent
     cd ${PWD/ZonamaDev*/}
@@ -93,6 +106,7 @@ main() {
     echo "** ZDHOME=${PWD} **"
 
     ## Clone Repo
+    echo "Using ${ZONAMADEV_URL} branch ${ZONAMADEV_BRANCH}"
     if git clone -b ${ZONAMADEV_BRANCH} ${ZONAMADEV_URL}; then
 	:
     else
@@ -113,11 +127,18 @@ main() {
         git fetch --all
 
 	if git pull --all; then
-            git checkout ${ZONAMADEV_BRANCH}
+	    :
 	else
 	    echo "** Failed to pull too, you might need help!"
 	    exit 1
 	fi
+
+        if git checkout "${ZONAMADEV_BRANCH}"; then
+            :
+        else
+            echo "** Failed to checkout branch ${ZONAMADEV_BRANCH}, GET HELP!"
+            exit 125
+        fi
     fi
 
     ## hand off to next script
@@ -130,6 +151,28 @@ main() {
     echo "** Something went wrong, get help **"
 
     exit 11
+}
+
+check_versions() {
+    ## Check for git
+    if git --version > /dev/null 2>&1; then
+	:
+    else
+	eval install_git_$OS
+    fi
+
+    if [ "$OS" = "win" ]; then
+	echo "** Checking for Git Bash **"
+	check_gitbash_$OS
+    fi
+
+    echo "** Checking for VirtualBox **"
+    check_virtualbox_$OS
+
+    echo "** Checking for Vagrant **"
+    check_vagrant_$OS
+
+    return 0
 }
 
 install_git_win() {
@@ -184,11 +227,11 @@ check_gitbash_win() {
 
     echo "** BASH_VERSION: ${BASH_VERSION} **"
 
-    return 1
+    return 0
 }
 
 check_virtualbox_win() {
-    local ver_min="5.1.12"
+    local ver_min="5.1.30"
     local ve=$(wmic cpu get VirtualizationFirmwareEnabled/value | grep TRUE)
 
     if [ -z "$ve" ]; then
@@ -227,10 +270,12 @@ check_virtualbox_win() {
     fi
 
     echo "** Virtualbox version $ver **"
+
+    return 0
 }
 
 check_virtualbox_linux() {
-    local ver_min="5.1.12"
+    local ver_min="5.1.30"
     local vbm=$(type -P VBoxManage)
 
     if [ -z "${vbm}" ]; then
@@ -251,10 +296,12 @@ check_virtualbox_linux() {
     fi
 
     echo "** Virtualbox version $ver **"
+
+    return 0
 }
 
 check_virtualbox_osx() {
-    local ver_min="5.1.12"
+    local ver_min="5.1.30"
     local vbm=$(type -P VBoxManage)
 
     if [ -z "${vbm}" ]; then
@@ -278,10 +325,24 @@ check_virtualbox_osx() {
 }
 
 check_vagrant_base() {
-    local ver_min="1.9.1"
+    local ver_min="2.0.1"
     local ver=$(vagrant --version | cut -d' ' -f2 2> /dev/null)
 
     if [ -z "$ver" ]; then
+        if [ -n "$(type -P vagrant)" ]; then
+            echo -e "** You might have a broken version of vagrant installed\n\nvagrant -v"
+
+            vagrant -v
+
+            if yorn "Is the version of vagrant installed ${ver_min} or higher?"; then
+                echo "** Please note that you could have problems unless you downgrade to ${ver_min}"
+                return 0
+            else
+                echo "** Please close this window, install Vagrant ${ver_min} or higher and try again **"
+                exit 1
+            fi
+        fi
+
 	echo -e "** You need to install Vagrant ${ver_min} or higher **\n"
 
 	if yorn "Would you like me to take you to: https://www.vagrantup.com/downloads.html?"; then
@@ -298,6 +359,8 @@ check_vagrant_base() {
     fi
 
     echo "** Vagrant version $ver **"
+
+    return 0
 }
 
 check_vagrant_win() {
@@ -326,7 +389,7 @@ check_vagrant_linux() {
 	fi
     fi
 
-    return $?
+    return 0
 }
 
 reset_zd() {
@@ -364,7 +427,7 @@ reset_zd() {
 	 fi
     )
 
-    echo "** Removing any cached copies of base box(es) **"
+    echo "** Removing any cached copies of base box **"
     vagrant box list | awk '/^zonama/ { print $1 }' | while read basebox
     do
         vagrant box remove ${basebox} --all --force
@@ -397,6 +460,7 @@ reset_zd() {
 }
 
 yorn() {
+  local yorn
   if tty -s; then
       echo -n -e "$@ Y\b" > /dev/tty
       read yorn < /dev/tty
