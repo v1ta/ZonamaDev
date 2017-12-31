@@ -93,7 +93,7 @@ main() {
     fi
 
     if [ -n "$@" ]; then
-        [ "$1" -ne "help" ] && echo "** Unexpected arguments: $@"
+        [ "$1" != "help" ] && echo "** Unexpected arguments: $@"
         echo
         echo "Usage: $0 (help|destroy|uninstall|branch {branchName}|release {x.y})"
         echo
