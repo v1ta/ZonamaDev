@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+# 00zd-upgrade-check - Check for pending upgrade
+
+zd_upgrade_check() {
+    local upgrade_status=$(VBoxControl --nologo guestproperty get "/ZonamaDev/upgrade"|sed -e 's/^.*: //' -e 's/^No value.*//' 2> /dev/null)
+
+    if [ "X${upgrade_status}" = "Xyes" ]; then
+        VBoxControl --nologo guestproperty set "/ZonamaDev/upgrade" "pending"
+        echo -e "$(date)\nYour host has triggered the VM upgrade process.\n\nPlease do not interact with the VM or close it until this process is complete.\n\n" > ${ZDHOME}/Desktop/upgrade.log
+        service lightdm stop
+        (
+            export TERM=linux
+            clear
+            tail -n +0 -F ${ZDHOME}/Desktop/upgrade.log
+            echo ">> tail exited? shutting down in 5 seconds."
+            sleep 5
+            init 0
+        ) > /dev/console 2>&1 < /dev/console
+    fi
+}
+
+zd_upgrade_check
