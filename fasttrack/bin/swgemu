@@ -376,7 +376,7 @@ server_build_step() {
     (
         cd build/ninja
         time ninja -v
-	echo $? > ${build_status_file}
+      	echo $? > ${build_status_file}
     ) 2>&1 | tee "${BUILD_LOG}"
 
     local status=$(cat $build_status_file)
@@ -802,10 +802,16 @@ show_version()
 
     rm -f "${tmp}"
 
+    local build_info=$(cat /.swgemudev.buildinfo.json /.swgemudev.builinfo.json 2> /dev/null)
+
+    if [ -z "${build_info}" ]; then
+        build_info='{ "error":"missing or empty buildinfo.json" }'
+    fi
+
     local json="{ "
 
-        json="${json} "'"server_version":{"remote-'${name}'":"'${url}'","remote-git-tag":"'${git_remote}'","local-git-tag":"'${git_local}'","asof_isodate":"'$(date -Iseconds)'","swgemu-script":"'${me}'","swgemu-md5":"'${me_md5}'","zd-tag":"'${zd_tag}'","zd-branch":"'${zd_branch}'","gpp6-version":"'${gpp_version}'","cmake-version":"'${cmake_version}'","collection_errors":"'${errors}'"}'
-        json="${json}, "'"box_buildinfo":'$(cat /.swgemudev.buildinfo.json /.swgemudev.builinfo.json 2> /dev/null)
+        json="${json} "'"server_version":{"remote-'${name}'":"'${url}'","remote-git-tag":"'${git_remote}'","local-get-tag":"'${git_local}'","asof_isodate":"'$(date -Iseconds)'","swgemu-script":"'${me}'","swgemu-md5":"'${me_md5}'","zd-tag":"'${zd_tag}'","zd-branch":"'${zd_branch}'","gpp6-version":"'${gpp_version}'","cmake-version":"'${cmake_version}'","collection_errors":"'${errors}'"}'
+        json="${json}, "'"box_buildinfo":'"${build_info}"
 
     json="$json }"
 
@@ -876,7 +882,7 @@ post_debug()
                 ghi config --auth $ghuser
             fi
             echo "** Posting Issue..."
-            local issue=$(ghi open --label "type/automated-help" -m "$(post_debug_body)" -- lordkator/ZonamaDev 2>&1)
+            local issue=$(ghi open --label "type/automated-help" -m "$(post_debug_body)" -- Zonama/ZonamaDev 2>&1)
             echo "** Looking for issue id"
             local issue_num=$(echo "$issue"|sed -ne '1s!^#\([0-9][0-9]*\):.*!\1!p')
 
@@ -920,6 +926,7 @@ post_debug_body() {
     #
     local debug_commands=(
         "show_version"
+        "cat /etc/os-release"
         "tail -5 ${WORKSPACE}/Initial_Core3_Build.log"
         "get_config --bash 'Zone..'"
         "get_config --bash 'Tre..'"
@@ -993,7 +1000,7 @@ server_latest()
         cd MMOEngine
         rm -f lib/unix/libengine3.a
         make
-	rm -rf "${BUILD_DIR}/build/ninja"
+      	rm -rf "${BUILD_DIR}/build/ninja"
     )
 
     local ret=$?
