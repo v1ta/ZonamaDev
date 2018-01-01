@@ -105,9 +105,9 @@ sleep 5
 ## KILL EVERYTHING ELSE ##
 ##########################
 echo ">> Stop ${ZDUSER} processes"
-ps -fu ${ZDUSER} | awk 'NR > 1 && $3 == 1 { print $2 }' | xargs -t kill
+ps -fu ${ZDUSER} | awk 'NR > 1 && $3 == 1 { print $2 }' | xargs --no-run-if-empty -t kill
 sleep 2
-ps -fu ${ZDUSER} | awk 'NR > 1 && $3 == 1 { print $2 }' | xargs -t kill -9
+ps -fu ${ZDUSER} | awk 'NR > 1 && $3 == 1 { print $2 }' | xargs --no-run-if-empty -t kill -9
 sleep 2
 echo ">> Remaining ${ZDUSER} processes:"
 ps -fu ${ZDUSER} | sed 's/^/>> /'
@@ -121,13 +121,25 @@ if [ -x /usr/bin/convert ]; then
     echo ">> Branding bootscreen with:"
     echo ">> ** ${line1}"
     echo ">> ** ${line2}"
-    convert /usr/share/images/desktop-base/lines-grub.png -gravity southeast ${ZDHOME}/Pictures/logo_yellow.png'[45%]' -geometry +0+5 -composite \
-        -gravity center -antialias -font Helvetica-Bold \
-        -pointsize 22 -fill black -annotate +1+206 "${line1}" -annotate +2+207 "${line1}" -fill gold -annotate +0+205 "${line1}" \
-        -pointsize 12 -fill black -annotate +1+226 "${line2}" -annotate +2+227 "${line2}" -fill grey -annotate +0+225 "${line2}" \
-        ${ZDHOME}/Pictures/swgemu-grub.png
-    sed -i -e '$ a GRUB_BACKGROUND="'"${ZDHOME}"'/Pictures/swgemu-grub.png"' -e '/GRUB_BACKGROUND/d' /etc/default/grub
-    /usr/sbin/update-grub
+    srcimg=''
+    for i in '/usr/share/images/desktop-base/lines-grub.png' '/usr/share/images/desktop-base/desktop-grub.png'
+    do
+        if [ -f "$i" ]; then
+            srcimg="$i"
+            break
+        fi
+    done
+    if [ -n "$srcimg" ]; then
+        convert "$srcimg" -gravity southeast ${ZDHOME}/Pictures/logo_yellow.png'[45%]' -geometry +0+5 -composite \
+            -gravity center -antialias -font Helvetica-Bold \
+            -pointsize 22 -fill black -annotate +1+206 "${line1}" -annotate +2+207 "${line1}" -fill gold -annotate +0+205 "${line1}" \
+            -pointsize 12 -fill black -annotate +1+226 "${line2}" -annotate +2+227 "${line2}" -fill grey -annotate +0+225 "${line2}" \
+            ${ZDHOME}/Pictures/swgemu-grub.png
+        sed -i -e '$ a GRUB_BACKGROUND="'"${ZDHOME}"'/Pictures/swgemu-grub.png"' -e '/GRUB_BACKGROUND/d' -e '/^GRUB_CMDLINE_LINUX_DEFAULT/s/.*/GRUB_CMDLINE_LINUX_DEFAULT=""/' /etc/default/grub
+        /usr/sbin/update-grub
+    else
+        echo -e "**************************************************************************************\n** WARNING: UNABLE TO FIND SOURCE GRUB BACKGROUND IMAGE, WILL NOT BRAND BOOT SCREEN **\n**************************************************************************************"
+    fi
 fi
 
 #####################
@@ -227,6 +239,16 @@ echo '{ "build_version": "'"${version}"'", "build_timestamp": '"${build_timestam
 # Ok let these run on first boot of new fasttrack image
 zdcfg clear-flag suspend_devsetup
 zdcfg clear-flag suspend_fasttrack
+
+####################################
+## Make sure box starts on master ##
+####################################
+(
+    set -x
+    cd ${ZDHOME}/ZonamaDev
+    git checkout master
+    git rev-parse --abbrev-ref HEAD
+)
 
 #####################
 ## Fix permissions ##

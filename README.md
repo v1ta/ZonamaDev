@@ -17,9 +17,9 @@ Zonama - The living planet, or in our world an easily deployed development envir
 
 #### Downloads
 * [Github's Git for Windows](https://git-for-windows.github.io)
-* [VirtualBox for Windows](https://www.virtualbox.org/wiki/Downloads)
-* [Vagrant for Windows](https://releases.hashicorp.com/vagrant/1.9.1/vagrant_1.9.1.msi)
-    (Vagrant versions above 1.9.1 are currently causing a setup failure. Install version 1.9.1 to avoid.)
+* [VirtualBox for Windows version 5.1.22 or higher](https://www.virtualbox.org/wiki/Downloads)
+* [Vagrant for Windows version 1.9.6](https://releases.hashicorp.com/vagrant/1.9.6/vagrant_1.9.6_i686.msi)
+* NOTE: 1.9.7 has an open issue that makes bootstrap.sh fail to detect vargant version: https://github.com/mitchellh/vagrant/issues/8833
 
 #### Bootstrap
 Launch Git Bash: Start -> Programs -> Git Bash
@@ -28,7 +28,7 @@ Right click in desired directory -> Git Bash
 
 Type:
 ````
-curl -L http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash
+curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash
 ````
 
 Watch for instructions.
@@ -68,7 +68,7 @@ sudo dpkg -i <pathtofile>/<nameoffile>
 ````
 Type:
 ````
-curl -L http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash
+curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash
 ````
 Watch for error messages, and resolve any unmet dependancy problems.  Each distro of linux has different versions:
 For example, on Debian Testing (Stretch) install should be able to do apt-get virtualbox and vagrant.
@@ -90,7 +90,7 @@ The system should update on reboot, please reboot the vm:
 To uninstall and re-install fresh on the host system type:
 
 ````
-curl -L http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s destroy
+curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s destroy
 ````
 
 
@@ -99,7 +99,7 @@ curl -L http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s destr
 To uninstall on the host system type:
 
 ````
-curl -L http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s uninstall
+curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s uninstall
 ````
 
 #### Local config for core and ram

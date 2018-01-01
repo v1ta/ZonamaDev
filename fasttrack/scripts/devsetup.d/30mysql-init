@@ -50,6 +50,13 @@ mysql_init_database() {
 
     mysql -ve "FLUSH PRIVILEGES;"
 
+    # Debian 9 assumes unix_socket auth but most of the scripts assume mysql_native_password
+    # This causes logrotate to fail and send lots of annoying messages
+    if [ -f /etc/logrotate.d/mysql-server ]; then
+        # Just remove it for now, most development environments don't need it anyway
+        sudo rm /etc/logrotate.d/mysql-server
+    fi
+
     alert "Mysql Database Initialized" "The database ${DBName} was created and initialized and the database user ${DBUser} was granted all privileges."
 
     step_complete 0
