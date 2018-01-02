@@ -20,10 +20,11 @@ legacy_checkup() {
         echo "** Migrate to ${ZONAMADEV_BRANCH}"
         cd $(dirname $ME)
         set -x
+        git fetch --all --prune
         git stash
-        git fetch --all
-        git pull --all
         git checkout "${ZONAMADEV_BRANCH}"
+        git reset --hard @{u}
+        git clean -d --force
     )
 
     source $(dirname $ME)/../../common/global.config
@@ -32,7 +33,7 @@ legacy_checkup() {
 
     sudo /bin/bash -xc 'unset ME CHILD_STATUS;exec $(dirname $ME)/../../basebox/scripts/firstboot --force 15customize > /tmp/legacy_checkup.out 2>&1'
 
-    notice "Legacy Checkup" "Moved ZonamaDev to legacy branch ${ZONAMADEV_BRANCH}\n\nMost likely you need to update your host and virtual machine."
+    notice "Legacy Checkup" "Moved ZonamaDev to legacy branch ${ZONAMADEV_BRANCH}\n\nMost likely you need to update your host and virtual machine soon."
 }
 
 legacy_checkup
