@@ -2,6 +2,14 @@
 
 Zonama - The living planet, or in our world an easily deployed development environment for working on the server code of swgemu's Core3 (https://www.swgemu.com/)
 
+## Branches / Versions
+
+In general you should not worry about what branch you're on.  The bootstrap script will do this for you. That said knowledge is power so here's a summary of the branches in this repo:
+
+* release-1.5 - Stable, Box 1.5 (Debian 9), Jan 1, 2018 to ...
+* release-1.4 - Legacy, Box 1.4.5 (Debian 8), Dec 31, 2016 to Dec 31, 2017
+* master - Current bleeding edge mess, much pain here padawan
+
 ## Windows Host
 
 #### Minimum requirements
@@ -17,9 +25,8 @@ Zonama - The living planet, or in our world an easily deployed development envir
 
 #### Downloads
 * [Github's Git for Windows](https://git-for-windows.github.io)
-* [VirtualBox for Windows](https://www.virtualbox.org/wiki/Downloads)
-* [Vagrant for Windows](https://releases.hashicorp.com/vagrant/1.9.1/vagrant_1.9.1.msi)
-    (Vagrant versions above 1.9.1 are currently causing a setup failure. Install version 1.9.1 to avoid.)
+* [VirtualBox v5.1.30 or greater](https://www.virtualbox.org/wiki/Downloads)
+* [Vagrant v2.0.1 or greater](https://www.vagrantup.com/downloads.html)
 
 #### Bootstrap
 Launch Git Bash: Start -> Programs -> Git Bash
@@ -28,7 +35,7 @@ Right click in desired directory -> Git Bash
 
 Type:
 ````
-curl -L http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash
+curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash
 ````
 
 Watch for instructions.
@@ -68,7 +75,7 @@ sudo dpkg -i <pathtofile>/<nameoffile>
 ````
 Type:
 ````
-curl -L http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash
+curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash
 ````
 Watch for error messages, and resolve any unmet dependancy problems.  Each distro of linux has different versions:
 For example, on Debian Testing (Stretch) install should be able to do apt-get virtualbox and vagrant.
@@ -90,16 +97,31 @@ The system should update on reboot, please reboot the vm:
 To uninstall and re-install fresh on the host system type:
 
 ````
-curl -L http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s destroy
+curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s destroy
 ````
-
 
 #### UNINSTALL
 
 To uninstall on the host system type:
 
 ````
-curl -L http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s uninstall
+curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s uninstall
+````
+
+#### SPECIFY RELEASE
+
+As an example to install release-1.5 before it becomes mainline:
+
+````
+curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s release 1.5
+````
+
+#### SPECIFY BRANCH
+
+As an example to QA a new branch called "feature-lotto-numbers-1":
+
+````
+curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s branch feature-lotto-numbers-1
 ````
 
 #### Local config for core and ram
