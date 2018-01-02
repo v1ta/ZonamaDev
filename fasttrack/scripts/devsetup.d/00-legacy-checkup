@@ -32,7 +32,7 @@ legacy_checkup() {
 
     sudo rm -f /.swgemudev.update
 
-    sudo /bin/bash -xc 'unset ME CHILD_STATUS;exec ${base_dir}/../../basebox/scripts/firstboot --force 15customize > /tmp/legacy_checkup.out 2>&1'
+    sudo /bin/bash -xc "unset ME CHILD_STATUS;exec ${base_dir}/../../basebox/scripts/firstboot --force 15customize > /tmp/legacy_checkup.out 2>&1"
 
     notice "Legacy Checkup" "Moved ZonamaDev to legacy branch ${ZONAMADEV_BRANCH}\n\nMost likely you need to update your host and virtual machine soon."
 }
