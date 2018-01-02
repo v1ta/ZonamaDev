@@ -2,6 +2,14 @@
 
 Zonama - The living planet, or in our world an easily deployed development environment for working on the server code of swgemu's Core3 (https://www.swgemu.com/)
 
+## Branches / Versions
+
+In general you should not worry about what branch you're on.  The bootstrap script will do this for you. That said knowledge is power so here's a summary of the branches in this repo:
+
+* release-1.5 - Stable, Box 1.5 (Debian 9), Jan 1, 2018 to ...
+* release-1.4 - Legacy, Box 1.4.5 (Debian 8), Dec 31, 2016 to Dec 31, 2017
+* master - Current bleeding edge mess, much pain here padawan
+
 ## Windows Host
 
 #### Minimum requirements
@@ -17,9 +25,8 @@ Zonama - The living planet, or in our world an easily deployed development envir
 
 #### Downloads
 * [Github's Git for Windows](https://git-for-windows.github.io)
-* [VirtualBox for Windows version 5.1.22 or higher](https://www.virtualbox.org/wiki/Downloads)
-* [Vagrant for Windows version 1.9.6](https://releases.hashicorp.com/vagrant/1.9.6/vagrant_1.9.6_i686.msi)
-* NOTE: 1.9.7 has an open issue that makes bootstrap.sh fail to detect vargant version: https://github.com/mitchellh/vagrant/issues/8833
+* [VirtualBox v5.1.30 or greater](https://www.virtualbox.org/wiki/Downloads)
+* [Vagrant v2.0.1 or greater](https://www.vagrantup.com/downloads.html)
 
 #### Bootstrap
 Launch Git Bash: Start -> Programs -> Git Bash
@@ -93,13 +100,28 @@ To uninstall and re-install fresh on the host system type:
 curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s destroy
 ````
 
-
 #### UNINSTALL
 
 To uninstall on the host system type:
 
 ````
 curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s uninstall
+````
+
+#### SPECIFY RELEASE
+
+As an example to install release-1.5 before it becomes mainline:
+
+````
+curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s release 1.5
+````
+
+#### SPECIFY BRANCH
+
+As an example to QA a new branch called "feature-lotto-numbers-1":
+
+````
+curl -Lk http://downloads.zonamaserver.org/zonamadev/bootstrap.sh | bash -s branch feature-lotto-numbers-1
 ````
 
 #### Local config for core and ram
