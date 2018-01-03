@@ -415,14 +415,6 @@ server_build() {
             echo '*' > .gitignore
             cmake -G Ninja -DENABLE_CCACHE=ON -DBUILD_IDL=ON -DRUN_GIT=ON ../..
         )
-        (
-            set -xe
-            cd "${WORKSPACE}/PublicEngine"
-            git pull
-            cd MMOEngine
-            rm -f lib/unix/libengine3.a
-            make
-        )
     fi
 
     if server_build_step $extra; then
@@ -939,8 +931,12 @@ post_debug_body() {
 	"zdcfg dump-flags"
 	"zdcfg get-all"
         "uname -a"
+        "sudo dmidecode"
+        "lsblk"
+        "lspci"
         "df -h"
 	"nproc"
+        "sed '/^$/q' /proc/cpuinfo"
         "top -Hbn 1"
     )
 
