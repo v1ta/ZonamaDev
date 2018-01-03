@@ -916,6 +916,8 @@ post_debug_body() {
     # Note: Can't be too long as it goes into the command line with ghi and thus is limited
     #       see: xargs --show-limits < /dev/null
     #
+    eval $(get_config --bash '..Port')
+
     local debug_commands=(
         "show_version"
         "cat /etc/os-release"
@@ -923,11 +925,12 @@ post_debug_body() {
         "get_config --bash 'Zone..'"
         "get_config --bash 'Tre..'"
         "tre_check"
-        "tail -100 ${WORKSPACE}/Core3/MMOCoreORB/bin/screenlog.0"
-        "tail -100 ${WORKSPACE}/Core3/MMOCoreORB/bin/log/core3.log"
-        "tail -25 ${OPENRESTY_DIR}/nginx/logs/error.log"
+        "tail -50 ${WORKSPACE}/Core3/MMOCoreORB/bin/screenlog.0"
+        "tail -50 ${WORKSPACE}/Core3/MMOCoreORB/bin/log/core3.log"
+        "tail -10 ${OPENRESTY_DIR}/nginx/logs/error.log"
 	"/sbin/ifconfig -a"
 	"mysql swgemu -tve 'select galaxy_id,name,address,port,pingport,population from galaxy'"
+        "nc 127.0.0.1 ${StatusPort}"
 	"zdcfg dump-flags"
 	"zdcfg get-all"
         "uname -a"
