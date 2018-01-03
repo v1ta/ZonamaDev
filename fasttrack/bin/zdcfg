@@ -122,7 +122,7 @@ do
 done
 
 if [ -z "${ZDCFGPATH}" -o ! -f "${ZDCFGPATH}" ]; then
-    echo "** ERROR: Can not find global.config, GET HELP!"
+    echo "** ERROR: Can not find global.config, GET HELP! HOME=$HOME id=$(id)"
     exit 252
 fi
 
