@@ -111,7 +111,7 @@ popd > /dev/null
 
 # Hunt for global.config
 dir=$(dirname $ME)
-for i in "$HOME" "${dir}" "${dir}/.." "${dir}/../.." "${dir}/../../.."
+for i in "$HOME" "${dir}" "${dir}/.." "${dir}/../.." "${dir}/../../.." /home/*
 do
     cfg="${i}/ZonamaDev/common/global.config"
 
@@ -122,7 +122,7 @@ do
 done
 
 if [ -z "${ZDCFGPATH}" -o ! -f "${ZDCFGPATH}" ]; then
-    echo "** ERROR: Can not find global.config, GET HELP! HOME=$HOME id=$(id)"
+    echo "** ERROR: Can not find global.config, GET HELP! ME=$ME HOME=$HOME id=$(id)"
     exit 252
 fi
 
@@ -133,7 +133,7 @@ main "$@"
 ret=$?
 
 if [ $(id -u) -eq 0 ]; then
-    chown ${ZDUSER}:${ZDUSER} "${ZONAMADEV_CONFIG_HOME}"
+    chown -R ${ZDUSER}:${ZDUSER} "${ZONAMADEV_CONFIG_HOME}"
 fi
 
 exit $ret
