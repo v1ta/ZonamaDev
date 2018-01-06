@@ -33,6 +33,12 @@ main() {
 
     local ret=255
 
+    echo "** Removing any cached copies of base box **"
+    vagrant box list | awk '/^zonama/ { print $1 }' | while read basebox
+    do
+        vagrant box remove ${basebox} --all --force
+    done
+
     for retry in 1 2
     do
         echo "vagrant up"
