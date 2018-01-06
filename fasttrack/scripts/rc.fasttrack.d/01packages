@@ -13,7 +13,7 @@ check_packages() {
 
     for i in $PACKAGES
     do
-	if dpkg -s $i > /dev/null 2>&1; then
+	if ! dpkg -s $i > /dev/null 2>&1; then
 	    need="$need $i"
 	fi
     done
