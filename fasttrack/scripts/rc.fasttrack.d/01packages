@@ -3,7 +3,7 @@
 # 01packages - Make sure all base box packages are installed
 #
 check_packages() {
-    source $ZDHOME/common/basebox.config
+    source $ZDHOME/ZonamaDev/common/basebox.config
 
     export DEBIAN_FRONTEND=noninteractive
     unset UCF_FORCE_CONFFOLD
