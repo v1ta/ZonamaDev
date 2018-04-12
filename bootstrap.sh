@@ -325,7 +325,7 @@ check_virtualbox_osx() {
 }
 
 check_vagrant_base() {
-    local ver_min="2.0.1"
+    local ver_min="2.0.3"
     local ver=$(vagrant --version | cut -d' ' -f2 2> /dev/null)
 
     if [ -z "$ver" ]; then
