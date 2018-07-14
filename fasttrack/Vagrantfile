@@ -50,12 +50,11 @@ plugins_installed = false
 
 [
   { :name => "vagrant-vbguest", :version => ">= 0.12.0" },
-  { :name => "vagrant-reload", :version => ">= 0.0.1" },
-  { :name => "vagrant-triggers", :version => ">= 0.5.3" }
+  { :name => "vagrant-reload", :version => ">= 0.0.1" }
 ].each do |plugin|
   if not Vagrant.has_plugin?(plugin[:name], plugin[:version])
     # raise "#{plugin[:name]} #{plugin[:version]} is required. Please run `vagrant plugin install #{plugin[:name]}`"
-    system("vagrant plugin install #{plugin[:name]}")
+    system("cd $HOME;vagrant plugin install #{plugin[:name]}")
     plugins_installed = true
   end
 end
