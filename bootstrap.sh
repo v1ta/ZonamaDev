@@ -231,7 +231,7 @@ check_gitbash_win() {
 }
 
 check_virtualbox_win() {
-    local ver_min="5.1.30"
+    local ver_min="5.2.14"
     local ve=$(wmic cpu get VirtualizationFirmwareEnabled/value | grep TRUE)
 
     if [ -z "$ve" ]; then
@@ -275,7 +275,7 @@ check_virtualbox_win() {
 }
 
 check_virtualbox_linux() {
-    local ver_min="5.1.30"
+    local ver_min="5.2.14"
     local vbm=$(type -P VBoxManage)
 
     if [ -z "${vbm}" ]; then
@@ -301,7 +301,7 @@ check_virtualbox_linux() {
 }
 
 check_virtualbox_osx() {
-    local ver_min="5.1.30"
+    local ver_min="5.2.14"
     local vbm=$(type -P VBoxManage)
 
     if [ -z "${vbm}" ]; then
@@ -325,7 +325,7 @@ check_virtualbox_osx() {
 }
 
 check_vagrant_base() {
-    local ver_min="2.0.4"
+    local ver_min="2.1.2"
     local ver=$(vagrant --version | cut -d' ' -f2 2> /dev/null)
 
     if [ -z "$ver" ]; then
