@@ -54,7 +54,7 @@ plugins_installed = false
 ].each do |plugin|
   if not Vagrant.has_plugin?(plugin[:name], plugin[:version])
     # raise "#{plugin[:name]} #{plugin[:version]} is required. Please run `vagrant plugin install #{plugin[:name]}`"
-    system("set -x;cd ..;vagrant plugin install #{plugin[:name]}")
+    system("bash -c 'set -x;cd ../..;vagrant plugin install #{plugin[:name]}'")
     plugins_installed = true
   end
 end
