@@ -33,7 +33,7 @@ main() {
 
     local ret=255
 
-    (cd $HOME;vagrant plugin uninstall vagrant-triggers && echo "** Removed vagrant-triggers as it breaks recent vagrant versions")
+    (cd $HOME;vagrant plugin uninstall vagrant-triggers > /dev/null 2>&1 && echo "** Removed vagrant-triggers as it breaks recent vagrant versions")
 
     echo "** Removing any cached copies of base box **"
     vagrant box list | awk '/^zonama/ { print $1 }' | while read basebox
