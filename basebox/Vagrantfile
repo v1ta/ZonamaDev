@@ -9,9 +9,8 @@
 plugins_installed = false
 
 [
-  { :name => "vagrant-vbguest", :version => ">= 0.11.0" },
+  { :name => "vagrant-vbguest", :version => ">= 0.12.0" },
   { :name => "vagrant-reload", :version => ">= 0.0.1" },
-  { :name => "vagrant-triggers", :version => ">= 0.5.0" }
 ].each do |plugin|
   if not Vagrant.has_plugin?(plugin[:name], plugin[:version])
     # raise "#{plugin[:name]} #{plugin[:version]} is required. Please run `vagrant plugin install #{plugin[:name]}`"
@@ -49,7 +48,8 @@ Vagrant.configure(2) do |config|
   # Base Box
   #config.vm.box = "debian/jessie64"
   #config.vm.box = "bento/debian-8.5"
-  config.vm.box = "bento/debian-9.0"
+  config.vm.box = "bento/debian-9.5"
+  config.vm.box_version = "201808.24.0"
 
   # Setup port forwarding
   config.vm.network "forwarded_port", guest: 44480,  host: 44480
@@ -150,14 +150,6 @@ Vagrant.configure(2) do |config|
         ethtool -K eth0 gro off || ethtool -K enp0s3 gro off
 	echo "** Please wait while provisioning continues **" > /dev/console
     SHELL
-
-    # Postponed vbguest, run it now...
-    # config.vm.provision :host_shell, inline: "vagrant vbguest --do install"
-    config.vm.provision :trigger, :force => true do |trigger|
-      trigger.fire do
-	run "vagrant vbguest --do install"
-      end
-    end
   end
 
   # Enable Graphical Boot

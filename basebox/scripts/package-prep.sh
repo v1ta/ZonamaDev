@@ -130,7 +130,7 @@ if [ -x /usr/bin/convert ]; then
         fi
     done
     if [ -n "$srcimg" ]; then
-        convert "$srcimg" -gravity southeast ${ZDHOME}/Pictures/logo_yellow.png'[45%]' -geometry +0+5 -composite \
+        convert "$srcimg" -gamma 0.6 -gravity southeast ${ZDHOME}/Pictures/logo_yellow.png'[45%]' -geometry +0+5 -composite \
             -gravity center -antialias -font Helvetica-Bold \
             -pointsize 22 -fill black -annotate +1+206 "${line1}" -annotate +2+207 "${line1}" -fill gold -annotate +0+205 "${line1}" \
             -pointsize 12 -fill black -annotate +1+226 "${line2}" -annotate +2+227 "${line2}" -fill grey -annotate +0+225 "${line2}" \

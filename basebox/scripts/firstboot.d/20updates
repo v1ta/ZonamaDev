@@ -8,8 +8,12 @@
 #
 
 # Add Googles's chrome repo to sources
-wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=true apt-key add -
 echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
+
+# Add clang repo to sources
+wget -q -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=true apt-key add -;
+echo 'deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch-7 main' > /etc/apt/sources.list.d/clang.list;
 
 # Hack for initramfs build bug: https://bugs.launchpad.net/ubuntu/+source/initramfs-tools/+bug/1636922
 rmdir /etc/udev/rules.d/70-persistent-net.rules && echo "Removed empty /etc/udev/rules.d/70-persistent-net.rules directory"
@@ -24,6 +28,8 @@ rmdir /etc/udev/rules.d/70-persistent-net.rules && echo "Removed empty /etc/udev
     ucf --purge /boot/grub/menu.lst
 
     export DEBIAN_FRONTEND=noninteractive
+
+    echo 'APT::Install-Recommends "0";\nAPT::Install-Suggests "0";' > /etc/apt/apt.conf.d/01norecommends
 
     # exit if anything returns error
 
@@ -69,6 +75,8 @@ rmdir /etc/udev/rules.d/70-persistent-net.rules && echo "Removed empty /etc/udev
         # Start out in text console until vbguest can update video drivers
         systemctl set-default -f multi-user.target
     fi
+
+    rm -f /etc/apt/apt.conf.d/01norecommends && echo "Removed /etc/apt/apt.conf.d/01norecommends"
 )
 
 ret=$?

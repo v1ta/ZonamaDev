@@ -13,6 +13,15 @@ version="0.0.0"
 source ../common/global.config
 
 main() {
+    if ! git diff-index --quiet HEAD . ../common; then
+        echo "** WARNING: You have uncommitted changes that will NOT be reflected in the base box!"
+        git status . ../common
+	if yorn "\n** Do you want to abort? "; then
+            echo "** ABORTED BY USER **"
+            exit 0
+        fi
+    fi
+
     case $1 in
 	help ) echo "$0: Choose build or package" ; exit 1 ;;
 	package ) package_box ;;
@@ -60,7 +69,10 @@ build_box() {
 
     sleep 5
 
-    echo "** Resizing to 1280x800"
+    echo "** Update vbguest extensions"
+    vagrant vbguest --do install && vagrant reload
+
+    echo "** Trying to resize to 1280x800"
     vboxmanage controlvm $(<.vagrant/machines/default/virtualbox/id) setvideomodehint 1280 800 24
 
     # Use instructions from README.md
