@@ -94,11 +94,17 @@ fi
 # If we made it this far time to start cleanup for packaging...
 #------------------------------------------------------------------------------
 
-##############
-## STOP GUI ##
-##############
-echo ">> Stop lightdm"
-service lightdm stop
+###################
+## STOP SERVICES ##
+###################
+echo ">> Stop services"
+(
+    set -x
+    service lightdm stop
+    service vboxadd stop # Trying to avoid VM in abort state at shutdown
+    service mysql stop
+)
+
 sleep 5
 
 ##########################
@@ -189,17 +195,26 @@ cp -vr /etc/skel/. ${ZDHOME}
 ########################
 ## Stop all the noise ##
 ########################
-service vboxadd stop
-service mysql stop
 service syslog stop
 ${ZDHOME}/server/openresty/nginx/sbin/nginx -s stop > /dev/null 2>&1
 
 # Make sure VBox service really stops
-vbpid=$(cat /var/run/vboxadd-service.pid 2> /dev/null)
+vbpid=$(cat /var/run/vboxadd-service.sh 2> /dev/null)
 
-[ -n "$vbpid" ] && kill -9 $vbpid
+if [ -n "$vbpid" ]; then
+    echo -n ">> Waiting for vbox to stop on pid ${vbpid}"
 
-sleep 5
+    for i in 1 2 3 4 5
+    do
+        kill -0 $vbpid && break
+        echo -n "."
+        sleep 1
+    done
+
+    kill -9 $vbpid && echo "killed ${vbpid}"
+
+    echo
+fi
 
 ps -fu ${ZDUSER}
 
