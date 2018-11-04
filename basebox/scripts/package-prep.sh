@@ -240,13 +240,13 @@ echo '{ "build_version": "'"${version}"'", "build_timestamp": '"${build_timestam
 zdcfg clear-flag suspend_devsetup
 zdcfg clear-flag suspend_fasttrack
 
-####################################
-## Make sure box starts on master ##
-####################################
+##############################################
+## Make sure box starts on ZONAMADEV_BRANCH ##
+##############################################
 (
     set -x
     cd ${ZDHOME}/ZonamaDev
-    git checkout master
+    git checkout ${ZONAMADEV_BRANCH:-master}
     git rev-parse --abbrev-ref HEAD
 )
 
