@@ -67,6 +67,8 @@ build_box() {
         exit 1
     fi
 
+    echo "** Ran for $SECONDS Second(s) so far."
+
     sleep 5
 
     echo "** Update vbguest extensions"
@@ -74,6 +76,8 @@ build_box() {
 
     echo "** Trying to resize to 1280x800"
     vboxmanage controlvm $(<.vagrant/machines/default/virtualbox/id) setvideomodehint 1280 800 24
+
+    echo "** Ran for $SECONDS Second(s) so far."
 
     # Use instructions from README.md
     echo
@@ -86,6 +90,8 @@ build_box() {
 	echo "** When you're ready to package type: ./build.sh package"
 	exit 0
     fi
+
+    echo "** Ran for $SECONDS Second(s)"
 }
 
 package_box() {
