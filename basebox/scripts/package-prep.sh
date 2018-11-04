@@ -247,6 +247,7 @@ zdcfg clear-flag suspend_fasttrack
     set -x
     cd ${ZDHOME}/ZonamaDev
     git checkout ${ZONAMADEV_BRANCH:-master}
+    git pull
     git rev-parse --abbrev-ref HEAD
 )
 
