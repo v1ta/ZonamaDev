@@ -15,7 +15,7 @@ fi
 (
     echo "Install Eclipse from $ECLIPSE_URL"
 
-    ECLIPSE_FN="eclipse.tar.gz"
+    ECLIPSE_FN="${ZDHOME}/Downloads/eclipse.tar.gz"
 
     cd ${ZDHOME}
     mkdir Downloads || echo "Created Downloads directory"
