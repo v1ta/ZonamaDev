@@ -29,7 +29,7 @@ rmdir /etc/udev/rules.d/70-persistent-net.rules && echo "Removed empty /etc/udev
 
     export DEBIAN_FRONTEND=noninteractive
 
-    echo 'APT::Install-Recommends "0";\nAPT::Install-Suggests "0";' > /etc/apt/apt.conf.d/01norecommends
+    # echo 'APT::Install-Recommends "0";\nAPT::Install-Suggests "0";' > /etc/apt/apt.conf.d/01norecommends
 
     # exit if anything returns error
 
@@ -76,7 +76,7 @@ rmdir /etc/udev/rules.d/70-persistent-net.rules && echo "Removed empty /etc/udev
         systemctl set-default -f multi-user.target
     fi
 
-    rm -f /etc/apt/apt.conf.d/01norecommends && echo "Removed /etc/apt/apt.conf.d/01norecommends"
+    # rm -f /etc/apt/apt.conf.d/01norecommends && echo "Removed /etc/apt/apt.conf.d/01norecommends"
 )
 
 ret=$?
