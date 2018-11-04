@@ -199,7 +199,7 @@ service syslog stop
 ${ZDHOME}/server/openresty/nginx/sbin/nginx -s stop > /dev/null 2>&1
 
 # Make sure VBox service really stops
-vbpid=$(cat /var/run/vboxadd-service.pid 2> /dev/null)
+vbpid=$(cat /var/run/vboxadd-service.sh 2> /dev/null)
 
 if [ -n "$vbpid" ]; then
     echo -n ">> Waiting for vbox to stop on pid ${vbpid}"
