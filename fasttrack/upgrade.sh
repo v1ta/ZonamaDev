@@ -23,6 +23,8 @@ main() {
 
     cd "$(dirname '${me}')"
 
+    error "NOT SUPPORTED YET DO NOT RUN THIS" 100
+
     # Detect OS
     case $(uname -s) in
         Darwin ) OS='osx' ;;
