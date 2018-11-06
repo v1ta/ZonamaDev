@@ -152,6 +152,20 @@ package_box() {
 
     echo "** Ok now build the package!"
 
+    local state='unknown'
+
+    while [ "$state" != "poweroff" ]
+    do
+        state=$(vagrant status --machine-readable | awk -F',' '$3 == "state" { print $4 }')
+
+        if [ "$state" != "poweroff" ]; then
+            echo "** Box state is: ${state} must be: poweroff"
+            echo
+            read -p "Fix it and press <ENTER>: " _
+            sleep 1
+        fi
+    done
+
     # TODO - Include a Vagrantfile with hints/metadata?
     if vagrant package; then
 	:
