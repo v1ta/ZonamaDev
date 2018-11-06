@@ -141,7 +141,12 @@ if [ -x /usr/bin/convert ]; then
             -pointsize 22 -fill black -annotate +1+206 "${line1}" -annotate +2+207 "${line1}" -fill gold -annotate +0+205 "${line1}" \
             -pointsize 12 -fill black -annotate +1+226 "${line2}" -annotate +2+227 "${line2}" -fill grey -annotate +0+225 "${line2}" \
             ${ZDHOME}/Pictures/swgemu-grub.png
-        sed -i -e '$ a GRUB_BACKGROUND="'"${ZDHOME}"'/Pictures/swgemu-grub.png"' -e '/GRUB_BACKGROUND/d' -e '/^GRUB_CMDLINE_LINUX_DEFAULT/s/.*/GRUB_CMDLINE_LINUX_DEFAULT=""/' /etc/default/grub
+        if [ -f /usr/share/desktop-base/grub_background.sh ]; then
+            sed -i -e "/^WALLPAPER/s@=.*@=${ZDHOME}/Pictures/swgemu-grub.png@" /usr/share/desktop-base/grub_background.sh
+            sed -i -e '/GRUB_BACKGROUND/d' -e '/^GRUB_CMDLINE_LINUX_DEFAULT/s/.*/GRUB_CMDLINE_LINUX_DEFAULT=""/' /etc/default/grub
+        else
+            sed -i -e '$ a GRUB_BACKGROUND="'"${ZDHOME}"'/Pictures/swgemu-grub.png"' -e '/GRUB_BACKGROUND/d' -e '/^GRUB_CMDLINE_LINUX_DEFAULT/s/.*/GRUB_CMDLINE_LINUX_DEFAULT=""/' /etc/default/grub
+        fi
         /usr/sbin/update-grub
     else
         echo -e "**************************************************************************************\n** WARNING: UNABLE TO FIND SOURCE GRUB BACKGROUND IMAGE, WILL NOT BRAND BOOT SCREEN **\n**************************************************************************************"
