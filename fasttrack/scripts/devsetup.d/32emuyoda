@@ -57,8 +57,11 @@ launch_yoda() {
 	return 1
     fi
 
+    if [ -z "${BROWSER}" ]; then
+        read BROWSER OTHER_BROWSERS <<<$(for i in chromium google-chrome chromium-browser firefox iceweasel; do type -P $i; done)
+        echo "** BROWSER not set, using: ${BROWSER}"
+    fi
 
-read BROWSER OTHER_BROWSERS <<<$(for i in chromium google-chrome chromium-browser firefox iceweasel; do type -P $i; done)
     case $BROWSER in
         *chromium* | *google-chrome* )
             local fn=$(basename $BROWSER)
