@@ -134,7 +134,7 @@ Vagrant.configure(2) do |config|
         v.customize [ "guestproperty", "set", :id, "/ZonamaDev/upgrade", ENV['ZONAMADEV_UPGRADE'] || 'no' ]
         # Hint at a bigger video config
         v.customize ["modifyvm", :id, "--accelerate3d", "off"]
-        v.customize ["modifyvm", :id, "--accelerate2dvideo", "on"]
+        v.customize ["modifyvm", :id, "--accelerate2dvideo", "off"]
         v.customize ["modifyvm", :id, "--vram", "128"]
         v.customize ["modifyvm", :id, "--audio", "null"]
         v.customize 'post-boot', ["controlvm", :id, "setvideomodehint", "1280", "800", "24"]
