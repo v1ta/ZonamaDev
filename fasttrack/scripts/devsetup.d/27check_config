@@ -82,14 +82,14 @@ validate_config() {
     fi
 
     # Just check for existance, maybe someday check valid values?
-    for setting in MakeZone MakePing MakeStatus MakeWeb ORB ORBPort
-        DBHost DBPort DBName DBUser DBPass DBSecret LoginPort
-        LoginProcessingThreads LoginAllowedConnections LoginRequiredVersion
-        MantisHost MantisPort MantisName MantisUser MantisPass MantisPrfx
-        AutoReg ProgressMonitors PingPort PingAllowedConnections
-        ZoneProcessingThreads ZoneAllowedConnections ZoneGalaxyID
-        ZonesEnabled TrePath TreFiles StatusPort StatusAllowedConnections
-        StatusInterval WebPorts WebAccessLog WebErrorLog WebSessionTimeout
+    for setting in MakeZone MakePing MakeStatus MakeWeb ORB ORBPort \
+        DBHost DBPort DBName DBUser DBPass DBSecret LoginPort \
+        LoginProcessingThreads LoginAllowedConnections LoginRequiredVersion \
+        MantisHost MantisPort MantisName MantisUser MantisPass MantisPrfx \
+        AutoReg ProgressMonitors PingPort PingAllowedConnections \
+        ZoneProcessingThreads ZoneAllowedConnections ZoneGalaxyID \
+        ZonesEnabled TrePath TreFiles StatusPort StatusAllowedConnections \
+        StatusInterval WebPorts WebAccessLog WebErrorLog WebSessionTimeout \
         PurgeDeletedCharacters MaxNavMeshJobs DumpObjFiles
     do
         local value=$(get_config "${setting}" || echo ERROR)
