@@ -85,7 +85,7 @@ main() {
             echo "${trefiles[@]}" > ${need}
         fi
 
-	scp -F $sshcfg -o Compression=no "$(cat ${need})" default:Desktop/SWGEmu
+	scp -F $sshcfg -o Compression=no $(cat ${need}) default:Desktop/SWGEmu
     else
 	scp -F $sshcfg -o Compression=no *.tre default:Desktop/SWGEmu
     fi
