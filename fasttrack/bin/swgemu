@@ -381,7 +381,7 @@ server_build_step() {
                 (set -x; make clean-ninja clean-ninja-debug)
             fi
             set -xe
-            make build-ninja-debug
+            make build-ninja-debug "$extra"
         else ## Old makefile w/o Ninja targets
             if [[ $extra =~ clean ]]; then
                 (
