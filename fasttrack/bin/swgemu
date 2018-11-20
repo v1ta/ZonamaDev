@@ -377,20 +377,21 @@ server_build_step() {
 
     (
         if fgrep -q 'build-ninja:' Makefile; then
-            if [[ $extra =~ clean ]]; then
+            if [[ $extra =~ (.*)clean(.*) ]]; then
                 (set -x; make clean-ninja clean-ninja-debug)
+                extra="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
             fi
             set -xe
             make build-ninja-debug "$extra"
         else ## Old makefile w/o Ninja targets
-            if [[ $extra =~ clean ]]; then
+            if [[ $extra =~ (.*)clean(.*) ]]; then
                 (
                     set -xe
                     rm -fr build/ninja
                     mkdir -p build/ninja
                     cd build/ninja
                     echo '*' > .gitignore
-                    cmake -G Ninja -DENABLE_CCACHE=ON -DBUILD_IDL=ON -DRUN_GIT=ON ../..
+                    cmake -G Ninja -DENABLE_CCACHE=ON -DBUILD_IDL=ON -DRUN_GIT=ON ../.. "${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
                 )
             fi
             set -xe
@@ -428,7 +429,9 @@ server_build() {
     local extra="$@"
 
     if [ ! -f build/ninja/build.ninja ]; then
-        extra="clean ${extra}"
+        if ! [[ $extra =~ clean ]]; then
+            extra="clean ${extra}"
+        fi
     fi
 
     if server_build_step $extra; then
