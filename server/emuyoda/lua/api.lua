@@ -209,22 +209,32 @@ local function load_config()
 
     f:close()
 
-    -- Support config.lua having a relative path loadfile
+    local emu_config_path_local = string.gsub(emu_config_path, "config.lua$", "config-local.lua");
     local emu_cfg = setmetatable({}, {__index=_G})
+    -- Support config.lua having a relative path loadfile
     emu_cfg.loadfile = function(file) local f = loadfile(file) or loadfile(string.gsub(emu_config_path, "(.*)/(.*)/(.*)", "%1") .. "/" .. file); if f then return setfenv(f, emu_cfg) else return nil end end
     assert(pcall(setfenv(assert(loadfile(emu_config_path)), emu_cfg)))
+    -- Also include optional config-local.lua file
+    local f = io.open(emu_config_path_local)
+    if f then
+        assert(pcall(setfenv(assert(loadfile(emu_config_path_local)), emu_cfg)))
+        f.close()
+    end
     setmetatable(emu_cfg, nil)
 
     -- Clear out the localFile function
     for k,v in pairs(emu_cfg) do
         if type(v) == "function" then
             emu_cfg[k] = nil
+        elseif k ~= "Core3" then
+            emu_cfg.Core3[k] = v
+            emu_cfg[k] = nil
         end
     end
 
     emu_cfg['__FILE__'] = emu_config_path
 
-    local cfg = { ['emu'] = emu_cfg, ['yoda'] = yoda_cfg, ['global'] = global_config }
+    local cfg = { ['emu'] = emu_cfg['Core3'], ['yoda'] = yoda_cfg, ['global'] = global_config }
 
     -- ngx.log(ngx.ERR, 'load_config = ' .. cjson.encode(cfg))
 
@@ -754,67 +764,56 @@ function service_config(path)
     end
 
     -- Support for ZonesEnabled changes..
-    -- Really we just "edit" the existing config file and uncomment or comment as needed.. 
-    -- Expects the ZonesEnabled = { 
-    -- array to be well formatted :-(
-    --
+    -- Uses config-local.lua by replacing the ZonesEnabled line
     if call.config.emu and call.config.emu.ZonesEnabled then
 	local cfg = load_config()
 
-	local enableZones = { }
+        local emu_config_path_local = string.gsub(cfg.yoda.emuConfigPath, "config.lua$", "config-local.lua");
 
-	for _, zone in pairs(call.config.emu.ZonesEnabled) do
-	    enableZones[zone] = true
-	end
-
-	local src_fh, err = io.open(cfg.yoda.emuConfigPath)
+	local src_fh, err = io.open(emu_config_path_local) or io.open(emu_config_path_local, "w+")
 
 	if err then
 	    return_error(r, "Unknown error", "INTERNAL_ERROR", "Unexpected error: " .. err, "SYSTEM", ngx.req.get_method(), "config")
 	end
 
-	local dst_fh, err  = io.open(cfg.yoda.emuConfigPath .. ".new", "w")
+	local dst_fh, err  = io.open(emu_config_path_local .. ".new", "w")
 
 	if err then
 	    return_error(r, "Unknown error", "INTERNAL_ERROR", "Unexpected error: " .. err, "SYSTEM", ngx.req.get_method(), "config")
 	end
 
-	local inZones = false
+        local zonesEnabled = "Core3.ZonesEnabled = { "
+        local sep = ""
+        for _, zone in pairs(call.config.emu.ZonesEnabled) do
+            zonesEnabled = zonesEnabled .. sep .. '"' .. zone .. '"'
+            sep = ", "
+        end
+        zonesEnabled = zonesEnabled .. " }"
 
+	local sawZones = false
 	while true do
 	    local ln = src_fh:read()
 
 	    if ln == nil then break end
 
-	    if inZones and string.match(ln, "^}") then
-		inZones = false
-	    end
+	    if string.match(ln, "^ZonesEnabled") or string.match(ln, "^Core3.ZonesEnabled") then
+                ln = zonesEnabled;
+                sawZones = true
+            end
 
-	    if inZones then
-		local ln_z = string.match(ln, '"([^"]+)"')
-
-		if ln_z then
-		    if enableZones[ln_z] then
-			ln = string.gsub(ln, '^([ \t]+)--"', '%1"')
-		    else
-			ln = string.gsub(ln, '^([ \t]+)"', '%1--"')
-		    end
-		end
-	    end
-
-	    dst_fh:write(ln .. "\n")
-
-	    if string.match(ln, "^ZonesEnabled = {") then
-		inZones = true
-	    end
+            dst_fh:write(ln .. "\n")
 	end
+
+        if not sawZones then
+            dst_fh:write(zonesEnabled .. "\n")
+        end
 
 	src_fh:close()
 	dst_fh:close()
 
 	-- Swap files
-	os.rename(cfg.yoda.emuConfigPath, cfg.yoda.emuConfigPath .. ".old")
-	os.rename(cfg.yoda.emuConfigPath .. ".new", cfg.yoda.emuConfigPath)
+	os.rename(emu_config_path_local, emu_config_path_local .. ".old")
+	os.rename(emu_config_path_local .. ".new", emu_config_path_local)
     end
 
     return_response(r, "OK")
