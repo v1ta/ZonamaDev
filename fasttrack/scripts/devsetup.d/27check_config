@@ -90,7 +90,7 @@ validate_config() {
         ZoneProcessingThreads ZoneAllowedConnections ZoneGalaxyID \
         ZonesEnabled TrePath TreFiles StatusPort StatusAllowedConnections \
         StatusInterval WebPorts WebAccessLog WebErrorLog WebSessionTimeout \
-        PurgeDeletedCharacters MaxNavMeshJobs DumpObjFiles
+        MaxNavMeshJobs DumpObjFiles
     do
         local value=$(get_config "${setting}" || echo ERROR)
 
