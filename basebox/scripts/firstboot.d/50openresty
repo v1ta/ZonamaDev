@@ -26,7 +26,7 @@ pushd ${EXTERNAL_SRC_DIR}
 if [ $OPENRESTY_VERSION = 'latest' ]; then
     echo "Get version 'latest' from openresty from ${OPENRESTY_REPO}"
 
-    OPENRESTY_VERSION=$(git ls-remote --tags https://github.com/openresty/ngx_openresty | sed -ne '/tags/s!.*tags/v!!p'|sort -b -t . -k 1,1nr -k 2,2nr -k 3,3r -k 4,4r -k 5,5r|head -1)
+    OPENRESTY_VERSION=$(git ls-remote --tags https://github.com/openresty/ngx_openresty | fgrep -v '^{}' | sed -ne '/tags/s!.*tags/v!!p'|sort -b -t . -k 1,1nr -k 2,2nr -k 3,3r -k 4,4r -k 5,5r|head -1)
 
     [ -n "$OPENRESTY_VERSION" ] || error "Failed to determine latest version" 130
 fi
