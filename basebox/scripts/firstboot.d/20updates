@@ -12,8 +12,12 @@ wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo APT_KE
 echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
 
 # Add clang repo to sources
-wget -q -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=true apt-key add -;
-echo 'deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch-7 main' > /etc/apt/sources.list.d/clang.list;
+wget -q -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=true apt-key add -
+echo 'deb http://apt.llvm.org/buster/ llvm-toolchain-buster-9 main' > /etc/apt/sources.list.d/clang.list
+
+# Add adoptopenjdk repo
+wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=true apt-key add -
+add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/;
 
 # Hack for initramfs build bug: https://bugs.launchpad.net/ubuntu/+source/initramfs-tools/+bug/1636922
 rmdir /etc/udev/rules.d/70-persistent-net.rules && echo "Removed empty /etc/udev/rules.d/70-persistent-net.rules directory"
