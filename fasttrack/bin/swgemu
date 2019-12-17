@@ -726,7 +726,7 @@ server_restore()
         return 15
     fi
 
-    server_backup --tag "pre_restore_backup" 
+    server_backup --tag "pre_restore_backup"
 
     echo "** RESTORING "${last_bu}" **"
     local restat=$(mktemp /tmp/swgemu-recovery-status.XXXXXX)
@@ -839,23 +839,23 @@ post_debug()
     echo -e "**\n** Post Debug Message\n**"
 
     echo -e "** This will create a dump of numerous files and status information"
-    
+
     echo -e "** and post them to the internet via a github gist or an issue.\n**"
 
     echo -e "** Attempts are made to make sure the post does not include sensitive"
-    
+
     echo -e "** data but we cannot 100% guarantee that sensitive data won't be posted.\n**"
 
     echo -e "** If you're worried you can follow the prompt to post a [G]ist and"
-    
+
     echo -e "** DO NOT LOGIN to GitHub so your gist will be 100% annonymous.\n**"
 
     echo -e "** By default if you do post a gist and login the gist is created as"
-    
+
     echo -e "** private so you can review it before sharing.\n**"
 
     echo -e "** Most people will want to post an [I]ssue and login to github"
-    
+
     echo -e "** to get immediate feedback and quicker support.\n**"
 
     if [ -z "$gori" ]; then
@@ -1014,12 +1014,17 @@ server_latest()
         else
             git pull
         fi
-        cd "${WORKSPACE}/PublicEngine"
-        git pull
-        cd MMOEngine
-        rm -f lib/unix/libengine3.a
-        make
-      	rm -rf "${BUILD_DIR}/build/ninja"
+
+	# Check for existence of deprecated PublicEngine folder; remove if it exists
+	# Also clean up broken symlinks
+	cd "${WORKSPACE}"
+	if [ -d PublicEngine ]; then
+		rm -fr PublicEngine Core3/MMOEngine
+	fi
+
+	# Update engine3 submodule
+	cd Core3
+	git submodule update --recursive
     )
 
     local ret=$?
