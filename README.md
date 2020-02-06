@@ -15,11 +15,11 @@ In general you should not worry about what branch you're on.  The bootstrap scri
 #### Minimum requirements
 - Virtualization enabled cpu (Check your BIOS if virtualbox fails to boot box)
 - 64 Bit Host
-- 2 Host Cores
+- 4 Host Cores
 - 6 Gigs Host Ram
 - Dynamically sized 40G HD (Approx 15G on first boot) (Usually $HOME/ZonamaDev)
 - 2.5Gb in your $HOME directory for base box image (On windows this is usually C:\ )
-- **Guest must be configured for at least 2Gb Ram, 128Mb Video Memory and 2 Cores**
+- **Guest must be configured for at least 3Gb Ram, 128Mb Video Memory and 2 Cores**
 
 ### Fast Start
 

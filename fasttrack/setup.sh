@@ -22,12 +22,12 @@ main() {
 
     if [ ! -f 'config.yml' ]; then
 	local cores=$(calc_cores)
-	if [ $cores -gt 0 ]; then
-	    let "ram=(768 * $cores)"
-	    echo -e "cores: ${cores}\nram: ${ram}" > config.yml
-	    echo "** Setting config.yml to use ${cores} cores for guest and ${ram}m of ram. **"
+	if [ "$cores" -gt 0 ]; then
+		let "ram=(768 * $cores)"
+		echo -e "cores: ${cores}\nram: ${ram}" > config.yml
+		echo "** Setting config.yml to use ${cores} cores for guest and ${ram}m of ram. **"
 	else
-	    echo "** Using default cores/ram **"
+		echo "** Using default cores/ram **"
 	fi
     fi
 
@@ -107,6 +107,11 @@ calc_cores() {
     local bycore=0
     local byram=0
     local est_ram=0
+
+    if [ $total_cores -lt 4 ]; then
+      echo "*** ZONAMADEV REQUIRES A MINIMUM OF 4 CPU CORES ON THE HOST! EXITING! ***"
+      return 0
+    fi
 
     let "byram=($total_ram / 1024 / 1024 / 4 * 3) / 768"
     let "bycore=$total_cores / 4 * 3"
