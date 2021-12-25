@@ -25,9 +25,9 @@ In general you should not worry about what branch you're on.  The bootstrap scri
 
 #### Downloads
 * [Github's Git for Windows](https://git-for-windows.github.io)
-* [VirtualBox v5.2.14 or greater](https://www.virtualbox.org/wiki/Downloads)
+* [VirtualBox v5.2.14 to v6.0.4](https://www.virtualbox.org/wiki/Downloads)
 * [Windows Management Framework 5.1](https://www.microsoft.com/en-us/download/details.aspx?id=54616) (Only required for Win7 hosts; included in Win10)
-* [Vagrant v2.1.2 or greater](https://www.vagrantup.com/downloads.html)
+* [Vagrant v2.1.2 to v2.2.3](https://www.vagrantup.com/downloads.html)
 
 #### Bootstrap
 Launch Git Bash: Start -> Programs -> Git Bash
